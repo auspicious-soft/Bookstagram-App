@@ -1,4 +1,5 @@
 import 'package:bookstagram/Pages/Dashboard/TabHome/Pg_tabhome.dart';
+import 'package:bookstagram/Pages/Dashboard/TabSearch/pg_tabsearch.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
@@ -18,9 +19,9 @@ class PgDashBoard extends StatefulWidget {
 
 class _StatePgDashBoard extends State<PgDashBoard> {
   int selectedTab = 0;
-
-  List<Widget> get tabViews => [const PgTabhome()];
+  List<Widget> get tabViews => [const PgTabhome(), const PgTabsearch()];
   final PageController pageController = PageController(initialPage: 0);
+
   @override
   void dispose() {
     pageController.dispose();
@@ -31,11 +32,20 @@ class _StatePgDashBoard extends State<PgDashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    // Map of localized labels to assets
+    final labelToAssetMap = {
+      AppLocalization.of(context).translate('home'): AppAssets.home,
+      AppLocalization.of(context).translate('Search'): AppAssets.search,
+      AppLocalization.of(context).translate('Bookshelf'): AppAssets.bookself,
+      AppLocalization.of(context).translate('Cart'): AppAssets.cart,
+      AppLocalization.of(context).translate('Profile'): AppAssets.profile,
+    };
+
     return Scaffold(
       body: PageView(
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [PgTabhome()],
+        children: const [PgTabhome(), PgTabsearch()],
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -60,19 +70,24 @@ class _StatePgDashBoard extends State<PgDashBoard> {
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: [
-            _buildNavItem(AppLocalization.of(context).translate('home'), 0),
-            _buildNavItem(AppLocalization.of(context).translate('Search'), 1),
-            _buildNavItem(
-                AppLocalization.of(context).translate('Bookshelf'), 2),
-            _buildNavItem(AppLocalization.of(context).translate('Cart'), 3),
-            _buildNavItem(AppLocalization.of(context).translate('Profile'), 4),
+            _buildNavItem(AppLocalization.of(context).translate('home'), 0,
+                labelToAssetMap),
+            _buildNavItem(AppLocalization.of(context).translate('Search'), 1,
+                labelToAssetMap),
+            _buildNavItem(AppLocalization.of(context).translate('Bookshelf'), 2,
+                labelToAssetMap),
+            _buildNavItem(AppLocalization.of(context).translate('Cart'), 3,
+                labelToAssetMap),
+            _buildNavItem(AppLocalization.of(context).translate('Profile'), 4,
+                labelToAssetMap),
           ],
         ),
       ),
     );
   }
 
-  BottomNavigationBarItem _buildNavItem(String label, int index) {
+  BottomNavigationBarItem _buildNavItem(
+      String label, int index, Map<String, String> labelToAssetMap) {
     bool isActive = selectedIndex == index;
 
     return BottomNavigationBarItem(
@@ -85,7 +100,7 @@ class _StatePgDashBoard extends State<PgDashBoard> {
             children: [
               padVertical(5),
               Image.asset(
-                getImageAsset(label),
+                labelToAssetMap[label] ?? AppAssets.profile,
                 fit: BoxFit.contain,
                 width: 25,
                 height: 20,
@@ -106,20 +121,5 @@ class _StatePgDashBoard extends State<PgDashBoard> {
       ),
       label: "",
     );
-  }
-
-  String getImageAsset(String label) {
-    switch (label.toLowerCase()) {
-      case "home":
-        return AppAssets.home;
-      case "search":
-        return AppAssets.search;
-      case "bookshelf":
-        return AppAssets.bookself;
-      case "cart":
-        return AppAssets.cart;
-      default:
-        return AppAssets.profile;
-    }
   }
 }

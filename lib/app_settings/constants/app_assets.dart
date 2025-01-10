@@ -4,6 +4,8 @@ class AppAssets {
   static String background = "assets/images/background.png";
   static String congrat = "assets/images/congrat.png";
   static String banner = "assets/images/banner.png";
+  static String book = "assets/images/book.png";
+  static String bookmarkett = "assets/images/bookmarket.png";
   //Icons
   static String google = "assets/icons/google.png";
   static String home = "assets/icons/home.png";
@@ -20,4 +22,8 @@ class AppAssets {
   static String master = "assets/icons/master.png";
   static String event = "assets/icons/event.png";
   static String booklife = "assets/icons/booklife.png";
+  static String categoryfil = "assets/icons/categoryfil.png";
+  static String close = "assets/icons/Close.png";
+  static String like = "assets/icons/likefill.png";
+    static String unlike = "assets/icons/unlike.png";
 }

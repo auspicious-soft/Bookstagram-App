@@ -1,13 +1,12 @@
+import 'package:bookstagram/Pages/BookMarket/pg_bookmarket.dart';
+import 'package:bookstagram/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
-
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
-
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
 import 'package:bookstagram/localization/app_localization.dart';
-
 import 'package:flutter/material.dart';
 
 class PgTabhome extends StatefulWidget {
@@ -33,18 +32,21 @@ class _PgTabhomeState extends State<PgTabhome> {
                   child: SingleChildScrollView(
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
                 padVertical(20),
-                const Row(
+                Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(children: [
-                        Label(txt: "Hello,", type: TextTypes.f_20_700),
                         Label(
+                            txt:
+                                "${AppLocalization.of(context).translate('hello')},",
+                            type: TextTypes.f_20_700),
+                        const Label(
                           txt: "Duman!",
                           type: TextTypes.f_20_500i,
                           forceColor: AppColors.primaryColor,
                         )
                       ]),
-                      Icon(Icons.notifications_none_outlined)
+                      const Icon(Icons.notifications_none_outlined)
                     ]),
                 padVertical(15),
                 SingleChildScrollView(
@@ -53,34 +55,44 @@ class _PgTabhomeState extends State<PgTabhome> {
                     children: List.generate(6, (index) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 12.0),
-                        child: Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            gradient: const LinearGradient(
-                              colors: [Colors.blue, Colors.purple],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                                3.0), // Gradient border width
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PgStoryscreen(),
+                                ),
+                              );
+                            },
                             child: Container(
+                              height: 80,
+                              width: 80,
                               decoration: BoxDecoration(
-                                color: Colors.white, // Inner background color
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  AppAssets.congrat,
-                                  fit: BoxFit.contain,
+                                borderRadius: BorderRadius.circular(15),
+                                gradient: const LinearGradient(
+                                  colors: [Colors.blue, Colors.purple],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                    3.0), // Gradient border width
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Colors.white, // Inner background color
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      AppAssets.congrat,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
                       );
                     }),
                   ),
@@ -145,27 +157,36 @@ class _PgTabhomeState extends State<PgTabhome> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 35,
-                                width: 35,
-                                AppAssets.bookmarket,
-                                fit: BoxFit.contain,
-                              ),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookmarket'),
-                                  type: TextTypes.f_12_400)
-                            ])),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookmarket(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 35,
+                                    width: 35,
+                                    AppAssets.bookmarket,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookmarket'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
                     Container(
                         height: 75,
                         width: 75,
@@ -270,12 +291,12 @@ class _PgTabhomeState extends State<PgTabhome> {
                             children: [
                               padVertical(7),
                               Image.asset(
-                                height: 25,
-                                width: 25,
+                                height: 28,
+                                width: 28,
                                 AppAssets.master,
                                 fit: BoxFit.contain,
                               ),
-                              padVertical(6),
+                              padVertical(4),
                               Label(
                                   txt: AppLocalization.of(context)
                                       .translate('Bookmasters'),
@@ -334,67 +355,571 @@ class _PgTabhomeState extends State<PgTabhome> {
                   fit: BoxFit.fill,
                 ),
                 padVertical(20),
-                Row(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => selectedIndex = 0),
-                        child: Container(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '🔥${AppLocalization.of(context).translate('Stock')}',
-                            style: TextStyle(
-                              fontFamily: AppConst.fontFamily,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: selectedIndex == 0
-                                  ? AppColors.primaryColor
-                                  : AppColors.blackColor,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          // First Tab
+                          GestureDetector(
+                            onTap: () => setState(() => selectedIndex = 0),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, left: 16, right: 16),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '🔥${AppLocalization.of(context).translate('Stock')}',
+                                style: TextStyle(
+                                  fontFamily: AppConst.fontFamily,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: selectedIndex == 0
+                                      ? AppColors.primaryColor
+                                      : AppColors.blackColor,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          // Second Tab
+                          GestureDetector(
+                            onTap: () => setState(() => selectedIndex = 1),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, left: 16, right: 16),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '📚${AppLocalization.of(context).translate('Collections')}',
+                                style: TextStyle(
+                                  fontFamily: AppConst.fontFamily,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: selectedIndex == 1
+                                      ? AppColors.primaryColor
+                                      : AppColors.blackColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Third Tab
+                          GestureDetector(
+                            onTap: () => setState(() => selectedIndex = 2),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, left: 16, right: 16),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '💡${AppLocalization.of(context).translate('Blog')}',
+                                style: TextStyle(
+                                  fontFamily: AppConst.fontFamily,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w500,
+                                  color: selectedIndex == 2
+                                      ? AppColors.primaryColor
+                                      : AppColors.blackColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => selectedIndex = 1),
-                        child: Container(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '📚${AppLocalization.of(context).translate('Collections')}',
-                            style: TextStyle(
-                              fontFamily: AppConst.fontFamily,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500,
-                              color: selectedIndex == 1
-                                  ? AppColors.primaryColor
-                                  : AppColors.buttongroupBorder,
-                            ),
-                          ),
+                    // Bottom Border line
+                    Stack(
+                      children: [
+                        Container(
+                          width: screenWidth,
+                          height: 2,
+                          color: Colors.grey.shade300,
                         ),
-                      ),
+                        AnimatedPositioned(
+                          duration: const Duration(milliseconds: 300),
+                          left: selectedIndex * (screenWidth / 3),
+                          width: screenWidth / 3,
+                          height: 2,
+                          child: Container(color: AppColors.primaryColor),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                // Bottom Border line
-                Stack(
-                  children: [
-                    Container(
-                      width: screenWidth,
-                      height: 2,
-                      color: Colors.grey.shade300,
+                padVertical(15),
+                if (selectedIndex == 0)
+                  Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt: AppLocalization.of(context).translate('Books'),
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
                     ),
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 300),
-                      left: selectedIndex == 0 ? 0 : screenWidth / 2,
-                      width: screenWidth / 2,
-                      height: 2,
-                      child: Container(color: AppColors.primaryColor),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 144,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Көксерек",
+                                      type: TextTypes.f_13_500),
+                                  const Label(
+                                    txt: "Мұхтар Әуезов",
+                                    type: TextTypes.f_13_400,
+                                    forceColor: AppColors.resnd,
+                                  ),
+                                  const Label(
+                                    txt: "Поэзия",
+                                    type: TextTypes.f_12_400,
+                                    forceColor: AppColors.resnd,
+                                  )
+                                ]),
+                          );
+                        }),
+                      ),
                     ),
-                  ],
-                ),
+                    padVertical(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt: AppLocalization.of(context)
+                                .translate('Courselect'),
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 246,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.fill,
+                                          height: 144,
+                                          width: 246,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Learn Figma from Scratch",
+                                      type: TextTypes.f_13_500),
+                                  SizedBox(
+                                      width:
+                                          240, // Match the width of the book container
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.star,
+                                                  size: 16,
+                                                  color: AppColors.primaryColor,
+                                                ),
+                                                const Label(
+                                                    txt: "5.0",
+                                                    type: TextTypes.f_11_500),
+                                                padHorizontal(8),
+                                                Container(
+                                                  height: 12,
+                                                  width: 1,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors
+                                                        .buttongroupBorder,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16),
+                                                  ),
+                                                ),
+                                                padHorizontal(8),
+                                                const Label(
+                                                    txt: "Designe",
+                                                    type: TextTypes.f_11_500),
+                                              ],
+                                            ),
+                                            Row(children: [
+                                              const Text(
+                                                "1670₸",
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppConst.fontFamily,
+                                                  decoration: TextDecoration
+                                                      .lineThrough,
+                                                  decorationThickness: 2,
+                                                  decorationColor:
+                                                      AppColors.blackColor,
+                                                  color: AppColors.blackColor,
+                                                ),
+                                              ),
+                                              padHorizontal(8),
+                                              const Label(
+                                                  txt: "990₸",
+                                                  forceColor:
+                                                      AppColors.primaryColor,
+                                                  type: TextTypes.f_11_500),
+                                            ])
+                                          ]))
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                  ]),
+                if (selectedIndex == 1)
+                  Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt:
+                                '${AppLocalization.of(context).translate('mindblowing')} 🤯',
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 144,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Көксерек",
+                                      type: TextTypes.f_13_500),
+                                  const Label(
+                                    txt: "Мұхтар Әуезов",
+                                    type: TextTypes.f_13_400,
+                                    forceColor: AppColors.resnd,
+                                  ),
+                                  const Label(
+                                    txt: "Поэзия",
+                                    type: TextTypes.f_12_400,
+                                    forceColor: AppColors.resnd,
+                                  )
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt:
+                                '${AppLocalization.of(context).translate('newbooks')} 💌',
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 144,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Ақшам хаттары",
+                                      type: TextTypes.f_13_500),
+                                  const Label(
+                                    txt: "Мұхтар Әуезов",
+                                    type: TextTypes.f_13_400,
+                                    forceColor: AppColors.resnd,
+                                  ),
+                                  const Label(
+                                    txt: "Поэзия",
+                                    type: TextTypes.f_12_400,
+                                    forceColor: AppColors.resnd,
+                                  )
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt:
+                                '${AppLocalization.of(context).translate('soulfulbooks')} 💔',
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 144,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Ақшам хаттары",
+                                      type: TextTypes.f_13_500),
+                                  const Label(
+                                    txt: "Мұхтар Әуезов",
+                                    type: TextTypes.f_13_400,
+                                    forceColor: AppColors.resnd,
+                                  ),
+                                  const Label(
+                                    txt: "Поэзия",
+                                    type: TextTypes.f_12_400,
+                                    forceColor: AppColors.resnd,
+                                  )
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                  ]),
+                if (selectedIndex == 2)
+                  Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt: AppLocalization.of(context).translate('News'),
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 246,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.fill,
+                                          height: 144,
+                                          width: 246,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Article Title",
+                                      type: TextTypes.f_13_500),
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt: AppLocalization.of(context).translate('blog2'),
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                    padVertical(15),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(6, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 144,
+                                    width: 246,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAssets.book,
+                                          fit: BoxFit.fill,
+                                          height: 144,
+                                          width: 246,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  padVertical(5),
+                                  const Label(
+                                      txt: "Article Title",
+                                      type: TextTypes.f_13_500),
+                                ]),
+                          );
+                        }),
+                      ),
+                    ),
+                    padVertical(15),
+                  ]),
               ])))
             ]))));
   }
