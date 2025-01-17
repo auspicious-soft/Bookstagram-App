@@ -25,5 +25,14 @@ class AppAssets {
   static String categoryfil = "assets/icons/categoryfil.png";
   static String close = "assets/icons/Close.png";
   static String like = "assets/icons/likefill.png";
-    static String unlike = "assets/icons/unlike.png";
+  static String unlike = "assets/icons/unlike.png";
+  static String unliked = "assets/icons/unliked.png";
+  static String liked = "assets/icons/liked.png";
+  static String dots = "assets/icons/dots.png";
+  static String dots2 = "assets/icons/dots2.png";
+  static String category = "assets/icons/category.png";
+  static String audioebook = "assets/icons/audioebook.png";
+  static String language = "assets/icons/language.png";
+  static String reader = "assets/icons/reader.png";
+  static String applycoup = "assets/icons/applycoup.png";
 }

@@ -13,21 +13,11 @@ class CommonAuthorsheet extends StatefulWidget {
 }
 
 class _CommonAuthorsheetState extends State<CommonAuthorsheet> {
-  // List of options to be shown with checkboxes
-  // final List<String> _options = [
-  //   'Option 1',
-  //   'Option 2',
-  //   'Option 3',
-  //   'Option 4'
-  // ];
-  // Track selected options
-  // Set<String> _selectedOptions = {};
-
   @override
   Widget build(BuildContext context) {
     return Container(
       height: ScreenUtils.screenHeight(context) / 1.1,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),

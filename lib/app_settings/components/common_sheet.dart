@@ -13,16 +13,6 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class _FilterBottomSheetState extends State<FilterBottomSheet> {
-  // List of options to be shown with checkboxes
-  // final List<String> _options = [
-  //   'Option 1',
-  //   'Option 2',
-  //   'Option 3',
-  //   'Option 4'
-  // ];
-  // Track selected options
-  // Set<String> _selectedOptions = {};
-
   @override
   Widget build(BuildContext context) {
     return Container(

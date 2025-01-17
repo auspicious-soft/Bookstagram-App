@@ -1,3 +1,4 @@
+import 'package:bookstagram/Pages/PublisherDetail/pg_publisherdetail.dart';
 import 'package:bookstagram/app_settings/components/common_sheet.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
@@ -72,28 +73,37 @@ class _PgPublishersState extends State<PgPublishers> {
                   ),
                   itemCount: 6,
                   itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          child: Center(
-                            child: Image.asset(
-                              width: 85,
-                              height: 85,
-                              AppAssets.book,
-                              fit: BoxFit.contain,
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgPublisherdetail(),
                             ),
-                          ),
-                        ),
-                        padVertical(5),
-                        const Label(
-                          txt: "Құнанбайұлы",
-                          type: TextTypes.f_10_500,
-                        ),
-                      ],
-                    );
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              child: Center(
+                                child: Image.asset(
+                                  width: 85,
+                                  height: 85,
+                                  AppAssets.book,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            padVertical(5),
+                            const Label(
+                              txt: "Құнанбайұлы",
+                              type: TextTypes.f_10_500,
+                            ),
+                          ],
+                        ));
                   },
                 ),
               ),

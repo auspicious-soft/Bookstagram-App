@@ -167,6 +167,21 @@ class Label extends StatelessWidget {
         size = 16;
         decoration = TextDecoration.none;
         break;
+      case TextTypes.f_16_300:
+        weight = FontWeight.w300;
+        size = 16;
+        decoration = TextDecoration.none;
+        break;
+      case TextTypes.f_22_400:
+        weight = FontWeight.w400;
+        size = 22;
+        decoration = TextDecoration.none;
+        break;
+      case TextTypes.f_13_600:
+        weight = FontWeight.w600;
+        size = 13;
+        decoration = TextDecoration.none;
+        break;
     }
 
     return TextStyle(
@@ -206,5 +221,8 @@ enum TextTypes {
   f_11_500,
   f_12_400,
   f_13_500,
+  f_13_600,
   f_16_500,
+  f_16_300,
+  f_22_400,
 }

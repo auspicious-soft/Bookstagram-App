@@ -21,4 +21,5 @@ class AppColors {
   static const facebook = Color.fromRGBO(24, 119, 242, 1);
   static const resnd = Color.fromRGBO(112, 95, 85, 1);
   static const tickbck = Color.fromRGBO(255, 242, 234, 1);
+  static const starprogress = Color.fromRGBO(15, 194, 154, 1);
 }

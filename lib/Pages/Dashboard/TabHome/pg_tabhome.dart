@@ -1,4 +1,5 @@
 import 'package:bookstagram/Pages/BookMarket/pg_bookmarket.dart';
+import 'package:bookstagram/Pages/BookView/pg_book_view.dart';
 import 'package:bookstagram/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
@@ -8,6 +9,7 @@ import 'package:bookstagram/app_settings/constants/app_const.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class PgTabhome extends StatefulWidget {
   const PgTabhome({super.key});
@@ -18,6 +20,20 @@ class PgTabhome extends StatefulWidget {
 
 class _PgTabhomeState extends State<PgTabhome> {
   int selectedIndex = 0;
+  final List<Map<String, String>> banners = [
+    {
+      "image": AppAssets.banner,
+      "title": "Tennis",
+    },
+    {
+      "image": AppAssets.banner,
+      "title": "Badminton",
+    },
+    {
+      "image": AppAssets.banner,
+      "title": "Swimming",
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -350,9 +366,27 @@ class _PgTabhomeState extends State<PgTabhome> {
                   ],
                 ),
                 padVertical(20),
-                Image.asset(
-                  AppAssets.banner,
-                  fit: BoxFit.fill,
+                CarouselSlider.builder(
+                  itemCount: banners.length,
+                  itemBuilder: (context, index, realIndex) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: AssetImage(banners[index]["image"]!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                  options: CarouselOptions(
+                    height: 150,
+                    autoPlay: true,
+                    enlargeCenterPage: true,
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 0.8,
+                  ),
                 ),
                 padVertical(20),
                 Column(
@@ -466,43 +500,55 @@ class _PgTabhomeState extends State<PgTabhome> {
                         children: List.generate(6, (index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 12.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    height: 144,
-                                    width: 144,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
+                            child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const PgBookView(),
                                     ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Center(
-                                        child: Image.asset(
-                                          AppAssets.book,
-                                          fit: BoxFit.contain,
+                                  );
+                                },
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 144,
+                                        width: 144,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                          ),
+                                          child: Center(
+                                            child: Image.asset(
+                                              AppAssets.book,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  padVertical(5),
-                                  const Label(
-                                      txt: "Көксерек",
-                                      type: TextTypes.f_13_500),
-                                  const Label(
-                                    txt: "Мұхтар Әуезов",
-                                    type: TextTypes.f_13_400,
-                                    forceColor: AppColors.resnd,
-                                  ),
-                                  const Label(
-                                    txt: "Поэзия",
-                                    type: TextTypes.f_12_400,
-                                    forceColor: AppColors.resnd,
-                                  )
-                                ]),
+                                      padVertical(5),
+                                      const Label(
+                                          txt: "Көксерек",
+                                          type: TextTypes.f_13_500),
+                                      const Label(
+                                        txt: "Мұхтар Әуезов",
+                                        type: TextTypes.f_13_400,
+                                        forceColor: AppColors.resnd,
+                                      ),
+                                      const Label(
+                                        txt: "Поэзия",
+                                        type: TextTypes.f_12_400,
+                                        forceColor: AppColors.resnd,
+                                      )
+                                    ])),
                           );
                         }),
                       ),
@@ -557,8 +603,7 @@ class _PgTabhomeState extends State<PgTabhome> {
                                       txt: "Learn Figma from Scratch",
                                       type: TextTypes.f_13_500),
                                   SizedBox(
-                                      width:
-                                          240, // Match the width of the book container
+                                      width: 240,
                                       child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
