@@ -1,4 +1,6 @@
 import 'package:bookstagram/Pages/BookMarket/pg_bookmarket.dart';
+import 'package:bookstagram/Pages/BookStudy/pg_bookstudy.dart';
+import 'package:bookstagram/Pages/BookUniversity/pg_book_uni.dart';
 import 'package:bookstagram/Pages/BookView/pg_book_view.dart';
 import 'package:bookstagram/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
@@ -7,6 +9,7 @@ import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
+import 'package:bookstagram/app_settings/constants/helpers.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -247,54 +250,72 @@ class _PgTabhomeState extends State<PgTabhome> {
                                       .translate('Bookschool'),
                                   type: TextTypes.f_12_400)
                             ])),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 35,
-                                width: 40,
-                                AppAssets.study,
-                                fit: BoxFit.contain,
-                              ),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookstudy'),
-                                  type: TextTypes.f_12_400)
-                            ])),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookstudy(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 35,
+                                    width: 40,
+                                    AppAssets.study,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookstudy'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
                   ],
                 ),
                 padVertical(20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                        height: 75,
-                        width: 78,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 35,
-                                width: 35,
-                                AppAssets.uni,
-                                fit: BoxFit.contain,
-                              ),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookuniversity'),
-                                  type: TextTypes.f_12_400)
-                            ])),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookUni(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 78,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 35,
+                                    width: 35,
+                                    AppAssets.uni,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookuniversity'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
                     Container(
                         height: 75,
                         width: 75,
@@ -364,6 +385,91 @@ class _PgTabhomeState extends State<PgTabhome> {
                                   type: TextTypes.f_12_400)
                             ])),
                   ],
+                ),
+                padVertical(20),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColors.border,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: Center(
+                          child: Image.asset(
+                            width: 113,
+                            height: 144,
+                            AppAssets.book,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      padHorizontal(10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Label(txt: "Алашқа", type: TextTypes.f_15_500),
+                          const Label(
+                            txt: "Міржақып Дулатұлы",
+                            type: TextTypes.f_15_400,
+                            forceColor: AppColors.resnd,
+                          ),
+                          const Label(
+                            txt: "Audio",
+                            type: TextTypes.f_13_400,
+                            forceColor: AppColors.resnd,
+                          ),
+                          padVertical(5),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: ScreenUtils.screenWidth(context) / 2.5,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: const LinearProgressIndicator(
+                                    value: 0.73,
+                                    backgroundColor: AppColors.inputBorder,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primaryColor),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              const Label(
+                                txt: "73%",
+                                type: TextTypes.f_12_400,
+                              ),
+                            ],
+                          ),
+                          padVertical(2),
+                          SizedBox(
+                              width: ScreenUtils.screenWidth(context) / 3,
+                              height: 38,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.0,
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Label(
+                                  txt: "Continue",
+                                  type: TextTypes.f_13_400,
+                                  forceColor: AppColors.whiteColor,
+                                ),
+                              ))
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 padVertical(20),
                 CarouselSlider.builder(

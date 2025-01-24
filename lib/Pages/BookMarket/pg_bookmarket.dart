@@ -1,3 +1,4 @@
+import 'package:bookstagram/Pages/AudioBook/pg_audio_book.dart';
 import 'package:bookstagram/Pages/Authors/pg_authors.dart';
 import 'package:bookstagram/Pages/Category/pg_catergory.dart';
 import 'package:bookstagram/Pages/Collections/Pg_collections.dart';
@@ -358,6 +359,116 @@ class _PgBookmarketState extends State<PgBookmarket> {
                     ),
                   ),
                   padVertical(20),
+                  GestureDetector(
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const PgCoursesPage(),
+                      //   ),
+                      // );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Label(
+                            txt:
+                                '${AppLocalization.of(context).translate('continuereading')} 💌',
+                            type: TextTypes.f_20_500),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    ),
+                  ),
+                  padVertical(10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          child: Center(
+                            child: Image.asset(
+                              width: 113,
+                              height: 144,
+                              AppAssets.book,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        padHorizontal(10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Label(
+                                txt: "Алашқа", type: TextTypes.f_15_500),
+                            const Label(
+                              txt: "Міржақып Дулатұлы",
+                              type: TextTypes.f_15_400,
+                              forceColor: AppColors.resnd,
+                            ),
+                            const Label(
+                              txt: "Audio",
+                              type: TextTypes.f_13_400,
+                              forceColor: AppColors.resnd,
+                            ),
+                            padVertical(5),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: ScreenUtils.screenWidth(context) / 2.5,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: const LinearProgressIndicator(
+                                      value: 0.73,
+                                      backgroundColor: AppColors.inputBorder,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppColors.primaryColor),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Label(
+                                  txt: "73%",
+                                  type: TextTypes.f_12_400,
+                                ),
+                              ],
+                            ),
+                            padVertical(2),
+                            SizedBox(
+                                width: ScreenUtils.screenWidth(context) / 3,
+                                height: 38,
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0.0,
+                                    backgroundColor: AppColors.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Label(
+                                    txt: "Continue",
+                                    type: TextTypes.f_13_400,
+                                    forceColor: AppColors.whiteColor,
+                                  ),
+                                ))
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  padVertical(30),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -385,7 +496,7 @@ class _PgBookmarketState extends State<PgBookmarket> {
                       }),
                     ),
                   ),
-                  padVertical(20),
+                  padVertical(25),
                   GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -413,66 +524,77 @@ class _PgBookmarketState extends State<PgBookmarket> {
                   padVertical(15),
                   Column(
                     children: List.generate(3, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 12.0, top: 10),
-                        child: Row(
-                          children: [
-                            Stack(
+                      return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PgAudioBook(),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(right: 12.0, top: 10),
+                            child: Row(
                               children: [
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        AppAssets.book,
-                                        fit: BoxFit.contain,
+                                Stack(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: Center(
+                                          child: Image.asset(
+                                            AppAssets.book,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    const Positioned(
+                                      top: 40,
+                                      left: 35,
+                                      child: Icon(
+                                        Icons.play_circle_filled,
+                                        size: 28,
+                                        color: AppColors.primaryColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const Positioned(
-                                  top: 40,
-                                  left: 35,
-                                  child: Icon(
-                                    Icons.play_circle_filled,
-                                    size: 28,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
+                                padHorizontal(10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    padVertical(5),
+                                    const Label(
+                                      txt: "Көксерек",
+                                      type: TextTypes.f_13_500,
+                                    ),
+                                    const Label(
+                                      txt: "Мұхтар Әуезов",
+                                      type: TextTypes.f_13_400,
+                                      forceColor: AppColors.resnd,
+                                    ),
+                                    const Label(
+                                      txt: "Аудио",
+                                      type: TextTypes.f_12_400,
+                                      forceColor: AppColors.resnd,
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
-                            padHorizontal(10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                padVertical(5),
-                                const Label(
-                                  txt: "Көксерек",
-                                  type: TextTypes.f_13_500,
-                                ),
-                                const Label(
-                                  txt: "Мұхтар Әуезов",
-                                  type: TextTypes.f_13_400,
-                                  forceColor: AppColors.resnd,
-                                ),
-                                const Label(
-                                  txt: "Аудио",
-                                  type: TextTypes.f_12_400,
-                                  forceColor: AppColors.resnd,
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
+                          ));
                     }),
                   ),
                   padVertical(20),

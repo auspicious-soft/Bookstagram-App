@@ -1,3 +1,4 @@
+import 'package:bookstagram/Pages/Cart/pg_cartscreen.dart';
 import 'package:bookstagram/Pages/Dashboard/TabHome/Pg_tabhome.dart';
 import 'package:bookstagram/Pages/Dashboard/TabSearch/pg_tabsearch.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
@@ -19,7 +20,12 @@ class PgDashBoard extends StatefulWidget {
 
 class _StatePgDashBoard extends State<PgDashBoard> {
   int selectedTab = 0;
-  List<Widget> get tabViews => [const PgTabhome(), const PgTabsearch()];
+  List<Widget> get tabViews => [
+        const PgTabhome(),
+        const PgTabsearch(),
+        const PgTabsearch(),
+        const PgCartscreen()
+      ];
   final PageController pageController = PageController(initialPage: 0);
 
   @override
@@ -45,7 +51,12 @@ class _StatePgDashBoard extends State<PgDashBoard> {
       body: PageView(
         controller: pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [PgTabhome(), PgTabsearch()],
+        children: const [
+          PgTabhome(),
+          PgTabsearch(),
+          PgTabsearch(),
+          PgCartscreen()
+        ],
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(

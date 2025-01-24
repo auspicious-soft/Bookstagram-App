@@ -123,8 +123,8 @@ class _PgCollectionsState extends State<PgCollections> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(children: [
-                                Icon(Icons.star),
-                                Label(
+                                const Icon(Icons.star),
+                                const Label(
                                   txt: "5.0",
                                   type: TextTypes.f_11_500,
                                 ),

@@ -6,6 +6,9 @@ class AppAssets {
   static String banner = "assets/images/banner.png";
   static String book = "assets/images/book.png";
   static String bookmarkett = "assets/images/bookmarket.png";
+  static String bookstudy = "assets/images/bookstudy.png";
+  static String coursecertificate = "assets/images/certificate.png";
+  static String bookuni = "assets/images/bookuni.png";
   //Icons
   static String google = "assets/icons/google.png";
   static String home = "assets/icons/home.png";
@@ -35,4 +38,6 @@ class AppAssets {
   static String language = "assets/icons/language.png";
   static String reader = "assets/icons/reader.png";
   static String applycoup = "assets/icons/applycoup.png";
+  static String lessons = "assets/icons/lessons.png";
+  static String certificate = "assets/icons/certificate.png";
 }

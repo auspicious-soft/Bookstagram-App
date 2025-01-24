@@ -25,7 +25,31 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
               Expanded(
                   child: SingleChildScrollView(
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
-                padVertical(10),
+                padVertical(12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent, // Background color
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: List.generate(5, (index) {
+                      return Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(right: index < 4 ? 4 : 0),
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: index == 0
+                                ? AppColors.whiteColor
+                                : AppColors.inputBorder,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                padVertical(15),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
