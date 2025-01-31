@@ -9,6 +9,9 @@ class AppAssets {
   static String bookstudy = "assets/images/bookstudy.png";
   static String coursecertificate = "assets/images/certificate.png";
   static String bookuni = "assets/images/bookuni.png";
+  static String bookmaster = "assets/images/bookmaster.png";
+  static String bookroom = "assets/images/bookroom.png";
+  static String bookschool = "assets/images/bookschool.png";
   //Icons
   static String google = "assets/icons/google.png";
   static String home = "assets/icons/home.png";
@@ -40,4 +43,22 @@ class AppAssets {
   static String applycoup = "assets/icons/applycoup.png";
   static String lessons = "assets/icons/lessons.png";
   static String certificate = "assets/icons/certificate.png";
+  static String read = "assets/icons/read.png";
+  static String combook = "assets/icons/combook.png";
+  static String favaut = "assets/icons/favaut.png";
+  static String audio = "assets/icons/audio.png";
+  static String courseaudio = "assets/icons/courseaudio.png";
+  static String readbook = "assets/icons/readbook.png";
+  static String level = "assets/icons/level.png";
+  static String blance = "assets/icons/blance.png";
+  static String levels = "assets/icons/levels.png";
+  static String noti = "assets/icons/noti.png";
+  static String lang = "assets/icons/lang.png";
+  static String support = "assets/icons/support.png";
+  static String privacy = "assets/icons/privacy.png";
+  static String about = "assets/icons/about.png";
+  static String logout = "assets/icons/logout.png";
+  static String infinity = "assets/icons/infinity.png";
+  static String diamond = "assets/icons/diamond.png";
+  static String access = "assets/icons/access.png";
 }

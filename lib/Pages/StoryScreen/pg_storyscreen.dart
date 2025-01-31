@@ -77,7 +77,7 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
                       width: 1,
                     ),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Label(
                       txt: "Follow",
                       type: TextTypes.f_17_700,

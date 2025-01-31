@@ -22,4 +22,8 @@ class AppColors {
   static const resnd = Color.fromRGBO(112, 95, 85, 1);
   static const tickbck = Color.fromRGBO(255, 242, 234, 1);
   static const starprogress = Color.fromRGBO(15, 194, 154, 1);
+  static const finbtn = Color.fromRGBO(37, 147, 83, 1);
+  static const linearLightOrg = Color.fromRGBO(254, 208, 119, 1);
+  static const linearDarkOrg = Color.fromRGBO(253, 176, 71, 1);
+  static const toggleBtn = Color.fromRGBO(23, 206, 146, 1);
 }

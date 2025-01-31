@@ -1,5 +1,6 @@
 import 'package:bookstagram/Pages/Cart/pg_cartscreen.dart';
 import 'package:bookstagram/Pages/Dashboard/TabHome/Pg_tabhome.dart';
+import 'package:bookstagram/Pages/Dashboard/TabProfile/pg_tabprofile.dart';
 import 'package:bookstagram/Pages/Dashboard/TabSearch/pg_tabsearch.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
@@ -24,7 +25,8 @@ class _StatePgDashBoard extends State<PgDashBoard> {
         const PgTabhome(),
         const PgTabsearch(),
         const PgTabsearch(),
-        const PgCartscreen()
+        const PgCartscreen(),
+        const PgTabprofile()
       ];
   final PageController pageController = PageController(initialPage: 0);
 
@@ -55,7 +57,8 @@ class _StatePgDashBoard extends State<PgDashBoard> {
           PgTabhome(),
           PgTabsearch(),
           PgTabsearch(),
-          PgCartscreen()
+          PgCartscreen(),
+          PgTabprofile()
         ],
       ),
       bottomNavigationBar: ClipRRect(

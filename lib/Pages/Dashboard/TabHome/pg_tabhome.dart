@@ -1,4 +1,9 @@
+import 'package:bookstagram/Pages/BookEvents/pg_book_event.dart';
+import 'package:bookstagram/Pages/BookLife/pg_book_life.dart';
 import 'package:bookstagram/Pages/BookMarket/pg_bookmarket.dart';
+import 'package:bookstagram/Pages/BookMaster/pg_book_master.dart';
+import 'package:bookstagram/Pages/BookRooomScreens/BookRoom/pg_book_room.dart';
+import 'package:bookstagram/Pages/BookSchool/pg_Book_school.dart';
 import 'package:bookstagram/Pages/BookStudy/pg_bookstudy.dart';
 import 'package:bookstagram/Pages/BookUniversity/pg_book_uni.dart';
 import 'package:bookstagram/Pages/BookView/pg_book_view.dart';
@@ -206,50 +211,68 @@ class _PgTabhomeState extends State<PgTabhome> {
                                           .translate('Bookmarket'),
                                       type: TextTypes.f_12_400)
                                 ]))),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 25,
-                                width: 25,
-                                AppAssets.room,
-                                fit: BoxFit.contain,
-                              ),
-                              padVertical(6),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookroom'),
-                                  type: TextTypes.f_12_400)
-                            ])),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 30,
-                                width: 30,
-                                AppAssets.school,
-                                fit: BoxFit.contain,
-                              ),
-                              padVertical(5),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookschool'),
-                                  type: TextTypes.f_12_400)
-                            ])),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookRoom(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 25,
+                                    width: 25,
+                                    AppAssets.room,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  padVertical(6),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookroom'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookSchool(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 30,
+                                    width: 30,
+                                    AppAssets.school,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  padVertical(5),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookschool'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
                     GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -316,74 +339,101 @@ class _PgTabhomeState extends State<PgTabhome> {
                                           .translate('Bookuniversity'),
                                       type: TextTypes.f_12_400)
                                 ]))),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              padVertical(7),
-                              Image.asset(
-                                height: 28,
-                                width: 28,
-                                AppAssets.master,
-                                fit: BoxFit.contain,
-                              ),
-                              padVertical(4),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookmasters'),
-                                  type: TextTypes.f_12_400)
-                            ])),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                height: 30,
-                                width: 30,
-                                AppAssets.event,
-                                fit: BoxFit.contain,
-                              ),
-                              padVertical(5),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Bookrvents'),
-                                  type: TextTypes.f_12_400)
-                            ])),
-                    Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              padVertical(5),
-                              Image.asset(
-                                height: 28,
-                                width: 28,
-                                AppAssets.booklife,
-                                fit: BoxFit.contain,
-                              ),
-                              padVertical(5),
-                              Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('Booklife'),
-                                  type: TextTypes.f_12_400)
-                            ])),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookMaster(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  padVertical(7),
+                                  Image.asset(
+                                    height: 28,
+                                    width: 28,
+                                    AppAssets.master,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  padVertical(4),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookmasters'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookEvent(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    height: 30,
+                                    width: 30,
+                                    AppAssets.event,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  padVertical(5),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Bookrvents'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PgBookLife(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                            height: 75,
+                            width: 75,
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  padVertical(5),
+                                  Image.asset(
+                                    height: 28,
+                                    width: 28,
+                                    AppAssets.booklife,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  padVertical(5),
+                                  Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Booklife'),
+                                      type: TextTypes.f_12_400)
+                                ]))),
                   ],
                 ),
                 padVertical(20),
