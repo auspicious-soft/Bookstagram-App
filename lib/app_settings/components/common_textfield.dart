@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 Widget commonTxtField({
   String? hTxt,
   keyboardType,
+  controller,
+  bool isError = false,
+  Function(String)? onChanged,
 }) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -12,11 +15,13 @@ Widget commonTxtField({
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       border: Border.all(
-        color: AppColors.inputBorder,
+        color: isError ? AppColors.red : AppColors.inputBorder,
         width: 2,
       ),
     ),
     child: TextField(
+      controller: controller,
+      onChanged: onChanged,
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: hTxt,

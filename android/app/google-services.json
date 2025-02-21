@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "407757155276",
+    "project_id": "bookstagram-cd574",
+    "storage_bucket": "bookstagram-cd574.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407757155276:android:3e33eb9429ee013038cb69",
+        "android_client_info": {
+          "package_name": "com.auskz.bookstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407757155276-987bg5uvtvjmjv5a9mqo1j0u2qdo6ikm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.auskz.bookstagram",
+            "certificate_hash": "474e359c638fe3679bf73c1605cfad1b52beace8"
+          }
+        },
+        {
+          "client_id": "407757155276-10oldb62gujvdpfdk5mhcj0oqtcdcmsm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJO14qk9TGpKvpzIuElJzugCfBX_39Ngc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407757155276-10oldb62gujvdpfdk5mhcj0oqtcdcmsm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "407757155276-fv3q66tpmp83vdrvoi3pclfi9isb9ths.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.org.auskz.bookstagram"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

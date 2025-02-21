@@ -26,4 +26,7 @@ class AppColors {
   static const linearLightOrg = Color.fromRGBO(254, 208, 119, 1);
   static const linearDarkOrg = Color.fromRGBO(253, 176, 71, 1);
   static const toggleBtn = Color.fromRGBO(23, 206, 146, 1);
+  static const purple = Color.fromRGBO(123, 0, 255, 1);
+  static const grey = Color.fromRGBO(120, 131, 141, 1);
+  static const divider = Color.fromRGBO(237, 239, 246, 1);
 }

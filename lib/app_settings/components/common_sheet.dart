@@ -8,16 +8,18 @@ import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class FilterBottomSheet extends StatefulWidget {
+  const FilterBottomSheet({super.key});
+
   @override
-  _FilterBottomSheetState createState() => _FilterBottomSheetState();
+  FilterBottomSheetState createState() => FilterBottomSheetState();
 }
 
-class _FilterBottomSheetState extends State<FilterBottomSheet> {
+class FilterBottomSheetState extends State<FilterBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
       height: ScreenUtils.screenHeight(context) / 1.2,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -33,8 +35,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 const Text(
                   '  ',
                 ),
-                const Label(
-                  txt: 'Фильтр',
+                Label(
+                  txt: AppLocalization.of(context).translate('Filter'),
                   type: TextTypes.f_17_500,
                 ),
                 IconButton(
@@ -49,8 +51,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   ),
                 )
               ]),
-              const Label(
-                txt: 'По языку',
+              Label(
+                txt: AppLocalization.of(context).translate('bylanguage'),
                 forceColor: AppColors.buttongroupBorder,
                 type: TextTypes.f_13_400,
               ),
@@ -122,20 +124,20 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 )
               ]),
               padVertical(40),
-              const Label(
-                txt: 'Сортировка  ',
+              Label(
+                txt: AppLocalization.of(context).translate('sorting'),
                 forceColor: AppColors.buttongroupBorder,
                 type: TextTypes.f_13_400,
               ),
               padVertical(20),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Label(
-                    txt: 'По умолчанию',
+                    txt: AppLocalization.of(context).translate('thedefault'),
                     type: TextTypes.f_16_500,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.radio_button_checked,
                     color: AppColors.primaryColor,
                     size: 26,
@@ -143,47 +145,41 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ],
               ),
               padVertical(15),
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Label(
-                      txt: 'По алфавиту',
-                      type: TextTypes.f_16_500,
-                    ),
-                    Icon(
-                      Icons.radio_button_off_outlined,
-                      color: AppColors.primaryColor,
-                      size: 26,
-                    )
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Label(
+                  txt: AppLocalization.of(context).translate('alphabetically'),
+                  type: TextTypes.f_16_500,
+                ),
+                const Icon(
+                  Icons.radio_button_off_outlined,
+                  color: AppColors.primaryColor,
+                  size: 26,
+                )
+              ]),
               padVertical(15),
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Label(
-                      txt: 'По рейтингу',
-                      type: TextTypes.f_16_500,
-                    ),
-                    Icon(
-                      Icons.radio_button_off_outlined,
-                      color: AppColors.primaryColor,
-                      size: 26,
-                    )
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Label(
+                  txt: AppLocalization.of(context).translate('byrating'),
+                  type: TextTypes.f_16_500,
+                ),
+                const Icon(
+                  Icons.radio_button_off_outlined,
+                  color: AppColors.primaryColor,
+                  size: 26,
+                )
+              ]),
               padVertical(15),
-              const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Label(
-                      txt: 'По новизне',
-                      type: TextTypes.f_16_500,
-                    ),
-                    Icon(
-                      Icons.radio_button_off_outlined,
-                      color: AppColors.primaryColor,
-                      size: 26,
-                    )
-                  ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Label(
+                  txt: AppLocalization.of(context).translate('bynovelty'),
+                  type: TextTypes.f_16_500,
+                ),
+                const Icon(
+                  Icons.radio_button_off_outlined,
+                  color: AppColors.primaryColor,
+                  size: 26,
+                )
+              ]),
               padVertical(100),
               commonButton(
                   context: context,

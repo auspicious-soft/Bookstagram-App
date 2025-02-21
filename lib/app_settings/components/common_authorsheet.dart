@@ -8,11 +8,13 @@ import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class CommonAuthorsheet extends StatefulWidget {
+  const CommonAuthorsheet({super.key});
+
   @override
-  _CommonAuthorsheetState createState() => _CommonAuthorsheetState();
+  CommonAuthorsheetState createState() => CommonAuthorsheetState();
 }
 
-class _CommonAuthorsheetState extends State<CommonAuthorsheet> {
+class CommonAuthorsheetState extends State<CommonAuthorsheet> {
   @override
   Widget build(BuildContext context) {
     return Container(

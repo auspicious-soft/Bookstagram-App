@@ -12,6 +12,8 @@ class AppAssets {
   static String bookmaster = "assets/images/bookmaster.png";
   static String bookroom = "assets/images/bookroom.png";
   static String bookschool = "assets/images/bookschool.png";
+  static String walletback = "assets/images/walletback.png";
+  static String loader = "assets/images/loader.json";
   //Icons
   static String google = "assets/icons/google.png";
   static String home = "assets/icons/home.png";
@@ -61,4 +63,8 @@ class AppAssets {
   static String infinity = "assets/icons/infinity.png";
   static String diamond = "assets/icons/diamond.png";
   static String access = "assets/icons/access.png";
+  static String grade = "assets/icons/grade.png";
+  static String logo = "assets/icons/logo.png";
+  static String wallet = "assets/icons/wallet.png";
+  static String card = "assets/icons/card.png";
 }

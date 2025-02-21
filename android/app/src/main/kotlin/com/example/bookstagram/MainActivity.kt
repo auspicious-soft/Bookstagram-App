@@ -1,4 +1,4 @@
-package com.example.bookstagram
+package com.auskz.bookstagram
 
 import io.flutter.embedding.android.FlutterActivity
 
