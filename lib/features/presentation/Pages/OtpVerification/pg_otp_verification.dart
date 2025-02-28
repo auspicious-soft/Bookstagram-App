@@ -168,7 +168,7 @@ class PgOtpVerificationState extends ConsumerState<PgOtpVerification> {
                               type: TextTypes.f_15_500,
                               forceColor: AppColors.whiteColor,
                             ),
-                            description: Label(
+                            description: const Label(
                               txt: "Enter valid Otp !!",
                               type: TextTypes.f_13_500,
                               forceColor: AppColors.whiteColor,

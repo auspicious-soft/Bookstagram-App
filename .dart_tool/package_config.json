@@ -104,6 +104,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "facebook_auth_desktop",
+      "rootUri": "file:///Users/anilsharma/.pub-cache/hosted/pub.dev/facebook_auth_desktop-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "fake_async",
       "rootUri": "file:///Users/anilsharma/.pub-cache/hosted/pub.dev/fake_async-1.3.2",
       "packageUri": "lib/",
@@ -186,6 +192,24 @@
       "rootUri": "file:///Users/anilsharma/Documents/Flutter/sdk/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "flutter_facebook_auth",
+      "rootUri": "file:///Users/anilsharma/.pub-cache/hosted/pub.dev/flutter_facebook_auth-7.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_facebook_auth_platform_interface",
+      "rootUri": "file:///Users/anilsharma/.pub-cache/hosted/pub.dev/flutter_facebook_auth_platform_interface-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_facebook_auth_web",
+      "rootUri": "file:///Users/anilsharma/.pub-cache/hosted/pub.dev/flutter_facebook_auth_web-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_lints",
@@ -716,7 +740,7 @@
       "languageVersion": "3.4"
     }
   ],
-  "generated": "2025-02-21T12:42:51.617531Z",
+  "generated": "2025-02-28T10:25:18.286304Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/anilsharma/Documents/Flutter/sdk/flutter",

@@ -1,3 +1,6 @@
+import 'package:bookstagram/features/data/models/change_pass_model.dart';
+import 'package:bookstagram/features/data/models/forgot_email_model.dart';
+import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
@@ -21,6 +24,15 @@ abstract class RemoteRepo {
     String email,
     String otpCode,
   );
+  Future<Either<Failure, ForgotEmailModel>> forgotEmail(
+    String email,
+  );
+  Future<Either<Failure, ForgotOtpModel>> forgotOtp(
+    String otpCode,
+  );
+
+  Future<Either<Failure, ChangePassModel>> changePass(
+      String password, String otpCode);
 }
 
 abstract class Failure {

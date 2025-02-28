@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bookstagram/app_settings/components/common_textfield.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/loader.dart';
@@ -9,19 +8,22 @@ import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
 import 'package:bookstagram/app_settings/constants/common_button.dart';
-import 'package:bookstagram/app_settings/constants/helpers.dart';
 import 'package:bookstagram/app_settings/extensions/extend_string.dart';
 import 'package:bookstagram/features/data/datasources/user_storage.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/presentation/Pages/Dashboard/pg_dasboard.dart';
+import 'package:bookstagram/features/presentation/Pages/Login/Widgets/forgot_email_sheet.dart';
 import 'package:bookstagram/features/presentation/Pages/SIgnUp/pg_signup.dart';
+// import 'package:bookstagram/features/presentation/providers/auth_facebook_login.dart';
 import 'package:bookstagram/features/presentation/providers/auth_google_service.dart';
 import 'package:bookstagram/features/presentation/providers/login_provider.dart';
 import 'package:bookstagram/localization/app_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class PgLogin extends ConsumerStatefulWidget {
   const PgLogin({super.key});
@@ -35,16 +37,32 @@ class PgLoginState extends ConsumerState<PgLogin> {
   int selectedIndex = 0;
   bool passEye = true;
   final emailController = TextEditingController();
+  final restoreEmailController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
   bool isEmailError = false;
+  bool isResEmailError = false;
   bool isPassError = false;
   bool isPhoneError = false;
   String countryCode = "";
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.tokenString);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
   @override
   Widget build(BuildContext context) {
     final formState = ref.watch(loginFormNotifierProvider);
     final loginState = ref.watch(stateLoginNotifierProvider);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (loginState.hasError) {
         MotionToast.error(
@@ -64,6 +82,7 @@ class PgLoginState extends ConsumerState<PgLogin> {
         ).show(context);
       }
     });
+
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColors.background,
@@ -338,8 +357,15 @@ class PgLoginState extends ConsumerState<PgLogin> {
                         forceAlignment: TextAlign.left,
                       ),
                       padHorizontal(3),
+                      // forgotEmailformState.is
+                      //     ? const LoadingScreen()
+                      //     :
+
                       GestureDetector(
                         onTap: () {
+                          setState(() {
+                            restoreEmailController.text = "";
+                          });
                           showModalBottomSheet(
                             backgroundColor: AppColors.background,
                             context: context,
@@ -352,341 +378,7 @@ class PgLoginState extends ConsumerState<PgLogin> {
                               return StatefulBuilder(
                                 builder: (BuildContext context,
                                     StateSetter setModalState) {
-                                  return SizedBox(
-                                    height:
-                                        ScreenUtils.screenHeight(context) / 1.1,
-                                    child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: 16,
-                                          right: 16,
-                                          top: 16,
-                                          bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom,
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            padVertical(10),
-                                            Center(
-                                              child: Label(
-                                                txt: AppLocalization.of(context)
-                                                    .translate(
-                                                        'Passwordrecovery'),
-                                                type: TextTypes.f_17_500,
-                                              ),
-                                            ),
-                                            padVertical(15),
-                                            Center(
-                                                child: Label(
-                                              txt: AppLocalization.of(context)
-                                                  .translate('restoretxt'),
-                                              forceAlignment: TextAlign.center,
-                                              type: TextTypes.f_13_400,
-                                            )),
-                                            padVertical(20),
-                                            commonTxtField(
-                                              hTxt: AppLocalization.of(context)
-                                                  .translate('Email'),
-                                              keyboardType:
-                                                  TextInputType.emailAddress,
-                                            ),
-                                            padVertical(15),
-                                            padVertical(20),
-                                            commonButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                showModalBottomSheet(
-                                                  backgroundColor:
-                                                      AppColors.background,
-                                                  context: context,
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.vertical(
-                                                            top:
-                                                                Radius.circular(
-                                                                    20)),
-                                                  ),
-                                                  isScrollControlled: true,
-                                                  builder: (context) {
-                                                    bool passEye2 = true;
-
-                                                    return StatefulBuilder(
-                                                      builder: (BuildContext
-                                                              context,
-                                                          StateSetter
-                                                              setModalState) {
-                                                        return SizedBox(
-                                                          height: ScreenUtils
-                                                                  .screenHeight(
-                                                                      context) /
-                                                              1.1,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                              left: 16,
-                                                              right: 16,
-                                                              top: 16,
-                                                              bottom: MediaQuery
-                                                                      .of(context)
-                                                                  .viewInsets
-                                                                  .bottom,
-                                                            ),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                padVertical(10),
-                                                                Center(
-                                                                  child: Label(
-                                                                    txt: AppLocalization.of(
-                                                                            context)
-                                                                        .translate(
-                                                                            'newpassword'),
-                                                                    type: TextTypes
-                                                                        .f_17_500,
-                                                                  ),
-                                                                ),
-                                                                padVertical(15),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          10),
-                                                                  child: Center(
-                                                                    child:
-                                                                        Label(
-                                                                      txt: AppLocalization.of(
-                                                                              context)
-                                                                          .translate(
-                                                                              'setnewpassword'),
-                                                                      forceAlignment:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      type: TextTypes
-                                                                          .f_34_500,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                padVertical(20),
-                                                                Label(
-                                                                  txt: AppLocalization.of(
-                                                                          context)
-                                                                      .translate(
-                                                                          'newpassword'),
-                                                                  forceAlignment:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  type: TextTypes
-                                                                      .f_13_400,
-                                                                ),
-                                                                padVertical(15),
-                                                                Container(
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          15),
-                                                                  height: 50,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color: AppColors
-                                                                          .inputBorder,
-                                                                      width: 2,
-                                                                    ),
-                                                                  ),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child:
-                                                                            TextField(
-                                                                          decoration:
-                                                                              InputDecoration(
-                                                                            border:
-                                                                                InputBorder.none,
-                                                                            hintText:
-                                                                                AppLocalization.of(context).translate('Password'),
-                                                                            hintStyle:
-                                                                                const TextStyle(
-                                                                              color: AppColors.inputBorder,
-                                                                              fontFamily: AppConst.fontFamily,
-                                                                              fontSize: 15,
-                                                                              fontWeight: FontWeight.w400,
-                                                                            ),
-                                                                          ),
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            color:
-                                                                                AppColors.blackColor,
-                                                                            fontFamily:
-                                                                                AppConst.fontFamily,
-                                                                            fontSize:
-                                                                                15,
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
-                                                                          ),
-                                                                          keyboardType:
-                                                                              TextInputType.text,
-                                                                          obscureText:
-                                                                              passEye2,
-                                                                        ),
-                                                                      ),
-                                                                      GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          setModalState(
-                                                                              () {
-                                                                            passEye2 =
-                                                                                !passEye2;
-                                                                          });
-                                                                        },
-                                                                        child:
-                                                                            Icon(
-                                                                          passEye2
-                                                                              ? Icons.visibility_off_outlined
-                                                                              : Icons.visibility_outlined,
-                                                                          color:
-                                                                              AppColors.buttongroupBorder,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                padVertical(15),
-                                                                Label(
-                                                                  txt: AppLocalization.of(
-                                                                          context)
-                                                                      .translate(
-                                                                          'repeatnewpassword'),
-                                                                  forceAlignment:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  type: TextTypes
-                                                                      .f_13_400,
-                                                                ),
-                                                                padVertical(15),
-                                                                Container(
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          15),
-                                                                  height: 50,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color: AppColors
-                                                                          .inputBorder,
-                                                                      width: 2,
-                                                                    ),
-                                                                  ),
-                                                                  child: Row(
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child:
-                                                                            TextField(
-                                                                          decoration:
-                                                                              InputDecoration(
-                                                                            border:
-                                                                                InputBorder.none,
-                                                                            hintText:
-                                                                                AppLocalization.of(context).translate('Password'),
-                                                                            hintStyle:
-                                                                                const TextStyle(
-                                                                              color: AppColors.inputBorder,
-                                                                              fontFamily: AppConst.fontFamily,
-                                                                              fontSize: 15,
-                                                                              fontWeight: FontWeight.w400,
-                                                                            ),
-                                                                          ),
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            color:
-                                                                                AppColors.blackColor,
-                                                                            fontFamily:
-                                                                                AppConst.fontFamily,
-                                                                            fontSize:
-                                                                                15,
-                                                                            fontWeight:
-                                                                                FontWeight.w400,
-                                                                          ),
-                                                                          keyboardType:
-                                                                              TextInputType.text,
-                                                                          obscureText:
-                                                                              passEye2,
-                                                                        ),
-                                                                      ),
-                                                                      GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          setModalState(
-                                                                              () {
-                                                                            passEye2 =
-                                                                                !passEye2;
-                                                                          });
-                                                                        },
-                                                                        child:
-                                                                            Icon(
-                                                                          passEye2
-                                                                              ? Icons.visibility_off_outlined
-                                                                              : Icons.visibility_outlined,
-                                                                          color:
-                                                                              AppColors.buttongroupBorder,
-                                                                          size:
-                                                                              20,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                padVertical(40),
-                                                                commonButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                  context:
-                                                                      context,
-                                                                  txt: AppLocalization.of(
-                                                                          context)
-                                                                      .translate(
-                                                                          'save'),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              context: context,
-                                              txt: AppLocalization.of(context)
-                                                  .translate('restore'),
-                                            ),
-                                          ],
-                                        )),
-                                  );
+                                  return const ForgotPasswordSheet();
                                 },
                               );
                             },
@@ -839,22 +531,45 @@ class PgLoginState extends ConsumerState<PgLogin> {
                                   ),
                                 )),
                           padHorizontal(20),
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: AppColors.inputBorder,
-                                width: 2,
-                              ),
-                            ),
-                            child: const Icon(
-                              Icons.facebook,
-                              color: AppColors.facebook,
-                              size: 32,
-                            ),
-                          ),
+                          GestureDetector(
+                              onTap: () async {
+                                // signInWithFacebook();
+                                UserCredential? user =
+                                    await signInWithFacebook();
+                                if (user != null) {
+                                  ref
+                                      .read(stateLoginNotifierProvider.notifier)
+                                      .login(
+                                          email: user.user!.email.toString(),
+                                          pass: " ",
+                                          phoneNumber: "",
+                                          language: "en",
+                                          authType: "Facebook",
+                                          onSuccess: (fineData) {
+                                            goToDasboard(fineData, context);
+                                          },
+                                          context: context);
+                                  print('Login successful: ${user.user}');
+                                } else {
+                                  print('Login failed');
+                                }
+                              },
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: AppColors.inputBorder,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.facebook,
+                                  color: AppColors.facebook,
+                                  size: 32,
+                                ),
+                              )),
                         ],
                       ),
                       padVertical(25),

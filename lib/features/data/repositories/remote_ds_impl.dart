@@ -1,4 +1,7 @@
 import 'package:bookstagram/features/data/datasources/bookstagram_ds.dart';
+import 'package:bookstagram/features/data/models/change_pass_model.dart';
+import 'package:bookstagram/features/data/models/forgot_email_model.dart';
+import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
@@ -73,6 +76,53 @@ class RemoteDsImpl implements RemoteRepo {
           email: email, otpCode: otpCode);
       if (otpData != null) {
         return Right(otpData);
+      }
+      //  print("return from here");
+      return Left(SomeSpecificError("Unable to fetch"));
+    } catch (error) {
+      print("return ok from here ${error.toString()}");
+      return Left(SomeSpecificError(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ForgotEmailModel>> forgotEmail(String email) async {
+    try {
+      final forgotData = await remoteDataSource.forgotEmail(email: email);
+      if (forgotData != null) {
+        return Right(forgotData);
+      }
+      //  print("return from here");
+      return Left(SomeSpecificError("Unable to fetch"));
+    } catch (error) {
+      print("return ok from here ${error.toString()}");
+      return Left(SomeSpecificError(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ForgotOtpModel>> forgotOtp(String otpCode) async {
+    try {
+      final forgotData = await remoteDataSource.forgotOtp(otpCode: otpCode);
+      if (forgotData != null) {
+        return Right(forgotData);
+      }
+      //  print("return from here");
+      return Left(SomeSpecificError("Unable to fetch"));
+    } catch (error) {
+      print("return ok from here ${error.toString()}");
+      return Left(SomeSpecificError(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ChangePassModel>> changePass(
+      String password, String otpCode) async {
+    try {
+      final forgotData = await remoteDataSource.changePassword(
+          password: password, otpCode: otpCode);
+      if (forgotData != null) {
+        return Right(forgotData);
       }
       //  print("return from here");
       return Left(SomeSpecificError("Unable to fetch"));

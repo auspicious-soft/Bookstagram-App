@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/features/data/datasources/network_error.dart';
+import 'package:bookstagram/features/data/models/change_pass_model.dart';
+import 'package:bookstagram/features/data/models/forgot_email_model.dart';
+import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
@@ -111,8 +114,6 @@ class RemoteDs {
 
       return obj;
     } else {
-      // Map<String, dynamic> responseData = jsonDecode(response.body);
-      // print("body ${responseData["reason"]}");
       final reason = handleError(response.body);
       if (reason.isEmpty) {
         throw Exception("unable to reach now.");
@@ -143,6 +144,98 @@ class RemoteDs {
 
     if (response.statusCode == 200) {
       final obj = VerificationOtpModel.fromJson(jsonDecode(response.body));
+
+      return obj;
+    } else {
+      final reason = handleError(response.body);
+      if (reason.isEmpty) {
+        throw Exception("unable to reach now.");
+      }
+      throw Exception(reason);
+    }
+  }
+
+  Future<dynamic> forgotEmail({
+    required String email,
+  }) async {
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = json.encode({
+      "email": email,
+    });
+
+    final response = await http.post(
+      Uri.parse('$_BASE_URL${AppConfig.forgotEmail}'),
+      headers: headers,
+      body: body,
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final obj = ForgotEmailModel.fromJson(jsonDecode(response.body));
+
+      return obj;
+    } else {
+      final reason = handleError(response.body);
+      if (reason.isEmpty) {
+        throw Exception("unable to reach now.");
+      }
+      throw Exception(reason);
+    }
+  }
+
+  Future<dynamic> forgotOtp({
+    required String otpCode,
+  }) async {
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = json.encode({
+      "otp": otpCode,
+    });
+
+    final response = await http.post(
+      Uri.parse('$_BASE_URL${AppConfig.forgotOtp}'),
+      headers: headers,
+      body: body,
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final obj = ForgotOtpModel.fromJson(jsonDecode(response.body));
+
+      return obj;
+    } else {
+      final reason = handleError(response.body);
+      if (reason.isEmpty) {
+        throw Exception("unable to reach now.");
+      }
+      throw Exception(reason);
+    }
+  }
+
+  Future<dynamic> changePassword({
+    required String password,
+    required String otpCode,
+  }) async {
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    final body = json.encode({"password": password, "otp": otpCode});
+
+    final response = await http.patch(
+      Uri.parse('$_BASE_URL${AppConfig.changePass}'),
+      headers: headers,
+      body: body,
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final obj = ChangePassModel.fromJson(jsonDecode(response.body));
 
       return obj;
     } else {
