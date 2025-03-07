@@ -1,8 +1,10 @@
+import 'package:bookstagram/features/data/datasources/user_storage.dart';
 import 'package:bookstagram/features/presentation/Pages/About/pg_about_us.dart';
 import 'package:bookstagram/features/presentation/Pages/Achivements/pg_achivements.dart';
 import 'package:bookstagram/features/presentation/Pages/BalanceScreen/pg_balance_screen.dart';
 import 'package:bookstagram/features/presentation/Pages/ChooseLan/pg_choose_lan_set.dart';
 import 'package:bookstagram/features/presentation/Pages/EditProfile/pg_edit_profile.dart';
+import 'package:bookstagram/features/presentation/Pages/Login/pg_login.dart';
 import 'package:bookstagram/features/presentation/Pages/Support/pg_support.dart';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
@@ -448,29 +450,40 @@ class _PgTabprofileState extends State<PgTabprofile> {
                       ],
                     )),
                 padVertical(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(children: [
-                      Image.asset(
-                        AppAssets.logout,
-                        width: 22,
-                        height: 22,
-                        fit: BoxFit.contain,
-                      ),
-                      padHorizontal(15),
-                      Label(
-                        txt: AppLocalization.of(context).translate('logout'),
-                        type: TextTypes.f_17_500,
-                        forceColor: AppColors.red,
-                      ),
-                    ]),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 18,
-                    )
-                  ],
-                ),
+                GestureDetector(
+                    onTap: () {
+                      UserStorage().deleteToken();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PgLogin(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(children: [
+                          Image.asset(
+                            AppAssets.logout,
+                            width: 22,
+                            height: 22,
+                            fit: BoxFit.contain,
+                          ),
+                          padHorizontal(15),
+                          Label(
+                            txt:
+                                AppLocalization.of(context).translate('logout'),
+                            type: TextTypes.f_17_500,
+                            forceColor: AppColors.red,
+                          ),
+                        ]),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                        )
+                      ],
+                    )),
               ])))
             ]))));
   }

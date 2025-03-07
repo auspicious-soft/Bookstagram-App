@@ -5,6 +5,7 @@ import 'package:bookstagram/features/data/datasources/network_error.dart';
 import 'package:bookstagram/features/data/models/change_pass_model.dart';
 import 'package:bookstagram/features/data/models/forgot_email_model.dart';
 import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
+import 'package:bookstagram/features/data/models/homedata_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
@@ -39,7 +40,6 @@ class RemoteDs {
       "language": language,
       "authType": authType
     });
-
     final response = await http.post(
       Uri.parse('$_BASE_URL${AppConfig.signIn}'),
       headers: headers,
@@ -247,6 +247,66 @@ class RemoteDs {
     }
   }
 
+  Future<dynamic> getHomeData() async {
+    final token = await getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+      'role': 'admin',
+      'x-client-type': 'mobile',
+    };
+
+    final response = await http.get(
+      Uri.parse('$_BASE_URL${AppConfig.getHomeData}'),
+      headers: headers,
+    );
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final obj = HomeDataModel.fromJson(jsonDecode(response.body));
+
+      return obj;
+    } else {
+      final reason = handleError(response.body);
+      if (reason.isEmpty) {
+        throw Exception("unable to reach now.");
+      }
+      throw Exception(reason);
+    }
+  }
+
+  Future<dynamic> getProductByType() async {
+    final token = await getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+      'role': 'admin',
+      'x-client-type': 'mobile',
+    };
+
+    final response = await http.get(
+      Uri.parse('$_BASE_URL${AppConfig.getproductByType}collections'),
+      headers: headers,
+    );
+
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final obj = HomeDataModel.fromJson(jsonDecode(response.body));
+
+      return obj;
+    } else {
+      final reason = handleError(response.body);
+      if (reason.isEmpty) {
+        throw Exception("unable to reach now.");
+      }
+      throw Exception(reason);
+    }
+  }
+
   String handleError(String jsonString) {
     Map<String, dynamic> responseData = jsonDecode(jsonString);
     // print("body ${responseData["reason"]}");
@@ -260,7 +320,7 @@ class RemoteDs {
   Future<String> getToken() async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     final fullToken = await secureStorage.read(key: 'token');
-    print(fullToken);
+    // print(fullToken);
 
     return fullToken ?? "";
   }

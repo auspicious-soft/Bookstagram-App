@@ -2,6 +2,7 @@ import 'package:bookstagram/features/data/datasources/bookstagram_ds.dart';
 import 'package:bookstagram/features/data/models/change_pass_model.dart';
 import 'package:bookstagram/features/data/models/forgot_email_model.dart';
 import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
+import 'package:bookstagram/features/data/models/homedata_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
@@ -121,6 +122,21 @@ class RemoteDsImpl implements RemoteRepo {
     try {
       final forgotData = await remoteDataSource.changePassword(
           password: password, otpCode: otpCode);
+      if (forgotData != null) {
+        return Right(forgotData);
+      }
+      //  print("return from here");
+      return Left(SomeSpecificError("Unable to fetch"));
+    } catch (error) {
+      print("return ok from here ${error.toString()}");
+      return Left(SomeSpecificError(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, HomeDataModel>> getHomeData() async {
+    try {
+      final forgotData = await remoteDataSource.getHomeData();
       if (forgotData != null) {
         return Right(forgotData);
       }

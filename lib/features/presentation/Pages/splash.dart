@@ -1,5 +1,7 @@
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
+import 'package:bookstagram/features/data/datasources/user_storage.dart';
+import 'package:bookstagram/features/presentation/Pages/Dashboard/pg_dasboard.dart';
 import 'package:bookstagram/features/presentation/Pages/chooselanguage/pg_chooselan.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +16,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const PgChooselan()),
-      );
-    });
+    inIt();
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const PgChooselan()),
+    //   );
+    // });
+  }
+
+  void inIt() async {
+    // UserStorage.con.deleteToken();
+    final token = await UserStorage.con.getToken();
+
+    if (token.isEmpty) {
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PgChooselan()),
+        );
+      });
+      print("on");
+    } else {
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PgDashBoard()),
+        );
+      });
+      print("dash");
+    }
   }
 
   @override
