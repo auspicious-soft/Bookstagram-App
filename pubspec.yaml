@@ -65,7 +65,7 @@ dependencies:
   just_audio: ^0.9.46
   flick_video_player: ^0.9.0
   read_more_text: ^0.0.5
-
+  better_player_plus: ^1.0.8
 
 
 dev_dependencies:

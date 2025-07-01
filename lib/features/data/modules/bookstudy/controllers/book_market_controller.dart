@@ -221,15 +221,19 @@ class PgBookmarketController extends GetxController {
   }
 
   void navigateToAudioBook(index) {
-    Get.toNamed("/AudioPlayer", arguments: {
-      "artist": getBookTitle(
-          name: bookMarket?.value?.data?.audiobooks?[index].productId?.authorId
-              ?.first.name),
-      "image": bookMarket?.value?.data?.audiobooks?[index].productId?.image,
-      "name":
-          getBookTitle(name: bookMarket?.value?.data?.audiobooks?[index].name),
-      "id": bookMarket?.value?.data?.audiobooks?[index].sId,
-      "audio": bookMarket?.value?.data?.audiobooks?[index].file
+    // Get.toNamed("/AudioPlayer", arguments: {
+    //   "artist": getBookTitle(
+    //       name: bookMarket?.value?.data?.audiobooks?[index].productId?.authorId
+    //           ?.first.name),
+    //   "image": bookMarket?.value?.data?.audiobooks?[index].productId?.image,
+    //   "name":
+    //       getBookTitle(name: bookMarket?.value?.data?.audiobooks?[index].name),
+    //   "id": bookMarket?.value?.data?.audiobooks?[index].sId,
+    //   "audio": bookMarket?.value?.data?.audiobooks?[index].file
+    // });
+
+    Get.toNamed('/book-detail', arguments: {
+      "id": bookMarket?.value?.data?.audiobooks?[index]?.productId?.sId,
     });
   }
 

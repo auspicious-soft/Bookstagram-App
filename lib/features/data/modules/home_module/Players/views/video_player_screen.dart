@@ -1,12 +1,10 @@
-import 'package:flick_video_player/flick_video_player.dart';
+import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/videoplayer_controller.dart';
 
 class VideoPlayerScreen extends StatelessWidget {
-
-
   const VideoPlayerScreen();
 
   @override
@@ -19,9 +17,11 @@ class VideoPlayerScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
-        title: const Text('Video Player',style: TextStyle(color:Colors.white),),
-
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          'Video Player',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Center(
         child: Obx(() {
@@ -30,17 +30,12 @@ class VideoPlayerScreen extends StatelessWidget {
           }
           return AspectRatio(
             aspectRatio: 16 / 9, // Standard video aspect ratio
-            child: FlickVideoPlayer(
-
-              flickManager: controller.flickManager,
-              flickVideoWithControls: const FlickVideoWithControls(
-                controls: FlickPortraitControls(),
-              ),
+            child: BetterPlayer(
+              controller: controller.betterPlayerController,
             ),
           );
         }),
       ),
-
     );
   }
 }

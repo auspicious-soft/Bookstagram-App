@@ -731,7 +731,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
         separatorBuilder: (context, index) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => Get.to(() => const PgBookView()),
+            onTap: () => Get.toNamed("/book-detail"),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -793,7 +793,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
         itemBuilder: (context, index) {
           final book = books[index];
           return GestureDetector(
-            onTap: () => Get.to(() => const PgBookView()),
+            onTap: () => Get.toNamed("/book-detail"),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

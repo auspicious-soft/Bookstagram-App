@@ -1,6 +1,7 @@
 class AppConfig {
-  // static const String baseUrl = "https://duman-backend.onrender.com/";
-  static const String baseUrl = "https://1bd3-103-223-15-43.ngrok-free.app/";
+  static const String baseUrl = "https://duman-backend.onrender.com/";
+
+  // static const String baseUrl = "https://1bd3-103-223-15-43.ngrok-free.app/";
   static const String signIn = 'api/user-login';
   static const String signUp = 'api/user-signup';
   static const String verifySignUp = 'api/user-verify-otp';
@@ -24,7 +25,7 @@ class AppConfig {
       'https://bookstagram-bucket-1.s3.eu-north-1.amazonaws.com/';
 
   static const String getBookMarketHome = 'api/user/book-market';
-
+  static const String getBookbyIdEndPoints = 'api/user/books';
   static const String getEventHome = 'api/user/events';
   static const String getBookLives = 'api/user/book-lives';
 }

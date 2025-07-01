@@ -36,41 +36,9 @@ class PgTeacherProfile extends GetView<PgTeacherProfileController> {
                             Container(
                               decoration: BoxDecoration(
                                 color: AppColors.background.withOpacity(0.3),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: Colors.grey.withOpacity(0.2),
-                                //     spreadRadius: 1,
-                                //     blurRadius: 4,
-                                //     offset: const Offset(0, 2),
-                                //   ),
-                                // ],
                               ),
                               child: Stack(
                                 children: [
-                                  // controller.bookStudy.value?.data?.image !=
-                                  //         null
-                                  //     ? Image.network(
-                                  //         height: Get.height * 0.4,
-                                  //         width: Get.width,
-                                  //         "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.image}",
-                                  //         fit: BoxFit.fill,
-                                  //         errorBuilder:
-                                  //             (context, error, stackTrace) =>
-                                  //                 Image.asset(
-                                  //           height: Get.height * 0.4,
-                                  //           width: Get.width,
-                                  //           AppAssets.book,
-                                  //           fit: BoxFit.contain,
-                                  //         ),
-                                  //       )
-                                  //     : Image.asset(
-                                  //         height: Get.height * 0.4,
-                                  //         width: Get.width,
-                                  //         AppAssets.book,
-                                  //         fit: BoxFit.contain,
-                                  //       ),
-                                  // // White shading at the bottom
-                                  // // Image with full height
                                   Container(
                                     height: Get.height * 0.4,
                                     width: Get.width,

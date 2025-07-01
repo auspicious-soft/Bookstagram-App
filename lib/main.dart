@@ -44,6 +44,8 @@ import 'features/data/modules/auth_module/view/PrivacyPolicyScreen.dart';
 import 'features/data/modules/auth_module/view/congratulation_screen.dart';
 import 'features/data/modules/auth_module/view/signup_view.dart';
 
+import 'features/data/modules/book_detail/bindings/book_detail_binding.dart';
+import 'features/data/modules/book_detail/views/book_detail.dart';
 import 'features/data/modules/bookstudy/bindings/book_event_binding.dart';
 import 'features/data/modules/bookstudy/bindings/bookeventdetail_binding.dart';
 import 'features/data/modules/bookstudy/views/bookEventDetail.dart';
@@ -248,6 +250,11 @@ class MyApp extends StatelessWidget {
           name: '/event-detail',
           page: () => PgEventDetail(),
           binding: PgEventDetailBinding(), // Bind the controller
+        ),
+        GetPage(
+          name: '/book-detail',
+          page: () => PgBookView(),
+          binding: PgBookViewBinding(), // Bind the controller
         ),
       ],
     );
