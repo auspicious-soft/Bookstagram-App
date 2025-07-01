@@ -67,4 +67,7 @@ class AppAssets {
   static String logo = "assets/icons/logo.png";
   static String wallet = "assets/icons/wallet.png";
   static String card = "assets/icons/card.png";
+  static String noData = "assets/images/nodata.png";
+  static String Connectionlost = "assets/icons/connectionloast.png";
+
 }

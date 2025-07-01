@@ -1,0 +1,1 @@
+/Users/anilsharma/Documents/GitHub/Bookstagram-App/build/app/intermediates/cxx/RelWithDebInfo/3j415pi5/obj/arm64-v8a

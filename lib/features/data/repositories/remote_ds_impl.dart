@@ -9,6 +9,8 @@ import 'package:bookstagram/features/data/models/verification_otp_model.dart';
 import 'package:bookstagram/features/domain/repositories/remote_repo.dart';
 import 'package:dartz/dartz.dart';
 
+import '../models/otp_resend_model.dart';
+
 class RemoteDsImpl implements RemoteRepo {
   final RemoteDs remoteDataSource;
 
@@ -87,6 +89,22 @@ class RemoteDsImpl implements RemoteRepo {
   }
 
   @override
+  Future<Either<Failure, resendModal>> resendOtp(String email) async {
+    try {
+      final forgotData = await remoteDataSource.resendOtp(email: email);
+      if (forgotData != null) {
+        return Right(forgotData);
+      }
+      //  print("return from here");
+      return Left(SomeSpecificError("Unable to fetch"));
+    } catch (error) {
+      print("return ok from here ${error.toString()}");
+      return Left(SomeSpecificError(error.toString()));
+    }
+  }
+
+
+  @override
   Future<Either<Failure, ForgotEmailModel>> forgotEmail(String email) async {
     try {
       final forgotData = await remoteDataSource.forgotEmail(email: email);
@@ -147,4 +165,19 @@ class RemoteDsImpl implements RemoteRepo {
       return Left(SomeSpecificError(error.toString()));
     }
   }
+
+  // @override
+  // Future<Either<Failure, HomeDataModel>> getProducts(String type) async {
+  //   try {
+  //     final forgotData = await remoteDataSource.getProductByType(type: type);
+  //     if (forgotData != null) {
+  //       return Right(forgotData);
+  //     }
+  //     //  print("return from here");
+  //     return Left(SomeSpecificError("Unable to fetch"));
+  //   } catch (error) {
+  //     print("return ok from here ${error.toString()}");
+  //     return Left(SomeSpecificError(error.toString()));
+  //   }
+  // }
 }

@@ -6,10 +6,12 @@ import 'package:bookstagram/app_settings/constants/app_config.dart';
 
 import 'package:bookstagram/features/data/models/homedata_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PgStoryscreen extends StatefulWidget {
   final Story story;
+
   const PgStoryscreen({super.key, required this.story});
 
   @override
@@ -93,7 +95,8 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
                   Expanded(
                     child: Center(
                       child: Image.network(
-                        "${AppConfig.imgBaseUrl}${storyImages[currentIndex]}", // Show current story image
+                        "${AppConfig.imgBaseUrl}${storyImages[currentIndex]}",
+                        // Show current story image
                         height: MediaQuery.of(context).size.height / 1.3,
                         fit: BoxFit.contain,
                       ),
@@ -127,7 +130,7 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
                             forceColor: Colors.white,
                           ),
                         ),
-                      )),
+                      )).marginSymmetric(vertical: 20),
                 ],
               ),
             ),

@@ -29,7 +29,7 @@ Widget commonButton(
                   )
                 : Label(
                     txt: txt!,
-                    type: TextTypes.f_17_700,
+                    type: TextTypes.f_17_500,
                     forceColor: AppColors.whiteColor,
                   ),
           )));

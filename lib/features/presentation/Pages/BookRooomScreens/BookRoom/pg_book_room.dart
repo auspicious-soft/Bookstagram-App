@@ -33,16 +33,16 @@ class _PgBookRoomState extends State<PgBookRoom> {
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),
-                Positioned(
-                  top: MediaQuery.of(context).padding.top + 15,
-                  left: 10,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
+                // Positioned(
+                //   top: MediaQuery.of(context).padding.top + 15,
+                //   left: 10,
+                //   child: IconButton(
+                //     icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                //     onPressed: () {
+                //       Navigator.pop(context);
+                //     },
+                //   ),
+                // ),
                 Positioned(
                   top: MediaQuery.of(context).size.height / 4.1,
                   left: 0,

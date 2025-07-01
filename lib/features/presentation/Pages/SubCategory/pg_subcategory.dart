@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 
 class PgSubcategory extends StatefulWidget {
   final String label;
-  const PgSubcategory({Key? key, required this.label}) : super(key: key);
+  const PgSubcategory({super.key, required this.label});
 
   @override
   State<PgSubcategory> createState() => _PgSubcategoryState();

@@ -15,6 +15,14 @@ class FilterBottomSheet extends StatefulWidget {
 }
 
 class FilterBottomSheetState extends State<FilterBottomSheet> {
+  // State variables for checkboxes (languages)
+  bool isKazakhSelected = true;
+  bool isEnglishSelected = false;
+  bool isRussianSelected = false;
+
+  // State variable for radio buttons (sorting)
+  String selectedSortOption = 'thedefault'; // Default sorting option
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,14 +35,14 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
         ),
       ),
       child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text(
-                  '  ',
-                ),
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('  '),
                 Label(
                   txt: AppLocalization.of(context).translate('Filter'),
                   type: TextTypes.f_17_500,
@@ -49,144 +57,236 @@ class FilterBottomSheetState extends State<FilterBottomSheet> {
                     AppAssets.close,
                     fit: BoxFit.contain,
                   ),
-                )
-              ]),
-              Label(
-                txt: AppLocalization.of(context).translate('bylanguage'),
-                forceColor: AppColors.buttongroupBorder,
-                type: TextTypes.f_13_400,
-              ),
-              padVertical(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Label(
-                    txt: 'Қазақша',
-                    type: TextTypes.f_16_500,
-                  ),
-                  Container(
+                ),
+              ],
+            ),
+            Label(
+              txt: AppLocalization.of(context).translate('bylanguage'),
+              forceColor: AppColors.buttongroupBorder,
+              type: TextTypes.f_13_400,
+            ),
+            padVertical(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Label(
+                  txt: 'Қазақша',
+                  type: TextTypes.f_16_500,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isKazakhSelected = !isKazakhSelected;
+                    });
+                  },
+                  child: Container(
                     height: 25,
                     width: 25,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.all(Radius.circular(
-                        8,
-                      )),
+                    decoration: BoxDecoration(
+                      color: isKazakhSelected
+                          ? AppColors.primaryColor
+                          : AppColors.tickbck,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 2,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
-                    child: const Icon(
-                      Icons.check_outlined,
-                      size: 18,
-                      color: AppColors.whiteColor,
-                    ),
+                    child: isKazakhSelected
+                        ? const Icon(
+                            Icons.check_outlined,
+                            size: 18,
+                            color: AppColors.whiteColor,
+                          )
+                        : null,
                   ),
-                ],
-              ),
-              padVertical(15),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                ),
+              ],
+            ),
+            padVertical(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Label(
                   txt: 'English',
                   type: TextTypes.f_16_500,
                 ),
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 2,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isEnglishSelected = !isEnglishSelected;
+                    });
+                  },
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                      color: isEnglishSelected
+                          ? AppColors.primaryColor
+                          : AppColors.tickbck,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 2,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
-                    color: AppColors.tickbck,
-                    borderRadius: const BorderRadius.all(Radius.circular(
-                      8,
-                    )),
+                    child: isEnglishSelected
+                        ? const Icon(
+                            Icons.check_outlined,
+                            size: 18,
+                            color: AppColors.whiteColor,
+                          )
+                        : null,
                   ),
-                )
-              ]),
-              padVertical(15),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                ),
+              ],
+            ),
+            padVertical(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Label(
                   txt: 'Русский',
                   type: TextTypes.f_16_500,
                 ),
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.primaryColor,
-                      width: 2,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isRussianSelected = !isRussianSelected;
+                    });
+                  },
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                      color: isRussianSelected
+                          ? AppColors.primaryColor
+                          : AppColors.tickbck,
+                      border: Border.all(
+                        color: AppColors.primaryColor,
+                        width: 2,
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
-                    color: AppColors.tickbck,
-                    borderRadius: const BorderRadius.all(Radius.circular(
-                      8,
-                    )),
+                    child: isRussianSelected
+                        ? const Icon(
+                            Icons.check_outlined,
+                            size: 18,
+                            color: AppColors.whiteColor,
+                          )
+                        : null,
                   ),
-                )
-              ]),
-              padVertical(40),
-              Label(
-                txt: AppLocalization.of(context).translate('sorting'),
-                forceColor: AppColors.buttongroupBorder,
-                type: TextTypes.f_13_400,
-              ),
-              padVertical(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Label(
-                    txt: AppLocalization.of(context).translate('thedefault'),
-                    type: TextTypes.f_16_500,
-                  ),
-                  const Icon(
-                    Icons.radio_button_checked,
-                    color: AppColors.primaryColor,
-                    size: 26,
-                  )
-                ],
-              ),
-              padVertical(15),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                ),
+              ],
+            ),
+            padVertical(40),
+            Label(
+              txt: AppLocalization.of(context).translate('sorting'),
+              forceColor: AppColors.buttongroupBorder,
+              type: TextTypes.f_13_400,
+            ),
+            padVertical(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Label(
+                  txt: AppLocalization.of(context).translate('thedefault'),
+                  type: TextTypes.f_16_500,
+                ),
+                Radio<String>(
+                  value: 'thedefault',
+                  groupValue: selectedSortOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSortOption = value!;
+                    });
+                  },
+                  activeColor: AppColors.primaryColor,
+                ),
+              ],
+            ),
+            padVertical(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Label(
                   txt: AppLocalization.of(context).translate('alphabetically'),
                   type: TextTypes.f_16_500,
                 ),
-                const Icon(
-                  Icons.radio_button_off_outlined,
-                  color: AppColors.primaryColor,
-                  size: 26,
-                )
-              ]),
-              padVertical(15),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Radio<String>(
+                  value: 'alphabetically',
+                  groupValue: selectedSortOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSortOption = value!;
+                    });
+                  },
+                  activeColor: AppColors.primaryColor,
+                ),
+              ],
+            ),
+            padVertical(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Label(
                   txt: AppLocalization.of(context).translate('byrating'),
                   type: TextTypes.f_16_500,
                 ),
-                const Icon(
-                  Icons.radio_button_off_outlined,
-                  color: AppColors.primaryColor,
-                  size: 26,
-                )
-              ]),
-              padVertical(15),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Radio<String>(
+                  value: 'byrating',
+                  groupValue: selectedSortOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSortOption = value!;
+                    });
+                  },
+                  activeColor: AppColors.primaryColor,
+                ),
+              ],
+            ),
+            padVertical(15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Label(
                   txt: AppLocalization.of(context).translate('bynovelty'),
                   type: TextTypes.f_16_500,
                 ),
-                const Icon(
-                  Icons.radio_button_off_outlined,
-                  color: AppColors.primaryColor,
-                  size: 26,
-                )
-              ]),
-              padVertical(100),
-              commonButton(
-                  context: context,
-                  onPressed: () {},
-                  txt: AppLocalization.of(context).translate('Filter'))
-            ],
-          )),
+                Radio<String>(
+                  value: 'bynovelty',
+                  groupValue: selectedSortOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSortOption = value!;
+                    });
+                  },
+                  activeColor: AppColors.primaryColor,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.sizeOf(context).height * 0.05,
+            ),
+            commonButton(
+              context: context,
+              onPressed: () {
+                // Apply filter logic here
+                // Example: Pass selected languages and sort option back
+                Navigator.pop(context, {
+                  'languages': {
+                    'kazakh': isKazakhSelected,
+                    'english': isEnglishSelected,
+                    'russian': isRussianSelected,
+                  },
+                  'sort': selectedSortOption,
+                });
+              },
+              txt: AppLocalization.of(context).translate('Filter'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

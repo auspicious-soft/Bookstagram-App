@@ -1,0 +1,92 @@
+{
+	"cmake" : 
+	{
+		"generator" : 
+		{
+			"multiConfig" : false,
+			"name" : "Ninja"
+		},
+		"paths" : 
+		{
+			"cmake" : "/Users/anilsharma/Library/Android/sdk/cmake/3.18.1/bin/cmake",
+			"cpack" : "/Users/anilsharma/Library/Android/sdk/cmake/3.18.1/bin/cpack",
+			"ctest" : "/Users/anilsharma/Library/Android/sdk/cmake/3.18.1/bin/ctest",
+			"root" : "/Users/anilsharma/Library/Android/sdk/cmake/3.18.1/share/cmake-3.18"
+		},
+		"version" : 
+		{
+			"isDirty" : false,
+			"major" : 3,
+			"minor" : 18,
+			"patch" : 1,
+			"string" : "3.18.1-g262b901",
+			"suffix" : "g262b901"
+		}
+	},
+	"objects" : 
+	[
+		{
+			"jsonFile" : "codemodel-v2-c799868152e20dfe5fd8.json",
+			"kind" : "codemodel",
+			"version" : 
+			{
+				"major" : 2,
+				"minor" : 1
+			}
+		},
+		{
+			"jsonFile" : "cache-v2-1378eecc99ab92a46c11.json",
+			"kind" : "cache",
+			"version" : 
+			{
+				"major" : 2,
+				"minor" : 0
+			}
+		},
+		{
+			"jsonFile" : "cmakeFiles-v1-26c5a4a0fc5c83dade01.json",
+			"kind" : "cmakeFiles",
+			"version" : 
+			{
+				"major" : 1,
+				"minor" : 0
+			}
+		}
+	],
+	"reply" : 
+	{
+		"client-agp" : 
+		{
+			"cache-v2" : 
+			{
+				"jsonFile" : "cache-v2-1378eecc99ab92a46c11.json",
+				"kind" : "cache",
+				"version" : 
+				{
+					"major" : 2,
+					"minor" : 0
+				}
+			},
+			"cmakeFiles-v1" : 
+			{
+				"jsonFile" : "cmakeFiles-v1-26c5a4a0fc5c83dade01.json",
+				"kind" : "cmakeFiles",
+				"version" : 
+				{
+					"major" : 1,
+					"minor" : 0
+				}
+			},
+			"codemodel-v2" : 
+			{
+				"jsonFile" : "codemodel-v2-c799868152e20dfe5fd8.json",
+				"kind" : "codemodel",
+				"version" : 
+				{
+					"major" : 2,
+					"minor" : 1
+				}
+			}
+		}
+	}
+}

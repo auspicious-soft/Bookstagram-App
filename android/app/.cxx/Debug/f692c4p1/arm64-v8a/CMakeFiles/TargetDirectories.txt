@@ -1,0 +1,2 @@
+/Users/puneetkumar/Desktop/Bookstagram-App/android/app/.cxx/Debug/f692c4p1/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/puneetkumar/Desktop/Bookstagram-App/android/app/.cxx/Debug/f692c4p1/arm64-v8a/CMakeFiles/rebuild_cache.dir

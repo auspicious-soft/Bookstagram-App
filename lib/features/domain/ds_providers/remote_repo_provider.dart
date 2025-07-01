@@ -1,18 +1,18 @@
 import 'package:bookstagram/features/data/datasources/bookstagram_ds.dart';
 import 'package:bookstagram/features/data/repositories/remote_ds_impl.dart';
 import 'package:bookstagram/features/domain/repositories/remote_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
-final remoteDataSourceProvider = Provider<RemoteDs>((ref) {
-  return RemoteDs();
-});
+class RemoteBindings implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<RemoteDs>(() => RemoteDs());
+    Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(
+      remoteDataSource: Get.find<RemoteDs>(),
+    ));
+  }
+}
 
-final remoteRepositoryProvider = Provider<RemoteRepo>((ref) {
-  // final localDataSource = ref.read(remoteDataSourceProvider);
-  final remoteDataSource = ref.read(remoteDataSourceProvider);
-  return RemoteDsImpl(
-
-      // localDataSource: localDataSource,
-
-      remoteDataSource: remoteDataSource);
-});
+// Usage:
+// In your main.dart or wherever you initialize your dependencies:
+// Get.put(RemoteBindings()).dependencies();

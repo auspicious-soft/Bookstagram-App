@@ -2,27 +2,68 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/features/data/datasources/network_error.dart';
+import 'package:bookstagram/features/data/models/blog_model.dart';
 import 'package:bookstagram/features/data/models/change_pass_model.dart';
+import 'package:bookstagram/features/data/models/collection_model.dart';
 import 'package:bookstagram/features/data/models/forgot_email_model.dart';
 import 'package:bookstagram/features/data/models/forgot_otp_model.dart';
 import 'package:bookstagram/features/data/models/homedata_model.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/data/models/signup_model.dart';
+import 'package:bookstagram/features/data/models/stock_model.dart';
 import 'package:bookstagram/features/data/models/verification_otp_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-class APIResult {
-  final NetworkAPIStatus status;
-  final dynamic data;
+import '../models/otp_resend_model.dart';
+import '../modules/home_module/models/blog_collection_model.dart';
 
-  APIResult(this.status, this.data);
+/// Custom HTTP Client with Pretty Logger
+class LoggingHttpClient extends http.BaseClient {
+  final http.Client _inner = http.Client();
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    print('\x1B[33m➡️ Request: ${request.method} ${request.url}');
+    request.headers.forEach((key, value) {
+      print('  🟡 $key: $value');
+    });
+
+    if (request is http.Request && request.body.isNotEmpty) {
+      try {
+        final prettyBody = const JsonEncoder.withIndent('  ').convert(jsonDecode(request.body));
+        print('  📦 Body:\n$prettyBody');
+      } catch (e) {
+        print('  📦 Raw Body: ${request.body}');
+      }
+    }
+
+    final response = await _inner.send(request);
+    final responseBody = await response.stream.bytesToString();
+
+    print('\x1B[32m⬅️ Response: ${response.statusCode} ${request.url}');
+    try {
+      final prettyResponse = const JsonEncoder.withIndent('  ').convert(jsonDecode(responseBody));
+      print('  🟢 Response Body:\n$prettyResponse');
+    } catch (e) {
+      print('  🟢 Raw Response: $responseBody');
+    }
+
+    return http.StreamedResponse(
+      Stream.value(utf8.encode(responseBody)),
+      response.statusCode,
+      headers: response.headers,
+      request: response.request,
+      reasonPhrase: response.reasonPhrase,
+    );
+  }
 }
 
+/// Remote Data Source with API integrations
 class RemoteDs {
-  RemoteDs();
-  // ignore: non_constant_identifier_names
-  final _BASE_URL = "https://api.bookstagram.online/";
+  final _BASE_URL = AppConfig.baseUrl;
+  final _client = LoggingHttpClient();
+
   Future<dynamic> loginToBookstagram({
     required String email,
     required String pass,
@@ -30,9 +71,7 @@ class RemoteDs {
     required String language,
     required String authType,
   }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+    final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
       "email": email,
       "password": pass,
@@ -40,26 +79,17 @@ class RemoteDs {
       "language": language,
       "authType": authType
     });
-    final response = await http.post(
+
+    final response = await _client.post(
       Uri.parse('$_BASE_URL${AppConfig.signIn}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = LoginModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return LoginModel.fromJson(jsonDecode(response.body));
     } else {
-      // Map<String, dynamic> responseData = jsonDecode(response.body);
-      // print("body ${responseData["reason"]}");
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
@@ -74,51 +104,29 @@ class RemoteDs {
     required String language,
     required String authType,
   }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+    final headers = {'Content-Type': 'application/json'};
     final body = json.encode({
       "email": email,
       "countryCode": countryCode,
       "phoneNumber": phoneNumber,
-      "fullName": {
-        // "kaz":"kjbsdfdsbfs",
-        "eng": fullname
-        // "rus":"Avtarrus"
-      },
-      "firstName": {
-        // "kaz":"kjbsdfdsbfs",
-        "eng": firstname
-        // "rus":"Avtarrus"
-      },
-      "lastName": {
-        // "kaz":"kjbsdfdsbfs",
-        "eng": lastname
-        // "rus":"Avtarrus"
-      },
+      "fullName": {"eng": fullname},
+      "firstName": {"eng": firstname},
+      "lastName": {"eng": lastname},
       "password": pass,
       "language": language,
       "authType": authType,
     });
 
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse('$_BASE_URL${AppConfig.signUp}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = SignUpModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return SignUpModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
@@ -126,94 +134,70 @@ class RemoteDs {
     required String email,
     required String otpCode,
   }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final body = json.encode({
-      "email": email,
-      "otp": otpCode,
-    });
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({"email": email, "otp": otpCode});
 
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse('$_BASE_URL${AppConfig.verifySignUp}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = VerificationOtpModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return VerificationOtpModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
-  Future<dynamic> forgotEmail({
-    required String email,
-  }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final body = json.encode({
-      "email": email,
-    });
+  Future<dynamic> forgotEmail({required String email}) async {
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({"email": email});
 
-    final response = await http.post(
+    final response = await _client.post(
       Uri.parse('$_BASE_URL${AppConfig.forgotEmail}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = ForgotEmailModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return ForgotEmailModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
-  Future<dynamic> forgotOtp({
-    required String otpCode,
-  }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    final body = json.encode({
-      "otp": otpCode,
-    });
+  Future<dynamic> resendOtp({required String email}) async {
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({"email": email});
 
-    final response = await http.post(
+    final response = await _client.post(
+      Uri.parse('$_BASE_URL${AppConfig.resendOtp}'),
+      headers: headers,
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      return resendModal.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception(handleError(response.body));
+    }
+  }
+
+  Future<dynamic> forgotOtp({required String otpCode}) async {
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({"otp": otpCode});
+
+    final response = await _client.post(
       Uri.parse('$_BASE_URL${AppConfig.forgotOtp}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = ForgotOtpModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return ForgotOtpModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
@@ -221,29 +205,19 @@ class RemoteDs {
     required String password,
     required String otpCode,
   }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-    };
+    final headers = {'Content-Type': 'application/json'};
     final body = json.encode({"password": password, "otp": otpCode});
 
-    final response = await http.patch(
+    final response = await _client.patch(
       Uri.parse('$_BASE_URL${AppConfig.changePass}'),
       headers: headers,
       body: body,
     );
-    print(response.statusCode);
-    print(response.body);
 
     if (response.statusCode == 200) {
-      final obj = ChangePassModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return ChangePassModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
@@ -256,28 +230,19 @@ class RemoteDs {
       'x-client-type': 'mobile',
     };
 
-    final response = await http.get(
+    final response = await _client.get(
       Uri.parse('$_BASE_URL${AppConfig.getHomeData}'),
       headers: headers,
     );
 
-    print(response.statusCode);
-    print(response.body);
-
     if (response.statusCode == 200) {
-      final obj = HomeDataModel.fromJson(jsonDecode(response.body));
-
-      return obj;
+      return HomeDataModel.fromJson(jsonDecode(response.body));
     } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
-      }
-      throw Exception(reason);
+      throw Exception(handleError(response.body));
     }
   }
 
-  Future<dynamic> getProductByType() async {
+  Future<dynamic> getProductByType({required String type}) async {
     final token = await getToken();
     final headers = {
       'Content-Type': 'application/json',
@@ -286,42 +251,33 @@ class RemoteDs {
       'x-client-type': 'mobile',
     };
 
-    final response = await http.get(
-      Uri.parse('$_BASE_URL${AppConfig.getproductByType}collections'),
+    final response = await _client.get(
+      Uri.parse('$_BASE_URL${AppConfig.getproductByType}$type'),
       headers: headers,
     );
 
-    print(response.statusCode);
-    print(response.body);
-
     if (response.statusCode == 200) {
-      final obj = HomeDataModel.fromJson(jsonDecode(response.body));
-
-      return obj;
-    } else {
-      final reason = handleError(response.body);
-      if (reason.isEmpty) {
-        throw Exception("unable to reach now.");
+      final jsonMap = jsonDecode(response.body);
+      if (type == "stock") {
+        return StockModel.fromJson(jsonMap);
+      } else if (type == "blog") {
+        return BlogCollectionModel.fromJson(jsonMap);
+      } else {
+        return CollectionModel.fromJson(jsonMap);
       }
-      throw Exception(reason);
+    } else {
+      throw Exception(handleError(response.body));
     }
   }
 
   String handleError(String jsonString) {
-    Map<String, dynamic> responseData = jsonDecode(jsonString);
-    // print("body ${responseData["reason"]}");
-    final reason = responseData["reason"] as String;
-    if (reason.isEmpty) {
-      return "unable to reach now.";
-    }
-    return reason;
+    final Map<String, dynamic> responseData = jsonDecode(jsonString);
+    return responseData["reason"] ?? "User not Found";
   }
 
   Future<String> getToken() async {
-    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-    final fullToken = await secureStorage.read(key: 'token');
-    // print(fullToken);
-
-    return fullToken ?? "";
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'token');
+    return token ?? "";
   }
 }

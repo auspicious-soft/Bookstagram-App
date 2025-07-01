@@ -1,0 +1,2 @@
+/Users/anilsharma/Documents/GitHub/Bookstagram-App/android/app/.cxx/RelWithDebInfo/2v352d3a/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/anilsharma/Documents/GitHub/Bookstagram-App/android/app/.cxx/RelWithDebInfo/2v352d3a/x86_64/CMakeFiles/edit_cache.dir

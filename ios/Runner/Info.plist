@@ -12,6 +12,7 @@
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
@@ -47,6 +48,11 @@
 				</array>
 			</dict>
 		</array>
+		<key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <true/>
+        </dict>
 		<key>FacebookAppID</key>
 		<string>1316679196229175</string>
 		<key>FacebookDisplayName</key>
