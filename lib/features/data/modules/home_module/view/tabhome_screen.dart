@@ -27,6 +27,7 @@ import 'package:get/get.dart';
 
 import '../../../../../app_settings/constants/app_dim.dart';
 import '../../../../presentation/widgets/home_subwidget.dart';
+import '../Players/views/epub_reader.dart';
 import '../controller/dashboard_controller.dart';
 import '../controller/searchcontroller.dart';
 import '../controller/tabhome_controller.dart';
@@ -350,6 +351,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                       onPressed: () {
                         // Get.toNamed("/AudioPlayer");
                         // Get.toNamed("/VideoPlayer");
+                        Get.to(() => const EpubReaderWidget());
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0.0,

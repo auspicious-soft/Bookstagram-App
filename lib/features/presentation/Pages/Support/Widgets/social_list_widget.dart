@@ -19,8 +19,7 @@ void openUrl(String url, BuildContext context) async {
         type: TextTypes.f_13_500,
         forceColor: AppColors.whiteColor,
       ),
-         animationType: AnimationType.slideInFromBottom,
-      position: MotionToastPosition.top,
+      animationType: AnimationType.slideInFromBottom,
       dismissable: true,
     ).show(context);
   }
