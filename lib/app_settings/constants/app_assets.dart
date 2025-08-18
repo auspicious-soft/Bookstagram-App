@@ -14,6 +14,7 @@ class AppAssets {
   static String bookschool = "assets/images/bookschool.png";
   static String walletback = "assets/images/walletback.png";
   static String loader = "assets/images/loader.json";
+
   //Icons
   static String google = "assets/icons/google.png";
   static String home = "assets/icons/home.png";
@@ -69,5 +70,24 @@ class AppAssets {
   static String card = "assets/icons/card.png";
   static String noData = "assets/images/nodata.png";
   static String Connectionlost = "assets/icons/connectionloast.png";
-
+  static String success = "assets/images/success.png";
+  static String certificatemark = "assets/images/cerificate.png";
+  static String iconNoReviews = "assets/images/noReviewIcon.png";
+  static String iconCourseTick = "assets/images/courseTick.png";
+  static String Expertbadge = "assets/images/badge1.png";
+  static String Expertbadgeblank = "assets/images/badge2.png";
+  static String Derveshbadge = "assets/images/badge5.png";
+  static String Commentatorbadge = "assets/images/badge7.png";
+  static String Commentatorbadgeblank = "assets/images/badge6.png";
+  static String Muridbadge = "assets/images/badge8.png";
+  static String Geniusbadge = "assets/images/badge9.png";
+  static String Geniusbadgeblank = "assets/images/badge18.png";
+  static String Hakimbadge = "assets/images/badge10.png";
+  static String Hakimbadgeblank = "assets/images/badge12.png";
+  static String Saintbadge = "assets/images/badge11.png";
+  static String Saintbadgeblank = "assets/images/badge13.png";
+  static String Teacherbadge = "assets/images/badge14.png";
+  static String Teacherbadgeblank = "assets/images/badge17.png";
+  static String Sufibadge = "assets/images/badge16.png";
+  static String Sufibadgeblank = "assets/images/badge15.png";
 }

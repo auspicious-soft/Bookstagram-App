@@ -17,13 +17,21 @@ class RemoteDsImpl implements RemoteRepo {
   RemoteDsImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, LoginModel>> login(String email, String pass,
-      String phoneNumber, String language, String authType) async {
+  Future<Either<Failure, LoginModel>> login(
+      String email,
+      String pass,
+      String phoneNumber,
+      String language,
+      String authType,
+      String fullName,
+      String profilePic) async {
     try {
       final loginData = await remoteDataSource.loginToBookstagram(
           email: email,
           pass: pass,
           phoneNumber: phoneNumber,
+          fullName: fullName,
+          profilePic: profilePic,
           language: language,
           authType: authType);
       if (loginData != null) {
@@ -103,7 +111,6 @@ class RemoteDsImpl implements RemoteRepo {
     }
   }
 
-
   @override
   Future<Either<Failure, ForgotEmailModel>> forgotEmail(String email) async {
     try {
@@ -166,18 +173,18 @@ class RemoteDsImpl implements RemoteRepo {
     }
   }
 
-  // @override
-  // Future<Either<Failure, HomeDataModel>> getProducts(String type) async {
-  //   try {
-  //     final forgotData = await remoteDataSource.getProductByType(type: type);
-  //     if (forgotData != null) {
-  //       return Right(forgotData);
-  //     }
-  //     //  print("return from here");
-  //     return Left(SomeSpecificError("Unable to fetch"));
-  //   } catch (error) {
-  //     print("return ok from here ${error.toString()}");
-  //     return Left(SomeSpecificError(error.toString()));
-  //   }
-  // }
+// @override
+// Future<Either<Failure, HomeDataModel>> getProducts(String type) async {
+//   try {
+//     final forgotData = await remoteDataSource.getProductByType(type: type);
+//     if (forgotData != null) {
+//       return Right(forgotData);
+//     }
+//     //  print("return from here");
+//     return Left(SomeSpecificError("Unable to fetch"));
+//   } catch (error) {
+//     print("return ok from here ${error.toString()}");
+//     return Left(SomeSpecificError(error.toString()));
+//   }
+// }
 }

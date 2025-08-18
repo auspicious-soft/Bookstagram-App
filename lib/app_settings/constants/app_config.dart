@@ -1,7 +1,7 @@
 class AppConfig {
   static const String baseUrl = "https://duman-backend.onrender.com/";
 
-  // static const String baseUrl = "https://1bd3-103-223-15-43.ngrok-free.app/";
+  // static const String baseUrl = "https://6c89ce46208e.ngrok-free.app/";
   static const String signIn = 'api/user-login';
   static const String signUp = 'api/user-signup';
   static const String verifySignUp = 'api/user-verify-otp';
@@ -21,11 +21,24 @@ class AppConfig {
   static const String getAllTeachers = 'api/user/books-studies/teachers';
   static const String getTeacherById = 'api/user/authors';
   static const String getCategoryById = 'api/user/categories';
+  static const String getCourseById = 'api/user/course';
+  static const String getCourseLessons = 'api/user/course-lessons';
   static const String imgBaseUrl =
       'https://bookstagram-bucket-1.s3.eu-north-1.amazonaws.com/';
 
   static const String getBookMarketHome = 'api/user/book-market';
   static const String getBookbyIdEndPoints = 'api/user/books';
+  static const String postOrdersEndPoints = 'api/user/order';
   static const String getEventHome = 'api/user/events';
   static const String getBookLives = 'api/user/book-lives';
+  static const String CompeteLesson = 'api/user/read-progress';
+  static const String AddToCartEndPoints = 'api/user/cart';
+  static const String ReviewsEndPoints = 'api/user/books/rating';
+  static const String GernateCertificate = 'api/user/generate-certificate';
+  static const String GetCertificate = 'api/user/certificate';
+  static const String postLikeEndPoint = 'api/user/favourites';
+  static const String SettingProfileEndPoint = 'api/user/user-details';
+  static const String MediaUploadEndPoint = 'api/user/upload-image';
+  static const String editProfileEndPoint = 'api/user/user-details';
+  static const String getAchievementsEndPoint = 'api/user/get-badge';
 }

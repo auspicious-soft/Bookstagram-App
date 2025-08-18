@@ -149,7 +149,7 @@ class HomeDataController extends GetxController {
           blogcollectiondata.value =
               data; // Make sure this matches the expected type
           blogcollectiondata.refresh();
-          print(blogcollectiondata.value?.data?.data?.blog?.blogs?.length);
+          print(blogcollectiondata.value?.data?.data?.blogs?.length);
         }
       }
     } catch (e) {

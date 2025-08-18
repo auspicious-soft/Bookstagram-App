@@ -15,17 +15,13 @@ class SplashView extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.whiteColor,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.asset(
-                  "assets/images/Splash.png",
-                  height: MediaQuery.of(context).size.height,
-                ),
+          body: Expanded(
+            child: Center(
+              child: Image.asset(
+                "assets/images/Splash.png",
+                height: MediaQuery.of(context).size.height,
               ),
-            ],
+            ),
           ),
         );
       },

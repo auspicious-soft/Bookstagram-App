@@ -10,8 +10,15 @@ import 'package:dartz/dartz.dart';
 import '../../data/models/otp_resend_model.dart';
 
 abstract class RemoteRepo {
-  Future<Either<Failure, LoginModel>> login(String email, String pass,
-      String phoneNumber, String language, String authType);
+  Future<Either<Failure, LoginModel>> login(
+      String email,
+      String pass,
+      String phoneNumber,
+      String language,
+      String authType,
+      String fullName,
+      String profilePic);
+
   // Future<Either<Failure, SignUpModel>> signUp(
   //   String email,
   //   String countryCode,
@@ -27,12 +34,14 @@ abstract class RemoteRepo {
     String email,
     String otpCode,
   );
+
   Future<Either<Failure, ForgotEmailModel>> forgotEmail(
     String email,
   );
 
   Future<Either<Failure, resendModal>> resendOtp(
-      String email,);
+    String email,
+  );
 
   Future<Either<Failure, ForgotOtpModel>> forgotOtp(
     String otpCode,
@@ -42,15 +51,14 @@ abstract class RemoteRepo {
       String password, String otpCode);
 
   Future<Either<Failure, HomeDataModel>> getHomeData();
-
 }
 
 abstract class Failure {
   final String message;
+
   Failure(this.message);
 }
 
 class SomeSpecificError extends Failure {
   SomeSpecificError(super.message);
 }
-

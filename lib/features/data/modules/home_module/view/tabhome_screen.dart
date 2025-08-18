@@ -15,6 +15,8 @@ import 'package:bookstagram/features/presentation/Pages/BookRooomScreens/BookRoo
 import 'package:bookstagram/features/presentation/Pages/BookSchool/pg_Book_school.dart';
 
 import 'package:bookstagram/features/presentation/Pages/BookView/pg_book_view.dart';
+import 'package:bookstagram/features/presentation/Pages/CourseDetail/pg_coursedetail.dart';
+import 'package:bookstagram/features/presentation/Pages/CoursesPage/pg_courses_page.dart';
 import 'package:bookstagram/features/presentation/Pages/Notification/pg_notification.dart';
 import 'package:bookstagram/features/presentation/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/localization/app_localization.dart';
@@ -347,7 +349,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                     return ElevatedButton(
                       onPressed: () {
                         // Get.toNamed("/AudioPlayer");
-                        Get.toNamed("/VideoPlayer");
+                        // Get.toNamed("/VideoPlayer");
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0.0,
@@ -666,11 +668,11 @@ class TabhomeScreen extends GetView<HomeDataController> {
         _buildSectionHeader(context, 'Blogs'),
         padVertical(15),
         _buildArticlesRow(
-            controller.blogcollectiondata.value?.data?.data?.blog?.blogs),
-        _buildSectionHeader(context, 'News'),
-        padVertical(15),
-        _buildArticlesRow(
-            controller.blogcollectiondata.value?.data?.data?.news?.blogs),
+            controller.blogcollectiondata.value?.data?.data?.blogs),
+        // _buildSectionHeader(context, 'News'),
+        // padVertical(15),
+        // _buildArticlesRow(
+        //     controller.blogcollectiondata.value?.data?.data?.blogs),
         padVertical(15),
       ],
     );
@@ -793,7 +795,11 @@ class TabhomeScreen extends GetView<HomeDataController> {
         itemBuilder: (context, index) {
           final book = books[index];
           return GestureDetector(
-            onTap: () => Get.toNamed("/book-detail"),
+            onTap: () {
+              Get.toNamed('/book-detail', arguments: {
+                "id": book?.sId,
+              });
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -868,117 +874,120 @@ class TabhomeScreen extends GetView<HomeDataController> {
 
           return Padding(
             padding: const EdgeInsets.only(right: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Course image container
-                Container(
-                  height: 144,
-                  width: 246,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
+            child: GestureDetector(
+              onTap: () {
+                Get.toNamed('/Course-detail',
+                    arguments: {"id": courses[index].sId});
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Course image container
+                  Container(
+                    height: 144,
+                    width: 246,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: course.image != null
-                          ? Image.network(
-                              "${AppConfig.imgBaseUrl}${courses[index].image}")
-                          : Image.asset(AppAssets.book, fit: BoxFit.contain),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: course.image != null
+                            ? Image.network(
+                                "${AppConfig.imgBaseUrl}${courses[index].image}",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(AppAssets.book, fit: BoxFit.cover),
+                      ),
                     ),
                   ),
-                ),
-                // Vertical padding
-                padVertical(5),
-                // Course title
-                Label(
-                  txt: controller.getBookTitle(
-                      language: controller.language.value, name: course.name),
-                  type: TextTypes.f_13_500,
-                ),
-                // Course info section
-                SizedBox(
-                  width: 240,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 16,
-                            color: AppColors.primaryColor,
-                          ),
-                          Label(
-                              txt: course.averageRating.toString(),
-                              type: TextTypes.f_11_500),
-                          padHorizontal(8),
-                          // Divider line
-                          Container(
-                            height: 12,
-                            width: 1,
-                            decoration: BoxDecoration(
-                              color: AppColors.buttongroupBorder,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          padHorizontal(8),
-                          SizedBox(
-                            width: 120,
-                            child: Label(
-                              txt: controller.getBookTitle(
-                                  language: controller.language.value,
-                                  name: course.authorId![0].name),
-                              type: TextTypes.f_13_400,
-                              forceColor: AppColors.resnd,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          course.isDiscounted == true
-                              ? Text(
-                                  course.price.toString(),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: AppConst.fontFamily,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationThickness: 2,
-                                    decorationColor: AppColors.blackColor,
-                                    color: AppColors.blackColor,
-                                  ),
-                                )
-                              : SizedBox(),
-                          SizedBox(width: 10),
-                          Text(
-                            course.isDiscounted == true
-                                ? (course.price ??
-                                        0 *
-                                            (1 -
-                                                (course.discountPercentage ??
-                                                    0 / 100)))
-                                    .toStringAsFixed(2)
-                                : (course.price ?? 0).toStringAsFixed(2),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: AppConst.fontFamily,
-                              decorationColor: AppColors.blackColor,
+                  // Vertical padding
+                  padVertical(5),
+                  // Course title
+                  Label(
+                    txt: controller.getBookTitle(
+                        language: controller.language.value, name: course.name),
+                    type: TextTypes.f_13_500,
+                  ),
+                  // Course info section
+                  SizedBox(
+                    width: 240,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              size: 16,
                               color: AppColors.primaryColor,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Label(
+                                txt: course.averageRating.toString(),
+                                type: TextTypes.f_11_500),
+                            padHorizontal(8),
+                            // Divider line
+                            Container(
+                              height: 12,
+                              width: 1,
+                              decoration: BoxDecoration(
+                                color: AppColors.buttongroupBorder,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            padHorizontal(8),
+                            SizedBox(
+                              width: 120,
+                              child: Label(
+                                txt: controller.getBookTitle(
+                                    language: controller.language.value,
+                                    name: course.authorId![0].name),
+                                type: TextTypes.f_13_400,
+                                forceColor: AppColors.resnd,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            course.isDiscounted == true
+                                ? Text(
+                                    course.price.toString(),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: AppConst.fontFamily,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: AppColors.blackColor,
+                                      color: AppColors.blackColor,
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(width: 10),
+                            course.isDiscounted == true
+                                ? Text(
+                                    "${(((course?.price ?? 0) - ((course?.price ?? 0) * ((course?.discountPercentage ?? 0)) / 100)).toStringAsFixed(0))}",
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: AppConst.fontFamily,
+                                      decorationColor: AppColors.blackColor,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  )
+                                : SizedBox(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../../../../../app_settings/constants/app_colors.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -26,6 +29,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: AppColors.background, // Set status bar color
+        statusBarIconBrightness:
+            Brightness.dark, // Ensure icons are visible on white
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: WebViewWidget(controller: _controller),

@@ -1,4 +1,5 @@
 import '../../bookstudy/models/book_market_response_Model.dart';
+import '../../bookstudy/models/categoryGetBy_id_model.dart' show File;
 
 class BookDetailResponseModel {
   bool? success;
@@ -67,19 +68,19 @@ class BookData {
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
-  String? file;
+  File? file;
   String? type;
   PublisherId? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
-  int? readers;
+  num? iV;
+  num? readers;
   List<Chapters>? chapters;
   String? language;
 
@@ -133,7 +134,7 @@ class BookData {
     price = json['price'];
     genre = json['genre'].cast<String>();
     image = json['image'];
-    file = json['file'];
+    file = json['file'] != null ? new File.fromJson(json['file']) : null;
     type = json['type'];
     publisherId = json['publisherId'] != null
         ? new PublisherId.fromJson(json['publisherId'])
@@ -176,7 +177,9 @@ class BookData {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    data['file'] = this.file;
+    if (this.file != null) {
+      data['file'] = this.file!.toJson();
+    }
     data['type'] = this.type;
     if (this.publisherId != null) {
       data['publisherId'] = this.publisherId!.toJson();
@@ -201,9 +204,9 @@ class Chapters {
   String? lang;
   String? name;
   String? productId;
-  int? srNo;
+  num? srNo;
   String? file;
-  int? iV;
+  num? iV;
   String? createdAt;
   String? updatedAt;
   bool? isRead;
@@ -256,18 +259,18 @@ class RelatedBooks {
   List<AuthorId>? authorId;
   List<String>? categoryId;
   List<String>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
   String? type;
   String? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   RelatedBooks(
       {this.sId,

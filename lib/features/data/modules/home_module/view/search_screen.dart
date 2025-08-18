@@ -55,7 +55,8 @@ class PgTabsearch extends GetView<TabSearchController> {
                         onChanged: (val) => controller.onSearchChanged(val),
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: AppLocalization.of(context).translate('search'),
+                          hintText:
+                              AppLocalization.of(context).translate('search'),
                           hintStyle: const TextStyle(
                             color: AppColors.inputBorder,
                             fontFamily: AppConst.fontFamily,
@@ -85,53 +86,56 @@ class PgTabsearch extends GetView<TabSearchController> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Obx(() => SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(4, (index) {
-                            final tabTitles = [
-                              'Books',
-                              'Audiobooks',
-                              'Authors',
-                              'Courses'
-                            ];
-                            return GestureDetector(
-                              onTap: () => controller.selectedIndex.value = index,
-                              child: Container(
-                                width: tabWidth,
-                                padding: const EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  AppLocalization.of(context).translate(tabTitles[index]),
-                                  style: TextStyle(
-                                    fontFamily: AppConst.fontFamily,
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w500,
-                                    color: controller.selectedIndex.value == index
-                                        ? AppColors.primaryColor
-                                        : AppColors.blackColor,
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(4, (index) {
+                                final tabTitles = [
+                                  'Books',
+                                  'Audiobooks',
+                                  'Authors',
+                                  'Courses'
+                                ];
+                                return GestureDetector(
+                                  onTap: () =>
+                                      controller.selectedIndex.value = index,
+                                  child: Container(
+                                    width: tabWidth,
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      AppLocalization.of(context)
+                                          .translate(tabTitles[index]),
+                                      style: TextStyle(
+                                        fontFamily: AppConst.fontFamily,
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        color: controller.selectedIndex.value ==
+                                                index
+                                            ? AppColors.primaryColor
+                                            : AppColors.blackColor,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      )),
+                                );
+                              }),
+                            ),
+                          )),
                       Obx(() => Stack(
-                        children: [
-                          Container(
-                            width: screenWidth,
-                            height: 2,
-                            color: Colors.grey.shade300,
-                          ),
-                          AnimatedPositioned(
-                            duration: const Duration(milliseconds: 300),
-                            left: controller.selectedIndex.value * tabWidth,
-                            width: tabWidth,
-                            height: 2,
-                            child: Container(color: AppColors.primaryColor),
-                          ),
-                        ],
-                      )),
+                            children: [
+                              Container(
+                                width: screenWidth,
+                                height: 2,
+                                color: Colors.grey.shade300,
+                              ),
+                              AnimatedPositioned(
+                                duration: const Duration(milliseconds: 300),
+                                left: controller.selectedIndex.value * tabWidth,
+                                width: tabWidth,
+                                height: 2,
+                                child: Container(color: AppColors.primaryColor),
+                              ),
+                            ],
+                          )),
                     ],
                   );
                 },
@@ -156,7 +160,8 @@ class PgTabsearch extends GetView<TabSearchController> {
                       case 3: // Courses
                         return _buildStockTab(context);
                       default:
-                        return const Center(child: Text("Invalid tab selected"));
+                        return const Center(
+                            child: Text("Invalid tab selected"));
                     }
                   }),
                 ),
@@ -192,7 +197,8 @@ class PgTabsearch extends GetView<TabSearchController> {
       );
     }
 
-    return controller.selectedIndex.value == 0 || controller.selectedIndex.value == 1
+    return controller.selectedIndex.value == 0 ||
+            controller.selectedIndex.value == 1
         ? _buildBooksGrid(books)
         : _buildCoursesRow(books);
   }
@@ -259,11 +265,12 @@ class PgTabsearch extends GetView<TabSearchController> {
                   child: ClipOval(
                     child: authors[index].image != null
                         ? Image.network(
-                      "${AppConfig.imgBaseUrl}${authors[index].image}",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(AppAssets.book, fit: BoxFit.contain),
-                    )
+                            "${AppConfig.imgBaseUrl}${authors[index].image}",
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(AppAssets.book,
+                                    fit: BoxFit.contain),
+                          )
                         : Image.asset(AppAssets.book, fit: BoxFit.contain),
                   ),
                 ),
@@ -271,10 +278,7 @@ class PgTabsearch extends GetView<TabSearchController> {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Label(
-                  txt: controller.getBookTitle(
-                      name:authors[index].name
-                  ),
-
+                  txt: controller.getBookTitle(name: authors[index].name),
                   type: TextTypes.f_13_500,
                 ),
               ),
@@ -297,111 +301,115 @@ class PgTabsearch extends GetView<TabSearchController> {
         physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final course = courses[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 160,
-                width: Get.width,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Container(
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed('/Course-detail',
+                  arguments: {"id": courses[index].sId});
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 160,
+                  width: Get.width,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: course.image != null
-                        ? Image.network(
-                      "${AppConfig.imgBaseUrl}${course.image}",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(AppAssets.book, fit: BoxFit.contain),
-                    )
-                        : Image.asset(AppAssets.book, fit: BoxFit.contain),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: course.image != null
+                          ? Image.network(
+                              "${AppConfig.imgBaseUrl}${course.image}",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.asset(AppAssets.book,
+                                      fit: BoxFit.contain),
+                            )
+                          : Image.asset(AppAssets.book, fit: BoxFit.contain),
+                    ),
                   ),
                 ),
-              ),
-              padVertical(5),
-              Label(
-                txt: controller.getBookTitle(
-                    name:course.name
+                padVertical(5),
+                Label(
+                  txt: controller.getBookTitle(name: course.name),
+                  maxWidth: 144,
+                  type: TextTypes.f_13_500,
                 ),
-
-                maxWidth: 144,
-                type: TextTypes.f_13_500,
-              ),
-              SizedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          size: 16,
-                          color: AppColors.primaryColor,
-                        ),
-                        Label(
-                          txt: course.averageRating.toString(),
-                          type: TextTypes.f_11_500,
-                        ),
-                        padHorizontal(4),
-                        Container(
-                          height: 12,
-                          width: 1,
-                          decoration: BoxDecoration(
-                            color: AppColors.buttongroupBorder,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        padHorizontal(5),
-                        Label(
-                          txt: controller.getBookTitle(
-                              name:course.authors![0].name
-                          ),
-                          type: TextTypes.f_13_400,
-                          forceColor: AppColors.resnd,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        if (course.isDiscounted == true)
-                          Text(
-                            course.price.toString(),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: AppConst.fontFamily,
-                              decoration: TextDecoration.lineThrough,
-                              decorationThickness: 2,
-                              decorationColor: AppColors.blackColor,
-                              color: AppColors.blackColor,
-                            ),
-                          ),
-                        const SizedBox(width: 10),
-                        Text(
-                          course.isDiscounted == true
-                              ? (course.price * (1 - (course.discountPercentage / 100)))
-                              .toStringAsFixed(2)
-                              : course.price.toStringAsFixed(2),
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: AppConst.fontFamily,
+                SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star,
+                            size: 16,
                             color: AppColors.primaryColor,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Label(
+                            txt: course.averageRating.toString(),
+                            type: TextTypes.f_11_500,
+                          ),
+                          padHorizontal(4),
+                          Container(
+                            height: 12,
+                            width: 1,
+                            decoration: BoxDecoration(
+                              color: AppColors.buttongroupBorder,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          padHorizontal(5),
+                          Label(
+                            txt: controller.getBookTitle(
+                                name: course.authors![0].name),
+                            type: TextTypes.f_13_400,
+                            forceColor: AppColors.resnd,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          if (course.isDiscounted == true)
+                            Text(
+                              course.price.toString(),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: AppConst.fontFamily,
+                                decoration: TextDecoration.lineThrough,
+                                decorationThickness: 2,
+                                decorationColor: AppColors.blackColor,
+                                color: AppColors.blackColor,
+                              ),
+                            ),
+                          const SizedBox(width: 10),
+                          Text(
+                            course.isDiscounted == true
+                                ? (course.price *
+                                        (1 - (course.discountPercentage / 100)))
+                                    .toStringAsFixed(2)
+                                : course.price.toStringAsFixed(2),
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: AppConst.fontFamily,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ).marginSymmetric(vertical: 20);
+              ],
+            ).marginSymmetric(vertical: 20),
+          );
         },
       ),
     );
@@ -434,11 +442,12 @@ class PgTabsearch extends GetView<TabSearchController> {
                         borderRadius: BorderRadius.circular(16),
                         child: book.image != null
                             ? Image.network(
-                          "${AppConfig.imgBaseUrl}${book.image}",
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Image.asset(AppAssets.book, fit: BoxFit.contain),
-                        )
+                                "${AppConfig.imgBaseUrl}${book.image}",
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppAssets.book,
+                                        fit: BoxFit.contain),
+                              )
                             : Image.asset(AppAssets.book, fit: BoxFit.contain),
                       ),
                     ),
@@ -446,30 +455,22 @@ class PgTabsearch extends GetView<TabSearchController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Label(
-                          txt: controller.getBookTitle(
-                              name: book.name
-                          ),
-
+                          txt: controller.getBookTitle(name: book.name),
                           maxWidth: 140,
                           type: TextTypes.f_13_500,
                         ),
                         SizedBox(
                           width: 144,
                           child: Label(
-
                             txt: controller.getBookTitle(
-                                name: book.authors![0].name
-                            ),
-
+                                name: book.authors![0].name),
                             type: TextTypes.f_13_400,
                             forceColor: AppColors.resnd,
                           ),
                         ),
                         Label(
-
                           txt: controller.getBookTitle(
-                              name: book.categoryId![0].name
-                          ),
+                              name: book.categoryId![0].name),
                           maxWidth: 144,
                           type: TextTypes.f_12_400,
                           forceColor: AppColors.resnd,
@@ -506,10 +507,8 @@ class PgTabsearch extends GetView<TabSearchController> {
                         ),
                         padHorizontal(8),
                         Label(
-
                           txt: controller.getBookTitle(
-                              name: book.publisherId.name
-                          ),
+                              name: book.publisherId.name),
                           type: TextTypes.f_13_400,
                           forceColor: AppColors.resnd,
                         ),

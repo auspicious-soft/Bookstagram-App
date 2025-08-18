@@ -271,18 +271,18 @@ class ProductId {
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
-  Null? file;
+  File? file;
   String? type;
   AuthorId? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   ProductId(
       {this.sId,
@@ -331,7 +331,7 @@ class ProductId {
     price = json['price'];
     genre = json['genre'].cast<String>();
     image = json['image'];
-    file = json['file'];
+    file = json['file'] != null ? new File.fromJson(json['file']) : null;
     type = json['type'];
     publisherId = json['publisherId'] != null
         ? new AuthorId.fromJson(json['publisherId'])
@@ -366,7 +366,9 @@ class ProductId {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    data['file'] = this.file;
+    if (this.file != null) {
+      data['file'] = this.file!.toJson();
+    }
     data['type'] = this.type;
     if (this.publisherId != null) {
       data['publisherId'] = this.publisherId!.toJson();
@@ -387,7 +389,7 @@ class CategoryId {
   Name? name;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   CategoryId(
       {this.sId,
@@ -427,7 +429,7 @@ class SubCategoryId {
   String? categoryId;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   SubCategoryId(
       {this.sId,
@@ -475,7 +477,7 @@ class PublisherId {
   String? image;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   PublisherId(
       {this.sId,
@@ -553,11 +555,11 @@ class Description {
 }
 
 class Collections {
-  int? page;
-  int? limit;
+  num? page;
+  num? limit;
   bool? success;
   String? message;
-  int? total;
+  num? total;
   CollectionsData? data;
 
   Collections(
@@ -646,7 +648,7 @@ class BooksId {
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
@@ -657,7 +659,7 @@ class BooksId {
   num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   BooksId(
       {this.sId,
@@ -793,7 +795,7 @@ class Author {
   Name? description;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   Author(
       {this.sId,
@@ -852,18 +854,18 @@ class NewBooks {
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
   List<String>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
   String? type;
   String? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
 
   NewBooks(
       {this.sId,
@@ -953,7 +955,7 @@ class NewBooks {
 }
 
 class BestSellers {
-  int? orderCount;
+  num? orderCount;
   Book? book;
 
   BestSellers({this.orderCount, this.book});
@@ -980,18 +982,18 @@ class Book {
   List<String>? authorId;
   List<String>? categoryId;
   List<String>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
-  Null? file;
+  File? file;
   String? type;
   String? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
   Author? authors;
 
   Book(
@@ -1027,7 +1029,7 @@ class Book {
     price = json['price'];
     genre = json['genre'].cast<String>();
     image = json['image'];
-    file = json['file'];
+    file = json['file'] != null ? new File.fromJson(json['file']) : null;
     type = json['type'];
     publisherId = json['publisherId'];
     isDiscounted = json['isDiscounted'];
@@ -1055,7 +1057,9 @@ class Book {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    data['file'] = this.file;
+    if (this.file != null) {
+      data['file'] = this.file!.toJson();
+    }
     data['type'] = this.type;
     data['publisherId'] = this.publisherId;
     data['isDiscounted'] = this.isDiscounted;

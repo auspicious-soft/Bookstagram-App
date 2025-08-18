@@ -31,7 +31,8 @@ class LoggingHttpClient extends http.BaseClient {
 
     if (request is http.Request && request.body.isNotEmpty) {
       try {
-        final prettyBody = const JsonEncoder.withIndent('  ').convert(jsonDecode(request.body));
+        final prettyBody = const JsonEncoder.withIndent('  ')
+            .convert(jsonDecode(request.body));
         print('  📦 Body:\n$prettyBody');
       } catch (e) {
         print('  📦 Raw Body: ${request.body}');
@@ -43,7 +44,8 @@ class LoggingHttpClient extends http.BaseClient {
 
     print('\x1B[32m⬅️ Response: ${response.statusCode} ${request.url}');
     try {
-      final prettyResponse = const JsonEncoder.withIndent('  ').convert(jsonDecode(responseBody));
+      final prettyResponse =
+          const JsonEncoder.withIndent('  ').convert(jsonDecode(responseBody));
       print('  🟢 Response Body:\n$prettyResponse');
     } catch (e) {
       print('  🟢 Raw Response: $responseBody');
@@ -69,6 +71,8 @@ class RemoteDs {
     required String pass,
     required String phoneNumber,
     required String language,
+    required String fullName,
+    required String profilePic,
     required String authType,
   }) async {
     final headers = {'Content-Type': 'application/json'};
@@ -76,6 +80,8 @@ class RemoteDs {
       "email": email,
       "password": pass,
       "phoneNumber": phoneNumber,
+      "fullName": {"eng": fullName},
+      "profilePic": profilePic,
       "language": language,
       "authType": authType
     });

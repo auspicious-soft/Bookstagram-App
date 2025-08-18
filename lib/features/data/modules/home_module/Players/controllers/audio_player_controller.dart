@@ -13,7 +13,7 @@ class AudioController extends GetxController {
   String AudioName = '';
   String Artist = '';
   var Image = ''.obs;
-
+  RxBool isLoading = true.obs;
   final List<double> availableSpeeds = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
   static const int maxRetries = 3;
   static const Duration retryDelay = Duration(seconds: 2);
@@ -64,9 +64,11 @@ class AudioController extends GetxController {
 
   Future<void> setAudioSource({int retryCount = 0}) async {
     try {
+      isLoading.value = true;
       if (audioUrl.isEmpty) {
         Get.snackbar('Error', 'Audio URL is empty');
         print('Error: Audio URL is empty');
+        isLoading.value = false;
         return;
       }
 
@@ -76,14 +78,18 @@ class AudioController extends GetxController {
       await _audioPlayer.setSpeed(playbackSpeed.value);
       await _audioPlayer.pause(); // Ensure paused state
       print('Audio source set successfully: $audioUrl');
+      isLoading.value = false;
     } catch (e) {
+      isLoading.value = false;
       print('Error setting audio source: $e');
       if (retryCount < maxRetries &&
           e.toString().contains('Connection aborted')) {
         print('Retrying after delay...');
         await Future.delayed(retryDelay);
         await setAudioSource(retryCount: retryCount + 1);
+        isLoading.value = false;
       } else {
+        isLoading.value = false;
         Get.snackbar('Error', 'Failed to load audio: $e');
       }
     }

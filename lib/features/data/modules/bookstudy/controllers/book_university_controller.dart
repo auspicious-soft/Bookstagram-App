@@ -138,7 +138,7 @@ class BookUniversityController extends GetxController {
   }
 
   void navigateToCourseDetail() {
-    Get.to(() => const PgCoursedetail());
+    // Get.to(() => const PgCoursedetail());
   }
 
   // Placeholder for continue button action

@@ -88,6 +88,8 @@ class LoginController extends GetxController {
       final data = await loginUseCase.call(
         email: emailController.text,
         pass: passwordController.text,
+        fullName: "",
+        profilePic: "",
         phoneNumber: selectedIndex.value == 0 ? "" : phoneController.text,
         language: language,
         authType: authType,
@@ -121,6 +123,8 @@ class LoginController extends GetxController {
     required String email,
     required String authType,
     required String language,
+    required String fullName,
+    required String profilePic,
     required BuildContext context,
   }) async {
     try {
@@ -130,13 +134,14 @@ class LoginController extends GetxController {
         email: email,
         pass: " ",
         phoneNumber: "",
+        fullName: fullName,
+        profilePic: profilePic,
         language: language,
         authType: authType,
       );
 
       data.fold(
         (error) {
-
           loginError.value = error.message;
           showErrorToast(context, error.message.toString());
         },
@@ -182,11 +187,15 @@ class LoginController extends GetxController {
       var user = await authService.signInWithGoogle();
 
       if (user != null) {
-        final loginUseCase = _useCaseLogin;
+        print("${user.displayName}>>>>>>>>>>>>>>>");
+        print(user.photoURL);
+
         final data = await loginUseCase.call(
           email: user.email.toString(),
           pass: " ",
           phoneNumber: "",
+          fullName: user.displayName.toString(),
+          profilePic: user.photoURL.toString(),
           language: "en",
           authType: "Google",
         );

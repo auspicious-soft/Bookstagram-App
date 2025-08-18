@@ -1,4 +1,6 @@
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
+import 'package:bookstagram/features/data/modules/CourseModule/bindings/course_detail_binding.dart';
+import 'package:bookstagram/features/data/modules/CourseModule/views/pgCourseDetailView.dart';
 import 'package:bookstagram/features/data/modules/auth_module/binding/congratulations_binding.dart';
 import 'package:bookstagram/features/data/modules/auth_module/binding/login_binding.dart';
 import 'package:bookstagram/features/data/modules/auth_module/binding/otp_verification_binding.dart';
@@ -24,18 +26,23 @@ import 'package:bookstagram/features/data/modules/bookstudy/views/bookstudy_home
 import 'package:bookstagram/features/data/modules/bookstudy/views/categories_screen.dart';
 import 'package:bookstagram/features/data/modules/bookstudy/views/categorybyId_Screen.dart';
 import 'package:bookstagram/features/data/modules/bookstudy/views/teachers_screen.dart';
+import 'package:bookstagram/features/data/modules/home_module/Players/bindings/cart_binding.dart';
+import 'package:bookstagram/features/data/modules/home_module/Players/views/cart_view.dart';
 import 'package:bookstagram/features/data/modules/home_module/binding/dashboard_binding.dart';
 import 'package:bookstagram/features/data/modules/home_module/view/dashboard_screen.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/all_collection_binding.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/onboarding_binding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'features/data/modules/CourseModule/bindings/pgcertificateBinding.dart';
+import 'features/data/modules/CourseModule/views/certifcate.dart';
 import 'features/data/modules/Splash/bindings/language_binding.dart';
 import 'features/data/modules/Splash/bindings/splash_binding.dart';
 import 'features/data/modules/Splash/views/language_view.dart';
@@ -57,6 +64,12 @@ import 'features/data/modules/home_module/Players/views/audio_player.dart';
 import 'features/data/modules/home_module/Players/views/video_player_screen.dart';
 import 'features/data/modules/home_module/view/aboutus_screen.dart';
 import 'features/data/modules/home_module/view/search_screen.dart';
+import 'features/data/modules/settingModule/bindings/balance_bindings.dart';
+import 'features/data/modules/settingModule/bindings/editProfileBinding.dart';
+import 'features/data/modules/settingModule/bindings/level_binding.dart';
+import 'features/data/modules/settingModule/view/balance_screen.dart';
+import 'features/data/modules/settingModule/view/edit_profile.dart';
+import 'features/data/modules/settingModule/view/levels.dart';
 import 'features/data/modules/splash/views/all_collection_screen.dart';
 import 'features/data/modules/splash/views/onboarding_screen.dart';
 
@@ -105,6 +118,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        // Set status bar color
+        statusBarIconBrightness:
+            Brightness.dark, // Ensure icons are visible on white
+      ),
+    );
     return GetMaterialApp(
       title: 'Bookstagram',
       debugShowCheckedModeBanner: false,
@@ -131,6 +152,14 @@ class MyApp extends StatelessWidget {
           unselectedItemColor: Colors.grey,
         ),
       ),
+      builder: (context, child) {
+        return SafeArea(
+          top: false, // Respect status bar
+          bottom: true, // Respect navigation bar
+          // Respect right notch/edge
+          child: child ?? SizedBox(), // Ensure child is not null
+        );
+      },
       getPages: [
         GetPage(
             name: '/splash',
@@ -255,6 +284,36 @@ class MyApp extends StatelessWidget {
           name: '/book-detail',
           page: () => PgBookView(),
           binding: PgBookViewBinding(), // Bind the controller
+        ),
+        GetPage(
+          name: '/Course-detail',
+          page: () => PgCoursedetail(),
+          binding: PgCoursedetailBinding(), // Bind the controller
+        ),
+        GetPage(
+          name: '/Add-to-cart',
+          page: () => CartView(),
+          binding: CartBinding(), // Bind the controller
+        ),
+        GetPage(
+          name: '/certificate',
+          page: () => const PgCertificate(),
+          binding: PgCertificateBinding(),
+        ),
+        GetPage(
+          name: '/editProfile',
+          page: () => const PgEditProfileView(),
+          binding: PgEditProfileBinding(),
+        ),
+        GetPage(
+          name: '/levels',
+          page: () => const PgAchievements(),
+          binding: PgAchievementsBinding(),
+        ),
+        GetPage(
+          name: '/balanceScreen',
+          page: () => const PgBalanceScreen(),
+          binding: PgBalanceScreenBinding(),
         ),
       ],
     );

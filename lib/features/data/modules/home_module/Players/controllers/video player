@@ -1,0 +1,263 @@
+import 'dart:convert';
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
+import '../../../../../../app_settings/constants/app_config.dart';
+import '../../../CourseModule/models/CourseLessons_model.dart';
+
+class VideoController extends GetxController {
+  late BetterPlayerController betterPlayerController;
+  var isInitialized = false.obs;
+  var isPlaying = false.obs;
+  final RxBool isLoading = true.obs;
+
+  final Rx<CourseLessonsModel?> CourseLessonDetail =
+      Rx<CourseLessonsModel?>(null);
+
+  // Static video URL
+  String videoUrl = "";
+  static String id = "";
+  var index = 0.obs; // Current lesson index
+  var subindex = 0.obs; // Current sub-lesson index
+
+  @override
+  void onInit() {
+    if (Get.arguments != null) {
+      id = "${Get.arguments['id']}";
+      index.value = Get.arguments['index'];
+      subindex.value = Get.arguments['subindex'];
+
+      print("${index.value}>>>>>>>>>>>${subindex.value}");
+
+      fetchCourseLessons(id);
+      videoUrl = Get.arguments['url'];
+
+      initialize();
+    }
+    super.onInit();
+  }
+
+  getBookTitle({required dynamic name}) {
+    // Default title if name is null or invalid
+    const String defaultTitle = 'No Title';
+    String selectedLanguage = Get.locale?.languageCode ?? "";
+
+    if (name == null) return defaultTitle;
+
+    try {
+      switch (selectedLanguage) {
+        case 'en':
+          return name.eng ?? name.kaz ?? name.rus ?? defaultTitle;
+        case 'kk':
+          return name.kaz ?? name.eng ?? name.rus ?? defaultTitle;
+        case 'ru':
+          return name.rus ?? name.eng ?? name.kaz ?? defaultTitle;
+        default:
+          return name.eng ?? name.kaz ?? name.rus ?? defaultTitle;
+      }
+    } catch (e) {
+      print("Error in getBookTitle: $e");
+      return defaultTitle;
+    }
+  }
+
+  Future<void> fetchCourseLessons(String? id) async {
+    isLoading.value = true;
+    try {
+      var data = await getLessonsDetail(id);
+      CourseLessonDetail.value = data;
+      CourseLessonDetail.refresh();
+    } catch (e) {
+      print("Error fetching books: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<String> getToken() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    final fullToken = await secureStorage.read(key: 'token');
+    return fullToken ?? "";
+  }
+
+  Future<CourseLessonsModel> getLessonsDetail(String? id) async {
+    try {
+      final token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+        'role': 'admin',
+        'x-client-type': 'mobile',
+      };
+
+      HttpWithMiddleware httpClient = HttpWithMiddleware.build(
+        middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
+      );
+      String selectedLanguage = Get.locale?.languageCode ?? "";
+      String uri =
+          '${AppConfig.baseUrl}${AppConfig.getCourseLessons}/$id?lang=${Uri.encodeComponent(selectedLanguage == "en" ? "eng" : selectedLanguage == "ru" ? "rus" : "kaz")}';
+
+      final response = await httpClient.get(
+        Uri.parse(uri),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonBody = json.decode(response.body);
+        return CourseLessonsModel.fromJson(jsonBody);
+      } else {
+        throw Exception('Failed to fetch books: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("API Error: $e");
+      throw e;
+    }
+  }
+
+  void initialize() {
+    // Configure BetterPlayerDataSource
+    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      videoUrl,
+    );
+
+    // Configure BetterPlayerController
+    betterPlayerController = BetterPlayerController(
+      const BetterPlayerConfiguration(
+        autoPlay: true,
+        aspectRatio: 16 / 9,
+        fit: BoxFit.contain,
+        controlsConfiguration: BetterPlayerControlsConfiguration(
+          enableFullscreen: true,
+          enablePlayPause: true,
+          enableMute: true,
+          enableProgressBarDrag: true,
+          enableProgressBar: true,
+          enableSkips: false,
+        ),
+      ),
+      betterPlayerDataSource: dataSource,
+    );
+
+    // Listen to initialization and playback state
+    betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.initialized) {
+        isInitialized.value = true;
+        isPlaying.value = betterPlayerController.isPlaying() ?? false;
+      } else if (event.betterPlayerEventType == BetterPlayerEventType.play ||
+          event.betterPlayerEventType == BetterPlayerEventType.pause) {
+        isPlaying.value = betterPlayerController.isPlaying() ?? false;
+      }
+    });
+
+    // Handle errors
+    betterPlayerController.addEventsListener((event) {
+      if (event.betterPlayerEventType == BetterPlayerEventType.exception) {
+        Get.snackbar('Error', 'Failed to load video');
+      }
+    });
+  }
+
+  void play() => betterPlayerController.play();
+
+  void pause() => betterPlayerController.pause();
+
+  void togglePlay() {
+    if (betterPlayerController.isPlaying() ?? false) {
+      betterPlayerController.pause();
+    } else {
+      betterPlayerController.play();
+    }
+  }
+
+  void toggleMute() {
+    // if (betterPlayerController.isMuted() ?? false) {
+    //   betterPlayerController.setVolume(1.0);
+    // } else {
+    //   betterPlayerController.setVolume(0.0);
+    // }
+  }
+
+  void enterFullscreen() => betterPlayerController.enterFullScreen();
+
+  void exitFullscreen() => betterPlayerController.exitFullScreen();
+
+  // Navigate to the next sub-lesson or lesson
+  void goToNext() async {
+    final lessons = CourseLessonDetail.value?.data?.courseLessons;
+    if (lessons == null || lessons.isEmpty) return;
+
+    final currentLesson = lessons[index.value];
+    final subLessons = currentLesson?.subLessons;
+
+    if (subLessons == null || subLessons.isEmpty) return;
+
+    // Check if there is a next sub-lesson in the current lesson
+    if (subindex.value < subLessons.length - 1) {
+      stopAndDisposePlayer();
+      subindex.value++;
+    } else if (index.value < lessons.length - 1) {
+      stopAndDisposePlayer(); // Move to the first sub-lesson of the next lesson
+      index.value++;
+      subindex.value = 0;
+    } else {
+      // No more lessons or sub-lessons
+      Get.snackbar('End', 'No more lessons available');
+      return;
+    }
+    stopAndDisposePlayer();
+    // Update video URL and reinitialize player
+    videoUrl =
+        "${AppConfig.imgBaseUrl}${subLessons[subindex.value].file}" ?? "";
+    initialize();
+  }
+
+  void stopAndDisposePlayer() {
+    if (isInitialized.value) {
+      betterPlayerController.pause(); // Pause the video
+      betterPlayerController.dispose(); // Dispose of the controller
+      isInitialized.value = false; // Reset initialization state
+      isPlaying.value = false; // Reset playing state
+    }
+  }
+
+  // Navigate to the previous sub-lesson or lesson
+  void goToPrevious() async {
+    final lessons = CourseLessonDetail.value?.data?.courseLessons;
+    if (lessons == null || lessons.isEmpty) return;
+
+    final currentLesson = lessons[index.value];
+    final subLessons = currentLesson?.subLessons;
+
+    if (subLessons == null || subLessons.isEmpty) return;
+
+    // Check if there is a previous sub-lesson in the current lesson
+    if (subindex.value > 0) {
+      stopAndDisposePlayer();
+      subindex.value--;
+    } else if (index.value > 0) {
+      stopAndDisposePlayer();
+      // Move to the last sub-lesson of the previous lesson
+      index.value--;
+      final previousLesson = lessons[index.value];
+      subindex.value = (previousLesson?.subLessons?.length ?? 1) - 1;
+    } else {
+      // No previous lessons or sub-lessons
+      Get.snackbar('Start', 'No previous lessons available');
+      return;
+    }
+    stopAndDisposePlayer();
+    // Update video URL and reinitialize player
+    videoUrl =
+        "${AppConfig.imgBaseUrl}${subLessons[subindex.value].file}" ?? "";
+    initialize();
+  }
+
+  @override
+  void onClose() {
+    betterPlayerController.dispose();
+    super.onClose();
+  }
+}

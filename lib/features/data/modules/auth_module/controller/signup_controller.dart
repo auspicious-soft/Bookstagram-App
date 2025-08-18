@@ -193,8 +193,6 @@ class SignUpController extends GetxController {
       final responseData = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-
-
         MotionToast.success(
           title: const Label(
             txt: "Success",
@@ -278,6 +276,8 @@ class SignUpController extends GetxController {
         final loginUseCase = _useCaseLogin;
         final data = await loginUseCase.call(
           email: user.email.toString(),
+          fullName: user.displayName.toString(),
+          profilePic: user.photoURL.toString(),
           pass: " ",
           phoneNumber: "",
           language: "en",

@@ -1,3 +1,4 @@
+import 'package:bookstagram/features/data/modules/home_module/Players/controllers/cart_controller.dart';
 import 'package:bookstagram/features/data/modules/home_module/controller/profile_controller.dart';
 import 'package:bookstagram/features/data/modules/home_module/controller/searchcontroller.dart';
 import 'package:bookstagram/features/data/modules/home_module/view/aboutus_screen.dart';
@@ -11,7 +12,6 @@ import '../../../repositories/remote_ds_impl.dart';
 import '../controller/dashboard_controller.dart';
 import '../controller/tabhome_controller.dart';
 
-
 class DashboardBinding extends Bindings {
   @override
   void dependencies() {
@@ -20,11 +20,13 @@ class DashboardBinding extends Bindings {
     Get.lazyPut<TabSearchController>(() => TabSearchController());
     Get.lazyPut<ProfileController>(() => ProfileController());
     Get.lazyPut<AboutUsController>(() => AboutUsController());
-    Get.lazyPut<RemoteDs>(() => RemoteDs());  // Assuming RemoteDs is your data source class
-    Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(remoteDataSource: Get.find())); // RemoteDsImpl depends on RemoteDs
-    Get.lazyPut<UsecaseGetHomedata>(() => UsecaseGetHomedata(repository: Get.find()));
+    Get.lazyPut<RemoteDs>(
+        () => RemoteDs()); // Assuming RemoteDs is your data source class
+    Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(
+        remoteDataSource: Get.find())); // RemoteDsImpl depends on RemoteDs
+    Get.lazyPut<UsecaseGetHomedata>(
+        () => UsecaseGetHomedata(repository: Get.find()));
 
-
-
+    Get.lazyPut<CartController>(() => CartController());
   }
 }

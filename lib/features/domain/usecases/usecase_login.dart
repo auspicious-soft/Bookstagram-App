@@ -10,9 +10,12 @@ class UsecaseLogin {
   Future<Either<Failure, LoginModel>> call(
       {required String email,
       required String pass,
+      required String fullName,
+      required String profilePic,
       required String phoneNumber,
       required String language,
       required String authType}) {
-    return repository.login(email, pass, phoneNumber, language, authType);
+    return repository.login(
+        email, pass, phoneNumber, language, authType, fullName, profilePic);
   }
 }

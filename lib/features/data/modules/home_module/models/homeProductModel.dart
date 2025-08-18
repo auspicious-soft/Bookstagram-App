@@ -71,11 +71,11 @@ class DataBooksAndCourses {
     return DataBooksAndCourses(
       books: json['Books'] != null
           ? List<BookModel>.from(
-          json['Books'].map((v) => BookModel.fromJson(v)))
+              json['Books'].map((v) => BookModel.fromJson(v)))
           : [],
       courses: json['Courses'] != null
           ? List<CourseModel>.from(
-          json['Courses'].map((v) => CourseModel.fromJson(v)))
+              json['Courses'].map((v) => CourseModel.fromJson(v)))
           : [],
     );
   }
@@ -99,7 +99,7 @@ class BookModel {
   List<AuthorModel>? authors;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
@@ -107,7 +107,7 @@ class BookModel {
   PublisherId? publisherId;
   bool? isDiscounted;
   num? discountPercentage;
-  int? averageRating;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
 
@@ -134,9 +134,8 @@ class BookModel {
   BookModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'] != null ? Name.fromJson(json['name']) : null;
-    description = json['description'] != null
-        ? Name.fromJson(json['description'])
-        : null;
+    description =
+        json['description'] != null ? Name.fromJson(json['description']) : null;
     if (json['authorId'] != null) {
       authors = <AuthorModel>[];
       json['authorId'].forEach((v) {
@@ -214,7 +213,7 @@ class CourseModel {
   List<AuthorModel>? authorId;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
@@ -222,7 +221,7 @@ class CourseModel {
   PublisherId? publisherId;
   bool? isDiscounted;
   num? discountPercentage;
-  int? averageRating;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
 
@@ -249,9 +248,8 @@ class CourseModel {
   CourseModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'] != null ? Name.fromJson(json['name']) : null;
-    description = json['description'] != null
-        ? Name.fromJson(json['description'])
-        : null;
+    description =
+        json['description'] != null ? Name.fromJson(json['description']) : null;
     if (json['authorId'] != null) {
       authorId = <AuthorModel>[];
       json['authorId'].forEach((v) {
@@ -353,7 +351,10 @@ class Name {
       case 'rus':
         return rus ?? eng ?? kaz ?? '';
       default:
-        return eng ?? kaz ?? rus ?? ''; // Fallback to English or another default
+        return eng ??
+            kaz ??
+            rus ??
+            ''; // Fallback to English or another default
     }
   }
 }
@@ -393,9 +394,8 @@ class AuthorModel {
     dob = json['dob'];
     genres = json['genres']?.cast<String>();
     image = json['image'];
-    description = json['description'] != null
-        ? Name.fromJson(json['description'])
-        : null;
+    description =
+        json['description'] != null ? Name.fromJson(json['description']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -542,9 +542,8 @@ class PublisherId {
     categoryId = json['categoryId']?.cast<String>();
     email = json['email'];
     password = json['password'];
-    description = json['description'] != null
-        ? Name.fromJson(json['description'])
-        : null;
+    description =
+        json['description'] != null ? Name.fromJson(json['description']) : null;
     country = json['country'];
     image = json['image'];
     createdAt = json['createdAt'];

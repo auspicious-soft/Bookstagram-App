@@ -8,13 +8,13 @@ class BlogCollectionModel {
   BlogCollectionModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? new BlogData.fromJson(json['data']) : null;
+    data = json['data'] != null ? BlogData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['success'] = success;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -44,17 +44,16 @@ class BlogData {
     page = json['page'];
     limit = json['limit'];
     total = json['total'];
-    data =
-        json['data'] != null ? new BlogDataModel.fromJson(json['data']) : null;
+    data = json['data'] != null ? BlogDataModel.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['message'] = this.message;
-    data['page'] = this.page;
-    data['limit'] = this.limit;
-    data['total'] = this.total;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['success'] = success;
+    data['message'] = message;
+    data['page'] = page;
+    data['limit'] = limit;
+    data['total'] = total;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -63,96 +62,89 @@ class BlogData {
 }
 
 class BlogDataModel {
-  Blog? blog;
-  Blog? news;
+  List<Category>? categories;
+  List<Blog>? blogs;
 
-  BlogDataModel({this.blog, this.news});
+  BlogDataModel({this.categories, this.blogs});
 
   BlogDataModel.fromJson(Map<String, dynamic> json) {
-    blog = json['blog'] != null ? new Blog.fromJson(json['blog']) : null;
-    news = json['news'] != null ? new Blog.fromJson(json['news']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.blog != null) {
-      data['blog'] = this.blog!.toJson();
+    if (json['categories'] != null) {
+      categories = <Category>[];
+      json['categories'].forEach((v) {
+        categories!.add(Category.fromJson(v));
+      });
     }
-    if (this.news != null) {
-      data['news'] = this.news!.toJson();
-    }
-    return data;
-  }
-}
-
-class Blog {
-  String? sId;
-  Name? name;
-  String? image;
-  String? createdAt;
-  String? updatedAt;
-  List<Blogs>? blogs;
-
-  Blog(
-      {this.sId,
-      this.name,
-      this.image,
-      this.createdAt,
-      this.updatedAt,
-      this.blogs});
-
-  Blog.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'] != null ? new Name.fromJson(json['name']) : null;
-    image = json['image'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
     if (json['blogs'] != null) {
-      blogs = <Blogs>[];
+      blogs = <Blog>[];
       json['blogs'].forEach((v) {
-        blogs!.add(new Blogs.fromJson(v));
+        blogs!.add(Blog.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    if (this.name != null) {
-      data['name'] = this.name!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (categories != null) {
+      data['categories'] = categories!.map((v) => v.toJson()).toList();
     }
-    data['image'] = this.image;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    if (this.blogs != null) {
-      data['blogs'] = this.blogs!.map((v) => v.toJson()).toList();
+    if (blogs != null) {
+      data['blogs'] = blogs!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
+class Category {
+  String? sId;
+  Name? name;
+  String? image;
+  String? createdAt;
+  String? updatedAt;
+
+  Category({this.sId, this.name, this.image, this.createdAt, this.updatedAt});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'] != null ? Name.fromJson(json['name']) : null;
+    image = json['image'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    if (name != null) {
+      data['name'] = name!.toJson();
+    }
+    data['image'] = image;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    return data;
+  }
+}
+
 class Name {
-  String? kaz;
   String? eng;
+  String? kaz;
   String? rus;
 
-  Name({this.kaz, this.eng, this.rus});
+  Name({this.eng, this.kaz, this.rus});
 
   Name.fromJson(Map<String, dynamic> json) {
-    kaz = json['kaz'];
     eng = json['eng'];
+    kaz = json['kaz'];
     rus = json['rus'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['kaz'] = kaz;
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['eng'] = eng;
+    data['kaz'] = kaz;
     data['rus'] = rus;
     return data;
   }
 
-  // Get the name based on the selected language
   String getLocalizedName(String languageCode) {
     switch (languageCode) {
       case 'kaz':
@@ -162,15 +154,12 @@ class Name {
       case 'rus':
         return rus ?? eng ?? kaz ?? '';
       default:
-        return eng ??
-            kaz ??
-            rus ??
-            ''; // Fallback to English or another default
+        return eng ?? kaz ?? rus ?? '';
     }
   }
 }
 
-class Blogs {
+class Blog {
   String? sId;
   String? categoryId;
   String? image;
@@ -179,16 +168,17 @@ class Blogs {
   String? createdAt;
   String? updatedAt;
 
-  Blogs(
-      {this.sId,
-      this.categoryId,
-      this.image,
-      this.name,
-      this.description,
-      this.createdAt,
-      this.updatedAt});
+  Blog({
+    this.sId,
+    this.categoryId,
+    this.image,
+    this.name,
+    this.description,
+    this.createdAt,
+    this.updatedAt,
+  });
 
-  Blogs.fromJson(Map<String, dynamic> json) {
+  Blog.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     categoryId = json['categoryId'];
     image = json['image'];
@@ -199,14 +189,14 @@ class Blogs {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['categoryId'] = this.categoryId;
-    data['image'] = this.image;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['categoryId'] = categoryId;
+    data['image'] = image;
+    data['name'] = name;
+    data['description'] = description;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

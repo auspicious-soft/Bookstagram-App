@@ -1,0 +1,1 @@
+/Users/puneetkumar/Desktop/PuneetSpace/Bookstagram-App/build/app/intermediates/cxx/RelWithDebInfo/2p4q693c/obj/arm64-v8a

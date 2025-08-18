@@ -10,8 +10,10 @@ class Label extends StatelessWidget {
     this.forceAlignment = TextAlign.start,
     this.scale,
     this.forceColor = AppColors.blackColor,
-    this.maxWidth, // New parameter for maximum width
-    this.maxLines = 2, // Default to 1 line, can be overridden
+    this.maxWidth,
+    this.maxLines = 2,
+    this.textDecoration =
+        TextDecoration.none, // New parameter for text decoration
   });
 
   final String txt;
@@ -19,8 +21,9 @@ class Label extends StatelessWidget {
   final Color forceColor;
   final TextAlign forceAlignment;
   final TextScaler? scale;
-  final double? maxWidth; // Maximum width for text
-  final int? maxLines; // Maximum number of lines
+  final double? maxWidth;
+  final int? maxLines;
+  final TextDecoration textDecoration; // Added parameter
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +34,9 @@ class Label extends StatelessWidget {
       style: fontStyle(),
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
-      // Truncate with ellipsis if text overflows
-      softWrap: true, // Allow wrapping if maxLines > 1
+      softWrap: true,
     );
 
-    // Apply width constraint if maxWidth is provided
     if (maxWidth != null) {
       return ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth!),
@@ -50,7 +51,7 @@ class Label extends StatelessWidget {
     FontWeight weight = FontWeight.normal;
     double size = 11.0;
     FontStyle fontStyle = FontStyle.normal;
-    TextDecoration decoration = TextDecoration.none;
+
     switch (type) {
       case TextTypes.f_17_700:
         weight = FontWeight.w700;
@@ -200,7 +201,8 @@ class Label extends StatelessWidget {
       fontFamily: AppConst.fontFamily,
       fontWeight: weight,
       fontStyle: fontStyle,
-      decoration: decoration,
+      decoration: textDecoration,
+      decorationColor: forceColor,
       fontSize: size,
     );
   }
