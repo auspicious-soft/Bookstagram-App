@@ -30,10 +30,15 @@ class BookDetailData {
   BookData? book;
   List<RelatedBooks>? relatedBooks;
   bool? isPurchased;
+  bool? isAddedToCart;
   bool? favorite;
 
   BookDetailData(
-      {this.book, this.relatedBooks, this.isPurchased, this.favorite});
+      {this.book,
+      this.relatedBooks,
+      this.isPurchased,
+      this.favorite,
+      this.isAddedToCart});
 
   BookDetailData.fromJson(Map<String, dynamic> json) {
     book = json['book'] != null ? new BookData.fromJson(json['book']) : null;
@@ -44,6 +49,7 @@ class BookDetailData {
       });
     }
     isPurchased = json['isPurchased'];
+    isAddedToCart = json['isAddedToCart'];
     favorite = json['favorite'];
   }
 
@@ -56,6 +62,7 @@ class BookDetailData {
       data['relatedBooks'] = this.relatedBooks!.map((v) => v.toJson()).toList();
     }
     data['isPurchased'] = this.isPurchased;
+    data['isAddedToCart'] = this.isAddedToCart;
     data['favorite'] = this.favorite;
     return data;
   }
@@ -79,6 +86,7 @@ class BookData {
   num? averageRating;
   String? createdAt;
   String? updatedAt;
+  String? format;
   num? iV;
   num? readers;
   List<Chapters>? chapters;
@@ -104,6 +112,7 @@ class BookData {
       this.updatedAt,
       this.iV,
       this.readers,
+      this.format,
       this.chapters,
       this.language});
 
@@ -144,6 +153,7 @@ class BookData {
     averageRating = json['averageRating'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    format = json['format'];
     iV = json['__v'];
     readers = json['readers'];
     if (json['chapters'] != null) {
@@ -188,6 +198,8 @@ class BookData {
     data['discountPercentage'] = this.discountPercentage;
     data['averageRating'] = this.averageRating;
     data['createdAt'] = this.createdAt;
+
+    data['format'] = this.format;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     data['readers'] = this.readers;

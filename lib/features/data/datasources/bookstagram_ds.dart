@@ -72,6 +72,7 @@ class RemoteDs {
     required String phoneNumber,
     required String language,
     required String fullName,
+    required String fcmToken,
     required String profilePic,
     required String authType,
   }) async {
@@ -81,6 +82,7 @@ class RemoteDs {
       "password": pass,
       "phoneNumber": phoneNumber,
       "fullName": {"eng": fullName},
+      "fcmToken": fcmToken,
       "profilePic": profilePic,
       "language": language,
       "authType": authType
@@ -104,6 +106,7 @@ class RemoteDs {
     required String countryCode,
     required String phoneNumber,
     required String fullname,
+    required String fcmToken,
     required String firstname,
     required String lastname,
     required String pass,
@@ -116,6 +119,7 @@ class RemoteDs {
       "countryCode": countryCode,
       "phoneNumber": phoneNumber,
       "fullName": {"eng": fullname},
+      "fcmToken": fcmToken,
       "firstName": {"eng": firstname},
       "lastName": {"eng": lastname},
       "password": pass,

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
 import '../../../../../app_settings/constants/app_config.dart';
+import '../../CourseModule/models/ReviewsModel.dart';
 import '../models/teacher_detail_model.dart';
 import '../models/teacher_model.dart';
 
@@ -12,7 +13,8 @@ class PgTeacherProfileController extends GetxController {
   // var selLike = false.obs;
   // var selLike2 = false.obs;
   final Rx<TeacherProfileModel?> bookStudy = Rx<TeacherProfileModel?>(null);
-
+  var selLike = false.obs;
+  var selLike2 = false.obs;
   final RxBool isLoading = true.obs;
 
   Future<String> getToken() async {
@@ -36,6 +38,8 @@ class PgTeacherProfileController extends GetxController {
       print(">>>>>>>>>>>TeacherId>>>>>>>>>>>>>${TeacherId}");
       var data = await getTeacherId(TeacherId);
       bookStudy.value = data;
+      selLike.value = bookStudy.value?.isFavorite ?? false;
+      selLike.refresh();
       bookStudy.refresh();
       print("Books found: ${bookStudy.value?.data?.name?.eng ?? ""}");
     } finally {
@@ -77,6 +81,59 @@ class PgTeacherProfileController extends GetxController {
       // Handle case where name is not null but doesn't have the expected properties
       print("Error in getBookTitle: $e");
       return defaultTitle;
+    }
+  }
+
+  void toggleLike() {
+    selLike.value = !selLike.value;
+    handleFavorite();
+  }
+
+  Future<void> handleFavorite() async {
+    try {
+      var data = await postlike();
+    } catch (e) {
+      print("Error fetching books: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<Ratings> postlike() async {
+    try {
+      final token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+        'role': 'admin',
+        'x-client-type': 'mobile',
+      };
+
+      HttpWithMiddleware httpClient = HttpWithMiddleware.build(
+        middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
+      );
+
+      String uri =
+          '${AppConfig.baseUrl}${AppConfig.AddAuthorFavouriteEndPoint}';
+
+      final response = await httpClient.put(
+        Uri.parse(uri),
+        headers: headers,
+        body: jsonEncode({
+          "authorId": bookStudy.value?.data?.sId,
+          "favorite": selLike.value,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonBody = json.decode(response.body);
+        return Ratings.fromJson(jsonBody);
+      } else {
+        throw Exception('Failed to fetch books: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("API Error: $e");
+      throw e;
     }
   }
 

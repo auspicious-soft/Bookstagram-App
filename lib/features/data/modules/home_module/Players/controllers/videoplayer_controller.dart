@@ -33,11 +33,12 @@ class VideoController extends GetxController {
       id = "${Get.arguments['id']}";
       index.value = Get.arguments['index'];
       subindex.value = Get.arguments['subindex'];
-
+      videoUrl = Get.arguments['url'];
+      print("${videoUrl}>>>>>>>>>>>>>>>>>>>>videoUrl");
       print("${index.value}>>>>>>>>>>>${subindex.value}");
 
       fetchCourseLessons(id);
-      videoUrl = Get.arguments['url'];
+
       initialize();
     }
 
@@ -232,6 +233,7 @@ class VideoController extends GetxController {
           BetterPlayerEventType.finished) {
         // Trigger course completion check when video finishes
         print(">>>>>>>>>>>>>>>>>>>>>>Complete Ho Gya");
+
         ReadProgress();
       }
     });

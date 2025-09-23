@@ -104,7 +104,7 @@ class NewBooks {
   ProductsId? productsId;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
   bool? isFavorite;
 
   NewBooks(
@@ -154,8 +154,8 @@ class ProductsId {
   String? type;
   PublisherId? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -403,20 +403,6 @@ class SubCategoryId {
     return data;
   }
 }
-
-// class File {
-//
-//
-//   File({});
-//
-// File.fromJson(Map<String, dynamic> json) {
-// }
-
-// Map<String, dynamic> toJson() {
-// final Map<String, dynamic> data = new Map<String, dynamic>();
-// return data;
-// }
-// }
 
 class PublisherId {
   String? sId;

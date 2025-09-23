@@ -1,22 +1,15 @@
-import 'dart:convert';
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/loader.dart';
-import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
+
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
-import 'package:bookstagram/app_settings/constants/helpers.dart';
-import 'package:bookstagram/features/data/models/homedata_model.dart';
-import 'package:bookstagram/features/presentation/Pages/BookEvents/pg_book_event.dart';
-import 'package:bookstagram/features/presentation/Pages/BookLife/pg_book_life.dart';
 
-import 'package:bookstagram/features/presentation/Pages/BookRooomScreens/BookRoom/pg_book_room.dart';
+import 'package:bookstagram/features/data/models/homedata_model.dart';
+
 import 'package:bookstagram/features/presentation/Pages/BookSchool/pg_Book_school.dart';
 
-import 'package:bookstagram/features/presentation/Pages/BookView/pg_book_view.dart';
-import 'package:bookstagram/features/presentation/Pages/CourseDetail/pg_coursedetail.dart';
-import 'package:bookstagram/features/presentation/Pages/CoursesPage/pg_courses_page.dart';
 import 'package:bookstagram/features/presentation/Pages/Notification/pg_notification.dart';
 import 'package:bookstagram/features/presentation/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/localization/app_localization.dart';
@@ -26,6 +19,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 
 import '../../../../../app_settings/constants/app_dim.dart';
+import '../../../../../app_settings/constants/helpers.dart';
 import '../../../../presentation/widgets/home_subwidget.dart';
 import '../Players/views/epub_reader.dart';
 import '../controller/dashboard_controller.dart';
@@ -242,13 +236,12 @@ class TabhomeScreen extends GetView<HomeDataController> {
             FeatureButton(
               imagePath: AppAssets.room,
               labelKey: 'Bookroom',
-              onTap: () => Get.to(() => const PgBookRoom()),
+              onTap: () => Get.toNamed("/book_room"),
             ),
             FeatureButton(
-              imagePath: AppAssets.school,
-              labelKey: 'Bookschool',
-              onTap: () => Get.to(() => const PgBookSchool()),
-            ),
+                imagePath: AppAssets.school,
+                labelKey: 'Bookschool',
+                onTap: () => {Get.toNamed("/book-schoolCoupon")}),
             FeatureButton(
               imagePath: AppAssets.study,
               labelKey: 'Bookstudy',
@@ -287,93 +280,146 @@ class TabhomeScreen extends GetView<HomeDataController> {
   }
 
   Widget _buildContinueReading() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      decoration: BoxDecoration(
-        color: AppColors.border,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            child: Image.asset(
-              width: 110,
-              height: 110,
-              AppAssets.book,
-              fit: BoxFit.fill,
-            ),
-          ),
-          padHorizontal(10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Label(txt: "Алашқа", type: TextTypes.f_15_500),
-                const Label(
-                  txt: "Міржақып Дулатұлы",
-                  type: TextTypes.f_15_400,
-                  forceColor: AppColors.resnd,
-                ),
-                const Label(
-                  txt: "Audio",
-                  type: TextTypes.f_13_400,
-                  forceColor: AppColors.resnd,
-                ),
-                padVertical(5),
-                Builder(builder: (context) {
-                  return Row(
+    return controller.homeData.value?.data?.readProgress?.length != 0
+        ? SizedBox(
+            height: 160,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount:
+                  controller.homeData.value?.data?.readProgress?.length ??
+                      0, // Adjust based on your data
+              itemBuilder: (context, index) {
+                final book =
+                    controller.homeData.value?.data?.readProgress?[index];
+                return Container(
+                  width: ScreenUtils.screenWidth(context) * 0.9,
+                  // Set a fixed width (e.g., 80% of screen width)
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  // Space between items
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: AppColors.border,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: const LinearProgressIndicator(
-                            value: 0.73,
-                            backgroundColor: AppColors.inputBorder,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.primaryColor),
-                          ),
+                      ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: book?.bookId?.image != null
+                            ? Image.network(
+                                width: 113,
+                                height: 144,
+                                "${AppConfig.imgBaseUrl}${book?.bookId?.image}",
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  AppAssets.book,
+                                  width: 113,
+                                  height: 144,
+                                  fit: BoxFit.fill,
+                                ),
+                              )
+                            : Image.asset(
+                                width: 113,
+                                height: 144,
+                                AppAssets.book,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+
+                      const SizedBox(width: 10), // Replaced padHorizontal(10)
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Label(
+                              txt: controller.getBookTitle(
+                                  name: book?.bookId?.name),
+                              type: TextTypes.f_15_500,
+                            ),
+                            Label(
+                              txt: controller.getBookTitle(
+                                  name: book?.bookId?.authorId?.first?.name),
+                              type: TextTypes.f_15_400,
+                              forceColor: AppColors.resnd,
+                            ),
+                            Label(
+                              txt: book?.bookId?.type ?? "",
+                              type: TextTypes.f_13_400,
+                              forceColor: AppColors.resnd,
+                            ),
+                            const SizedBox(
+                                height: 5), // Replaced padVertical(5)
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: LinearProgressIndicator(
+                                      value: (book?.progress ?? 0) / 100,
+                                      backgroundColor: AppColors.inputBorder,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          AppColors.primaryColor),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Label(
+                                  txt: "${book?.progress?.toString()}%",
+                                  // Replace with dynamic value like "${(book.progress * 100).toInt()}%"
+                                  type: TextTypes.f_12_400,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                                height: 2), // Replaced padVertical(2)
+                            SizedBox(
+                              height: 38,
+                              child: ElevatedButton(
+                                onPressed: () => {
+                                  if (book?.bookId?.type == "course")
+                                    {
+                                      Get.toNamed('/Course-detail', arguments: {
+                                        "id": book?.bookId?.sId,
+                                      })
+                                    }
+                                  else
+                                    {
+                                      Get.toNamed('/book-detail', arguments: {
+                                        "id": book?.bookId?.sId,
+                                      })
+                                    }
+                                }, // Pass index if needed
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.0,
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Label(
+                                  txt: AppLocalization.of(context)
+                                      .translate('continue'),
+                                  type: TextTypes.f_13_400,
+                                  forceColor: AppColors.whiteColor,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      const Label(txt: "73%", type: TextTypes.f_12_400),
                     ],
-                  );
-                }),
-                padVertical(2),
-                SizedBox(
-                  height: 38,
-                  child: Builder(builder: (context) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        // Get.toNamed("/AudioPlayer");
-                        // Get.toNamed("/VideoPlayer");
-                        Get.to(() => const EpubReaderWidget());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0.0,
-                        backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Label(
-                        txt: AppLocalization.of(context).translate('continue'),
-                        type: TextTypes.f_13_400,
-                        forceColor: AppColors.whiteColor,
-                      ),
-                    );
-                  }),
-                )
-              ],
+                  ),
+                );
+              },
             ),
           )
-        ],
-      ),
-    );
+        : SizedBox();
   }
 
   Widget _buildCarouselSlider(HomeDataModel? findata) {
@@ -577,7 +623,9 @@ class TabhomeScreen extends GetView<HomeDataController> {
                 controller.getBookTitle(
                     language: controller.language.value,
                     name: controller.collectiondata.value?.data?.data
-                        ?.mindBlowing?[0].name)),
+                        ?.mindBlowing?[0].name),
+                id: controller
+                    .collectiondata.value?.data?.data?.mindBlowing?[0].sId),
         padVertical(15),
         Obx(() {
           final popularCollections =
@@ -594,7 +642,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
             return const Center(child: CircularProgressIndicator());
           }
           if (books.isEmpty) {
-            return const Center(child: Text("No Collection found."));
+            return const SizedBox();
           }
           return _builCollectioinRow(books);
         }),
@@ -607,7 +655,9 @@ class TabhomeScreen extends GetView<HomeDataController> {
                 controller.getBookTitle(
                     language: controller.language.value,
                     name: controller.collectiondata.value?.data?.data
-                        ?.newCollections?[0].name)),
+                        ?.newCollections?[0].name),
+                id: controller
+                    .collectiondata.value?.data?.data?.newCollections?[0].sId),
         padVertical(15),
         Obx(() {
           final popularCollections =
@@ -625,7 +675,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
             return const Center(child: CircularProgressIndicator());
           }
           if (books.isEmpty) {
-            return const Center(child: Text("No Collection found."));
+            return const SizedBox();
           }
           return _builCollectioinRow(books);
         }),
@@ -639,7 +689,9 @@ class TabhomeScreen extends GetView<HomeDataController> {
                 controller.getBookTitle(
                     language: controller.language.value,
                     name: controller.collectiondata.value?.data?.data
-                        ?.popularCollections?[0].name)),
+                        ?.popularCollections?[0].name),
+                id: controller.collectiondata.value?.data?.data
+                    ?.popularCollections?[0].sId),
         padVertical(15),
         Obx(() {
           if (controller.isLoading.value) {
@@ -655,7 +707,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
           final books = popularCollections.first.booksId ?? [];
 
           if (books.isEmpty) {
-            return const Center(child: Text("No Collection found."));
+            return const SizedBox();
           }
           return _builCollectioinRow(books);
         }),
@@ -681,7 +733,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
   }
 
   Widget _buildSectionHeader(BuildContext context, String titleKey,
-      {String emoji = ''}) {
+      {String emoji = '', String? id}) {
     String title = emoji.isEmpty
         ? AppLocalization.of(context).translate(titleKey)
         : '${emoji}${AppLocalization.of(context).translate(titleKey)}';
@@ -718,10 +770,13 @@ class TabhomeScreen extends GetView<HomeDataController> {
                           language: controller.language.value,
                           name: controller.collectiondata.value?.data?.data
                               ?.popularCollections?[0].name)) {
-                Get.toNamed("/allcollections", arguments: {"title": title});
+                Get.toNamed("/allcollections",
+                    arguments: {"title": title, "id": id});
               }
             },
-            child: const Icon(Icons.arrow_forward_ios_rounded, size: 18))
+            child: title != null && title.isNotEmpty
+                ? const Icon(Icons.arrow_forward_ios_rounded, size: 18)
+                : SizedBox())
       ],
     );
   }
@@ -735,7 +790,10 @@ class TabhomeScreen extends GetView<HomeDataController> {
         separatorBuilder: (context, index) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => Get.toNamed("/book-detail"),
+            onTap: () => Get.toNamed(
+              "/book-detail",
+              arguments: {"id": books[index]?.sId},
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

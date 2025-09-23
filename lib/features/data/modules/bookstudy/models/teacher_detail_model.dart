@@ -113,15 +113,15 @@ class AuthorBooks {
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  num? price;
   List<String>? genre;
   String? image;
   Name? file;
   String? type;
   AuthorId? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
   int? iV;

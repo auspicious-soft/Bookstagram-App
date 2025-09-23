@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import '../modules/bookstudy/models/book_market_response_Model.dart';
+
 StockModel stockModelFromJson(String str) =>
     StockModel.fromJson(json.decode(str));
 
@@ -190,13 +192,13 @@ class Book {
 
 class AuthorId {
   String? id;
-  Description? name;
+  Name? name;
   List<String>? profession;
   String? country;
   DateTime? dob;
   List<String>? genres;
   String? image;
-  Description? description;
+  Name? description;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -217,7 +219,7 @@ class AuthorId {
 
   factory AuthorId.fromJson(Map<String, dynamic> json) => AuthorId(
         id: json["_id"],
-        name: json["name"] == null ? null : Description.fromJson(json["name"]),
+        name: json["name"] == null ? null : Name.fromJson(json["name"]),
         profession: json["profession"] == null
             ? []
             : List<String>.from(json["profession"]!.map((x) => x)),
@@ -229,7 +231,7 @@ class AuthorId {
         image: json["image"],
         description: json["description"] == null
             ? null
-            : Description.fromJson(json["description"]),
+            : Name.fromJson(json["description"]),
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
@@ -254,22 +256,6 @@ class AuthorId {
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "__v": v,
-      };
-}
-
-class Description {
-  String? eng;
-
-  Description({
-    this.eng,
-  });
-
-  factory Description.fromJson(Map<String, dynamic> json) => Description(
-        eng: json["eng"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "eng": eng,
       };
 }
 
@@ -489,12 +475,17 @@ class SubCategoryIdName {
 
 class Course {
   String? id;
+  String? certificatePdf;
+  String? certificatePng;
   Description? name;
   Description? description;
   List<AuthorId>? authorId;
   List<CourseCategoryId>? categoryId;
   List<SubCategoryId>? subCategoryId;
-  int? price;
+  ProductId? productId;
+  ProductId? bookId;
+  num? progress;
+  num? price;
   List<String>? genre;
   String? image;
   Description? file;
@@ -510,9 +501,14 @@ class Course {
     this.id,
     this.name,
     this.description,
+    this.certificatePdf,
+    this.certificatePng,
     this.authorId,
     this.categoryId,
     this.subCategoryId,
+    this.productId,
+    this.bookId,
+    this.progress,
     this.price,
     this.genre,
     this.image,
@@ -529,6 +525,8 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) => Course(
         id: json["_id"],
         name: json["name"] == null ? null : Description.fromJson(json["name"]),
+        certificatePdf: json["certificatePdf"],
+        certificatePng: json["certificatePng"],
         description: json["description"] == null
             ? null
             : Description.fromJson(json["description"]),
@@ -544,6 +542,12 @@ class Course {
             ? []
             : List<SubCategoryId>.from(
                 json["subCategoryId"]!.map((x) => SubCategoryId.fromJson(x))),
+        productId: json["productId"] == null
+            ? null
+            : ProductId.fromJson(json["productId"]),
+        bookId:
+            json["bookId"] == null ? null : ProductId.fromJson(json["bookId"]),
+        progress: json["progress"],
         price: json["price"],
         genre: json["genre"] == null
             ? []
@@ -569,6 +573,8 @@ class Course {
         "_id": id,
         "name": name?.toJson(),
         "description": description?.toJson(),
+        "certificatePdf": certificatePdf,
+        "certificatePng": certificatePng,
         "authorId": authorId == null
             ? []
             : List<dynamic>.from(authorId!.map((x) => x.toJson())),
@@ -578,6 +584,9 @@ class Course {
         "subCategoryId": subCategoryId == null
             ? []
             : List<dynamic>.from(subCategoryId!.map((x) => x.toJson())),
+        "productId": productId?.toJson(),
+        "bookId": bookId?.toJson(),
+        "progress": progress,
         "price": price,
         "genre": genre == null ? [] : List<dynamic>.from(genre!.map((x) => x)),
         "image": image,

@@ -26,12 +26,17 @@ import 'package:bookstagram/features/data/modules/bookstudy/views/bookstudy_home
 import 'package:bookstagram/features/data/modules/bookstudy/views/categories_screen.dart';
 import 'package:bookstagram/features/data/modules/bookstudy/views/categorybyId_Screen.dart';
 import 'package:bookstagram/features/data/modules/bookstudy/views/teachers_screen.dart';
+import 'package:bookstagram/features/data/modules/collection_and_summary/bindings/fav_course_binding.dart';
+import 'package:bookstagram/features/data/modules/collection_and_summary/bindings/my_all_Favourite_authors_binding.dart';
+import 'package:bookstagram/features/data/modules/collection_and_summary/view/fav_course_view.dart';
+import 'package:bookstagram/features/data/modules/collection_and_summary/view/my_all_FavouriteAuthors.dart';
 import 'package:bookstagram/features/data/modules/home_module/Players/bindings/cart_binding.dart';
 import 'package:bookstagram/features/data/modules/home_module/Players/views/cart_view.dart';
 import 'package:bookstagram/features/data/modules/home_module/binding/dashboard_binding.dart';
 import 'package:bookstagram/features/data/modules/home_module/view/dashboard_screen.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/all_collection_binding.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/onboarding_binding.dart';
+import 'package:bookstagram/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,6 +63,19 @@ import 'features/data/modules/bookstudy/bindings/bookeventdetail_binding.dart';
 import 'features/data/modules/bookstudy/views/bookEventDetail.dart';
 import 'features/data/modules/bookstudy/views/book_event.dart';
 import 'features/data/modules/bookstudy/views/teacher_detail_screen.dart';
+import 'features/data/modules/collection_and_summary/bindings/book_room_binding.dart';
+import 'features/data/modules/collection_and_summary/bindings/book_school_bindings.dart';
+import 'features/data/modules/collection_and_summary/bindings/collection_summary_binding.dart'
+    show CollectionSummaryBinding;
+import 'features/data/modules/collection_and_summary/bindings/completed_books_bindings.dart';
+import 'features/data/modules/collection_and_summary/bindings/favourite_books_binding.dart';
+import 'features/data/modules/collection_and_summary/bindings/reading_now_binding.dart';
+import 'features/data/modules/collection_and_summary/view/book_School.dart';
+import 'features/data/modules/collection_and_summary/view/book_room_screen.dart';
+import 'features/data/modules/collection_and_summary/view/collection_summary.dart';
+import 'features/data/modules/collection_and_summary/view/completed_books.dart';
+import 'features/data/modules/collection_and_summary/view/favorite_books.dart';
+import 'features/data/modules/collection_and_summary/view/reading_now_screen.dart';
 import 'features/data/modules/home_module/Players/bindings/audio_player_bindings.dart';
 import 'features/data/modules/home_module/Players/bindings/video_player_bindings.dart';
 import 'features/data/modules/home_module/Players/views/audio_player.dart';
@@ -70,15 +88,21 @@ import 'features/data/modules/settingModule/bindings/level_binding.dart';
 import 'features/data/modules/settingModule/view/balance_screen.dart';
 import 'features/data/modules/settingModule/view/edit_profile.dart';
 import 'features/data/modules/settingModule/view/levels.dart';
+import 'features/data/modules/splash/bindings/all_publishers_binding.dart';
+import 'features/data/modules/splash/bindings/publisher_detail_binding.dart';
 import 'features/data/modules/splash/views/all_collection_screen.dart';
+import 'features/data/modules/splash/views/all_publishers_screen.dart';
 import 'features/data/modules/splash/views/onboarding_screen.dart';
 
+import 'features/data/modules/splash/views/publisher_detail_screen.dart';
 import 'localization/connectivity_controller.dart';
 import 'localization/no_internet_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Initialize ConnectivityController
   final connectivityController = ConnectivityController();
@@ -314,6 +338,56 @@ class MyApp extends StatelessWidget {
           name: '/balanceScreen',
           page: () => const PgBalanceScreen(),
           binding: PgBalanceScreenBinding(),
+        ),
+        GetPage(
+          name: '/allPublishers',
+          page: () => const PgPublishers(),
+          binding: PublishersBinding(),
+        ),
+        GetPage(
+          name: '/publisherDetail',
+          page: () => const PublisherDetailScreen(),
+          binding: PublisherDetailBinding(),
+        ),
+        GetPage(
+          name: '/Collection_Summary',
+          page: () => CollectionSummary(),
+          binding: CollectionSummaryBinding(),
+        ),
+        GetPage(
+          name: '/book_room',
+          page: () => PgBookRoom(),
+          binding: PgBookRoomBinding(),
+        ),
+        GetPage(
+          name: "/reading-books",
+          page: () => PgReadingBooks(),
+          binding: PgReadingBooksBinding(),
+        ),
+        GetPage(
+          name: "/favourite-books",
+          page: () => PgFavoriteBooks(),
+          binding: PgFavoriteBooksBinding(),
+        ),
+        GetPage(
+          name: "/complete-books",
+          page: () => CompletedBooks(),
+          binding: CompletedBooksBindings(),
+        ),
+        GetPage(
+          name: "/my-all-favourite-authors",
+          page: () => MyFavoriteAuthorView(),
+          binding: MyFavoriteAuthorBinding(),
+        ),
+        GetPage(
+          name: "/favourite-courses",
+          page: () => FavCourseView(),
+          binding: FavCourseBinding(),
+        ),
+        GetPage(
+          name: "/book-schoolCoupon",
+          page: () => PgBookSchool(),
+          binding: PgBookSchoolBinding(),
         ),
       ],
     );

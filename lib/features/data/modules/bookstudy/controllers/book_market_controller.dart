@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:bookstagram/features/presentation/Pages/AudioBook/pg_audio_book.dart';
 import 'package:bookstagram/features/presentation/Pages/Authors/pg_authors.dart';
-import 'package:bookstagram/features/presentation/Pages/Publishers/pg_publishers.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
 import '../../../../../app_settings/constants/app_config.dart';
-import '../../../../presentation/Pages/CourseDetail/pg_coursedetail.dart';
+
 import '../models/BookStudyModel.dart';
 import '../models/book_market_response_Model.dart';
 import '../../home_module/models/CollectionDataModel.dart';
@@ -221,20 +221,16 @@ class PgBookmarketController extends GetxController {
   }
 
   void navigateToAudioBook(index) {
-    // Get.toNamed("/AudioPlayer", arguments: {
-    //   "artist": getBookTitle(
-    //       name: bookMarket?.value?.data?.audiobooks?[index].productId?.authorId
-    //           ?.first.name),
-    //   "image": bookMarket?.value?.data?.audiobooks?[index].productId?.image,
-    //   "name":
-    //       getBookTitle(name: bookMarket?.value?.data?.audiobooks?[index].name),
-    //   "id": bookMarket?.value?.data?.audiobooks?[index].sId,
-    //   "audio": bookMarket?.value?.data?.audiobooks?[index].file
-    // });
-
-    Get.toNamed('/book-detail', arguments: {
-      "id": bookMarket?.value?.data?.audiobooks?[index]?.productId?.sId,
-    });
+    if (bookMarket?.value?.data?.audiobooks?[index]?.productId?.type ==
+        "course") {
+      Get.toNamed('/Course-detail', arguments: {
+        "id": bookMarket?.value?.data?.audiobooks?[index]?.productId?.sId,
+      });
+    } else {
+      Get.toNamed('/book-detail', arguments: {
+        "id": bookMarket?.value?.data?.audiobooks?[index]?.productId?.sId,
+      });
+    }
   }
 
   void navigateToAuthors() {
@@ -242,7 +238,7 @@ class PgBookmarketController extends GetxController {
   }
 
   void navigateToPublishers() {
-    Get.to(() => const PgPublishers());
+    Get.toNamed("/allPublishers");
   }
 
   void continueReading() {

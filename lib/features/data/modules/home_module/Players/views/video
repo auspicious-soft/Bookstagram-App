@@ -1,137 +1,151 @@
-import 'package:better_player_plus/better_player_plus.dart';
+import 'dart:typed_data';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:read_more_text/read_more_text.dart' show ReadMoreText;
-import '../../../../../../app_settings/components/label.dart';
-import '../../../../../../app_settings/constants/app_colors.dart';
-import '../../../../../../app_settings/constants/app_const.dart';
-import '../../../../../../app_settings/constants/app_dim.dart';
-import '../../../../../../localization/app_localization.dart';
-import '../controllers/videoplayer_controller.dart';
+import 'package:get/get.dart'; // Updated import for full GetX functionality
+import 'package:http/http.dart' as http;
+import 'package:epub_reader_highlight/epub_reader_highlight.dart';
+import 'package:epub_reader_highlight/data/models/selected_text_model.dart';
+import 'package:epub_reader_highlight/ui/actual_chapter.dart';
+import 'package:epub_reader_highlight/ui/table_of_contents.dart';
 
-class VideoPlayerScreen extends StatelessWidget {
-  const VideoPlayerScreen();
+class EpubReaderWidget extends StatefulWidget {
+  final String? epubUrl; // Constructor parameter for EPUB URL
+
+  const EpubReaderWidget({super.key, this.epubUrl});
+
+  @override
+  State<EpubReaderWidget> createState() => _EpubReaderWidgetState();
+}
+
+class _EpubReaderWidgetState extends State<EpubReaderWidget> {
+  EpubController? _epubReaderController;
+  bool _isLoading = true;
+  bool _hasError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEpubFromNetwork();
+  }
+
+  @override
+  void dispose() {
+    _epubReaderController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadEpubFromNetwork() async {
+    // Use widget.epubUrl if provided, otherwise fallback to Get.arguments or default URL
+    final String epubUrl =
+        "${AppConfig.imgBaseUrl}${Get.arguments['file']}"; // Use Get.parameters for route parameters
+    print(epubUrl);
+    if (epubUrl.isEmpty) {
+      setState(() {
+        _hasError = true;
+      });
+      Get.snackbar('Error', 'No valid EPUB URL provided');
+      return;
+    }
+
+    try {
+      final response = await http.get(Uri.parse(epubUrl));
+      if (response.statusCode == 200) {
+        final Uint8List epubBytes = response.bodyBytes;
+
+        setState(() {
+          _epubReaderController = EpubController(
+            document: EpubDocument.openData(epubBytes),
+          );
+          _isLoading = false;
+        });
+        // Add listener to track chapter changes
+      } else {
+        print('❌ Failed to load EPUB file. Status: ${response.statusCode}');
+        setState(() {
+          _hasError = true;
+        });
+        Get.snackbar(
+            'Error', 'Failed to load EPUB: Status ${response.statusCode}');
+      }
+    } catch (e, s) {
+      print('❌ Error loading EPUB from network: $e');
+      print(s);
+      setState(() {
+        _hasError = true;
+      });
+      Get.snackbar('Error', 'Error loading EPUB: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final VideoController controller = Get.put(VideoController());
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_hasError || _epubReaderController == null) {
+      return const Center(child: Text('Failed to load EPUB.'));
+    }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Obx(() {
-            if (!controller.isInitialized.value) {
-              return Container(
-                height: Get.height * 0.8,
-                width: Get.width,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: const CircularProgressIndicator(),
-                ),
-              );
-            }
-            return SingleChildScrollView(
-              child: Obx(() => Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: Get.height * 0.4,
-                        width: Get.width,
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: BetterPlayer(
-                            controller: controller.betterPlayerController,
-                          ),
-                        ),
-                      ).marginOnly(top: 20),
-                      Label(
-                        txt: controller
-                                .CourseLessonDetail
-                                .value
-                                ?.data
-                                ?.courseLessons?[controller.index.value]
-                                ?.subLessons?[controller.subindex.value]
-                                .name ??
-                            "",
-                        type: TextTypes.f_22_700,
-                      ),
-                      padVertical(10),
-                      ReadMoreText(
-                        controller
-                                .CourseLessonDetail
-                                .value
-                                ?.data
-                                ?.courseLessons?[controller.index.value]
-                                ?.subLessons?[controller.subindex.value]
-                                ?.description ??
-                            "",
-                        numLines: 3,
-                        readMoreTextStyle: TextStyle(
-                          color: AppColors.resnd,
-                          fontFamily: AppConst.fontFamily,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                        readMoreAlign: Alignment.center,
-                        readMoreText: 'Read more',
-                        readLessText: 'Read less',
-                        readMoreIconColor: Colors.grey,
-                        style: TextStyle(
-                          color: AppColors.resnd,
-                          fontFamily: AppConst.fontFamily,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  )).marginSymmetric(horizontal: 20),
-            );
-          }),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        color: Colors.white,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                controller.goToPrevious();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.whiteColor,
-                side: BorderSide(color: AppColors.primaryColor),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Label(
-                txt: AppLocalization.of(context).translate('Prev'),
-                type: TextTypes.f_17_500,
-                forceColor: AppColors.primaryColor,
-              ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: EpubViewActualChapter(
+          controller: _epubReaderController!,
+          builder: (chapterValue) => Text(
+            'Chapter: ${chapterValue?.chapter?.Title}',
+            textAlign: TextAlign.start,
+            maxLines: 1,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
             ),
-            ElevatedButton(
-              onPressed: () {
-                controller.goToNext();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Label(
-                txt: AppLocalization.of(context).translate('Next'),
-                type: TextTypes.f_17_500,
-                forceColor: AppColors.whiteColor,
-              ).marginSymmetric(horizontal: 5, vertical: 5),
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: EpubViewTableOfContents(
+          controller: _epubReaderController!,
+        ),
+      ),
+      body: EpubView(
+        controller: _epubReaderController!,
+        // Hypothetical property
+        builders: EpubViewBuilders<DefaultBuilderOptions>(
+          options: const DefaultBuilderOptions(
+            textStyle: TextStyle(fontSize: 16, height: 1.5),
+          ),
+          chapterDividerBuilder: (_) => const Divider(),
+        ),
+        onHighlightTap: (SelectedTextModel selectedTextModel) {
+          print('Highlighted Text: $selectedTextModel');
+          _showHighlightDialog(context, selectedTextModel);
+        },
+        paragraphIndexOnDispose: (int paragraphIndex) {
+          print('Last Paragraph Index: $paragraphIndex');
+        },
+      ),
+    );
+  }
+
+  void _showHighlightDialog(
+      BuildContext context, SelectedTextModel selectedText) {
+    showDialog(
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        // Prevent back button from closing dialog
+        child: AlertDialog(
+          title: const Text('Highlight Details'),
+          content: Text('Selected Text: ${selectedText.selectedText}'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Edit Highlight'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
             ),
           ],
         ),

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../../../domain/repositories/remote_repo.dart';
 import '../../../datasources/bookstagram_ds.dart';
 import '../../../repositories/remote_ds_impl.dart';
+import '../../collection_and_summary/controller/book_room_controller.dart';
 import '../controller/dashboard_controller.dart';
 import '../controller/tabhome_controller.dart';
 
@@ -20,6 +21,7 @@ class DashboardBinding extends Bindings {
     Get.lazyPut<TabSearchController>(() => TabSearchController());
     Get.lazyPut<ProfileController>(() => ProfileController());
     Get.lazyPut<AboutUsController>(() => AboutUsController());
+    Get.lazyPut<PgBookRoomController>(() => PgBookRoomController());
     Get.lazyPut<RemoteDs>(
         () => RemoteDs()); // Assuming RemoteDs is your data source class
     Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(

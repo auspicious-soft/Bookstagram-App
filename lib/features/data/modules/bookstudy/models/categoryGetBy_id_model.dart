@@ -111,8 +111,8 @@ class Books {
   String? type;
   AuthorId? publisherId;
   bool? isDiscounted;
-  int? discountPercentage;
-  int? averageRating;
+  num? discountPercentage;
+  num? averageRating;
   String? createdAt;
   String? updatedAt;
   int? iV;

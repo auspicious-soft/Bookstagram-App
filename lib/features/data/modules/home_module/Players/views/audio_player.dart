@@ -26,6 +26,39 @@ class CommonAudioScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      drawer: Drawer(
+        child: Obx(() => ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              itemCount:
+                  controller.audioChapters.value?.data?.chapter?.length ?? 0,
+              itemBuilder: (context, index) {
+                final item =
+                    controller.audioChapters.value?.data?.chapter?[index];
+                final isSelected =
+                    controller.currentChapterIndex.value == index;
+                return ListTile(
+                  leading: Icon(
+                    Icons.lock,
+                    color:
+                        isSelected ? AppColors.primaryColor : AppColors.resnd,
+                  ),
+                  title: Label(
+                    txt: item?.name ?? "",
+                    type: isSelected ? TextTypes.f_16_700 : TextTypes.f_16_500,
+                    forceColor:
+                        isSelected ? AppColors.primaryColor : AppColors.resnd,
+                  ),
+                  tileColor: isSelected
+                      ? AppColors.primaryColor.withOpacity(0.1)
+                      : null,
+                  onTap: () {
+                    controller.setChapter(index);
+                    Navigator.pop(context); // Close the drawer
+                  },
+                );
+              },
+            )),
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(
@@ -68,39 +101,62 @@ class CommonAudioScreen extends StatelessWidget {
                     top: MediaQuery.of(context).padding.top + 15,
                     left: 0,
                     right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: AppColors.whiteColor,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Label(
-                          txt: 'Music Player',
-                          type: TextTypes.f_20_500,
-                          forceColor: AppColors.whiteColor,
-                        ),
-                        Row(
+                    child: Builder(
+                      builder: (BuildContext innerContext) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Icon(
-                              Icons.list,
-                              color: AppColors.whiteColor,
-                            ),
                             IconButton(
-                              icon: Image.asset(
-                                AppAssets.dots,
-                                fit: BoxFit.contain,
-                                width: 18,
-                                height: 4,
+                              icon: const Icon(
+                                Icons.arrow_back_ios,
+                                color: AppColors.whiteColor,
                               ),
-                              onPressed: () {},
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            Label(
+                              txt: 'Music Player',
+                              type: TextTypes.f_20_500,
+                              forceColor: AppColors.whiteColor,
+                            ),
+                            Row(
+                              children: [
+                                Obx(() => controller?.audioChapters?.value?.data
+                                            ?.chapter?.length !=
+                                        0
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            color: AppColors.primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        child: Center(
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.menu,
+                                              size: 20,
+                                              color: AppColors.whiteColor,
+                                            ),
+                                            onPressed: () {
+                                              Scaffold.of(innerContext)
+                                                  .openDrawer();
+                                            },
+                                          ),
+                                        ).paddingAll(3),
+                                      ).marginSymmetric(horizontal: 10)
+                                    : SizedBox()),
+                                // IconButton(
+                                //   icon: Image.asset(
+                                //     AppAssets.dots,
+                                //     fit: BoxFit.contain,
+                                //     width: 18,
+                                //     height: 4,
+                                //   ),
+                                //   onPressed: () {},
+                                // ),
+                              ],
                             ),
                           ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                   Positioned(
@@ -246,19 +302,20 @@ class CommonAudioScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
-                                icon: const Icon(
-                                  Icons.replay_10,
+                                icon: Icon(
+                                  Icons.skip_previous,
                                   size: 40,
-                                  color: AppColors.resnd,
+                                  color:
+                                      controller.currentChapterIndex.value > 0
+                                          ? AppColors.resnd
+                                          : AppColors.resnd.withOpacity(0.3),
                                 ),
-                                onPressed: () {
-                                  final newPosition =
-                                      controller.position.value -
-                                          const Duration(seconds: 10);
-                                  controller.seek(newPosition.inSeconds < 0
-                                      ? Duration.zero
-                                      : newPosition);
-                                },
+                                onPressed:
+                                    controller.currentChapterIndex.value > 0
+                                        ? () {
+                                            controller.previousChapter();
+                                          }
+                                        : null,
                               ),
                               padHorizontal(20),
                               IconButton(
@@ -282,25 +339,31 @@ class CommonAudioScreen extends StatelessWidget {
                               ),
                               padHorizontal(20),
                               IconButton(
-                                icon: const Icon(
-                                  Icons.forward_10,
+                                icon: Icon(
+                                  Icons.skip_next,
                                   size: 40,
-                                  color: AppColors.resnd,
+                                  color: controller.currentChapterIndex.value <
+                                          (controller.audioChapters.value?.data
+                                                      ?.chapter?.length ??
+                                                  0) -
+                                              1
+                                      ? AppColors.resnd
+                                      : AppColors.resnd.withOpacity(0.3),
                                 ),
-                                onPressed: () {
-                                  final newPosition =
-                                      controller.position.value +
-                                          const Duration(seconds: 10);
-                                  if (newPosition >=
-                                      controller.duration.value) {
-                                    controller.seek(controller.duration.value);
-                                    controller.pause();
-                                    controller.seek(Duration.zero);
-                                    controller.setAudioSource();
-                                  } else {
-                                    controller.seek(newPosition);
-                                  }
-                                },
+                                onPressed:
+                                    controller.currentChapterIndex.value <
+                                            (controller
+                                                        .audioChapters
+                                                        .value
+                                                        ?.data
+                                                        ?.chapter
+                                                        ?.length ??
+                                                    0) -
+                                                1
+                                        ? () {
+                                            controller.nextChapter();
+                                          }
+                                        : null,
                               ),
                             ],
                           ),

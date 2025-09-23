@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/features/domain/repositories/remote_repo.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bookstagram/features/domain/usecases/usecase_signup.dart';
@@ -62,7 +63,9 @@ class SignUpController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("$token>>>>>>>>>>>>>>>>>>>>>Token");
     // _signUpUseCase = Get.find<UsecaseSignup>();
     _useCaseLogin = Get.find<UsecaseLogin>();
     super.onInit();
@@ -120,6 +123,7 @@ class SignUpController extends GetxController {
 
   Future<void> signUp(BuildContext context) async {
     isLoading.value = true;
+
     if (!isFormValid()) {
       validateEmail(emailController.text);
       validateName(nameController.text);
@@ -157,6 +161,7 @@ class SignUpController extends GetxController {
       final body = jsonEncode({
         "email": emailController.text.trim(),
         "password": passwordController.text.trim(),
+        "fcmToken": await FirebaseMessaging.instance.getToken(),
         "language": selectedLanguage == "en"
             ? "eng"
             : selectedLanguage == "kk"
@@ -168,11 +173,23 @@ class SignUpController extends GetxController {
           "eng": selectedLanguage == "en" ? nameController.text : null,
           "kaz": selectedLanguage == "kk" ? nameController.text : null,
         },
+        "fullName": {
+          "rus": selectedLanguage == "ru"
+              ? "${nameController.text} ${lastNameController.text} "
+              : null,
+          "eng": selectedLanguage == "en"
+              ? "${nameController.text} ${lastNameController.text}"
+              : null,
+          "kaz": selectedLanguage == "kk"
+              ? "${nameController.text} ${lastNameController.text}"
+              : null,
+        },
         "lastName": {
           "rus": selectedLanguage == "ru" ? lastNameController.text : null,
           "eng": selectedLanguage == "en" ? lastNameController.text : null,
           "kaz": selectedLanguage == "kk" ? lastNameController.text : null,
         },
+
         // Optional fields, add if needed
         // "countryCode": "+91",
         // "phoneNumber": "645636356546",
@@ -271,7 +288,7 @@ class SignUpController extends GetxController {
       isLoading.value = true;
 
       var user = await authService.signInWithGoogle();
-
+      String token = await FirebaseMessaging.instance.getToken() ?? "";
       if (user != null) {
         final loginUseCase = _useCaseLogin;
         final data = await loginUseCase.call(
@@ -279,6 +296,7 @@ class SignUpController extends GetxController {
           fullName: user.displayName.toString(),
           profilePic: user.photoURL.toString(),
           pass: " ",
+          fcmToken: token,
           phoneNumber: "",
           language: "en",
           authType: "Google",

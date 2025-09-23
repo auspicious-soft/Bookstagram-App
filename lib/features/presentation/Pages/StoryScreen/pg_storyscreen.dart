@@ -57,6 +57,7 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
             child: WidgetGlobalMargin(
               child: Column(
                 children: [
+                  const SizedBox(height: 15),
                   // Story progress indicators
                   Row(
                     children: List.generate(storyImages.length, (index) {

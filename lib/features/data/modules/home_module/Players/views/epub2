@@ -1,0 +1,160 @@
+import 'dart:typed_data';
+import 'package:bookstagram/app_settings/constants/app_config.dart';
+import 'package:epub_view/epub_view.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
+class EpubReaderWidget extends StatefulWidget {
+  final String? epubUrl;
+
+  const EpubReaderWidget({super.key, this.epubUrl});
+
+  @override
+  State<EpubReaderWidget> createState() => _EpubReaderWidgetState();
+}
+
+class _EpubReaderWidgetState extends State<EpubReaderWidget> {
+  EpubController? _epubController;
+  bool _isLoading = true;
+  bool _hasError = false;
+  String? _lastCfi; // Store last reading position
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEpubFromNetwork();
+  }
+
+  @override
+  void dispose() {
+    // Save the last reading position before disposing
+    _lastCfi = _epubController?.generateEpubCfi();
+    print('Last EPUB CFI: $_lastCfi');
+    _epubController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _launchUrl(String href) async {
+    final Uri uri = Uri.parse(href);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      Get.snackbar('Error', 'Could not launch $href');
+    }
+  }
+
+  Future<void> _loadEpubFromNetwork() async {
+    // Use widget.epubUrl if provided, otherwise fallback to Get.arguments
+    final String epubUrl = "${AppConfig.imgBaseUrl}${Get.arguments['file']}";
+    print('Loading EPUB from: $epubUrl');
+
+    if (epubUrl.isEmpty) {
+      setState(() {
+        _hasError = true;
+        _isLoading = false;
+      });
+      Get.snackbar('Error', 'No valid EPUB URL provided');
+      return;
+    }
+
+    try {
+      // Use http package to fetch EPUB file
+      final response = await http.get(Uri.parse(epubUrl));
+      if (response.statusCode == 200) {
+        final Uint8List epubBytes = response.bodyBytes;
+
+        setState(() {
+          _epubController = EpubController(
+            document: EpubDocument.openData(epubBytes),
+            // Optionally restore last position if _lastCfi is available
+            epubCfi: _lastCfi,
+          );
+          _isLoading = false;
+        });
+      } else {
+        print('❌ Failed to load EPUB file. Status: ${response.statusCode}');
+        setState(() {
+          _hasError = true;
+          _isLoading = false;
+        });
+        Get.snackbar(
+            'Error', 'Failed to load EPUB: Status ${response.statusCode}');
+      }
+    } catch (e, s) {
+      print('❌ Error loading EPUB: $e');
+      print(s);
+      setState(() {
+        _hasError = true;
+        _isLoading = false;
+      });
+      Get.snackbar('Error', 'Error loading EPUB: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_hasError || _epubController == null) {
+      return const Center(child: Text('Failed to load EPUB.'));
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: EpubViewActualChapter(
+          controller: _epubController!,
+          builder: (chapterValue) => Text(
+            'Chapter: ${chapterValue?.chapter?.Title?.replaceAll('\n', '').trim() ?? ''}',
+            textAlign: TextAlign.start,
+            maxLines: 1,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: EpubViewTableOfContents(
+          controller: _epubController!,
+        ),
+      ),
+      body: EpubView(
+        controller: _epubController!,
+        builders: EpubViewBuilders<DefaultBuilderOptions>(
+          options: const DefaultBuilderOptions(
+            textStyle: TextStyle(fontSize: 16, height: 1.5),
+          ),
+          chapterDividerBuilder: (_) => const Divider(),
+        ),
+
+        onExternalLinkPressed: (href) {
+          print('External link pressed: $href');
+          _launchUrl(href);
+          // Handle external links (e.g., open in browser)
+        },
+        onDocumentLoaded: (document) {
+          print('Document loaded: ${document.Title}');
+        },
+        onDocumentError: (error) {
+          print('Document error: $error');
+          setState(() {
+            _hasError = true;
+            _isLoading = false;
+          });
+          Get.snackbar('Error', 'Failed to load document: $error');
+        },
+        onChapterChanged: (chapter) {
+          print('Chapter changed: ${chapter?.progress}');
+          print('Chapter changed: ${chapter?.chapter?.ContentFileName}');
+        },
+
+        // Placeholder for highlight functionality (epub_view does not support onHighlightTap)
+        // Implement custom text selection logic if needed
+      ),
+    );
+  }
+}

@@ -1,10 +1,4 @@
 import 'dart:convert';
-
-import 'package:bookstagram/features/presentation/Pages/AuthorDetail/pg_authordetail.dart';
-import 'package:bookstagram/features/presentation/Pages/Cart/pg_cartscreen.dart';
-import 'package:bookstagram/features/presentation/Pages/Certificate/pg_certificate.dart';
-import 'package:bookstagram/app_settings/components/review_sheet.dart';
-import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -13,8 +7,6 @@ import 'package:pretty_http_logger/pretty_http_logger.dart';
 import '../../../../../app_settings/constants/app_config.dart';
 import '../../../../../app_settings/constants/common_button.dart';
 import '../../../../../localization/app_localization.dart';
-import '../../book_detail/Models/postOrderResponseModel.dart';
-import '../../book_detail/WebviewWidget.dart';
 import '../../home_module/Players/controllers/cart_controller.dart';
 import '../models/AddToCartResponseModel.dart';
 import '../models/CourseDetailModel.dart';
@@ -92,19 +84,6 @@ class PgCoursedetailController extends GetxController {
       CourseLessonDetail.value = data;
       CourseLessonDetail.refresh();
       fetchReviews(Id);
-    } catch (e) {
-      print("Error fetching books: $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  Future<void> fetchReviews(String? id) async {
-    isLoading.value = true;
-    try {
-      var data = await getReviewsDetail(id);
-      ReviewResponse.value = data;
-      ReviewResponse.refresh();
     } catch (e) {
       print("Error fetching books: $e");
     } finally {
@@ -236,6 +215,19 @@ class PgCoursedetailController extends GetxController {
     } catch (e) {
       print("API Error: $e");
       throw e;
+    }
+  }
+
+  Future<void> fetchReviews(String? id) async {
+    isLoading.value = true;
+    try {
+      var data = await getReviewsDetail(id);
+      ReviewResponse.value = data;
+      ReviewResponse.refresh();
+    } catch (e) {
+      print("Error fetching books: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

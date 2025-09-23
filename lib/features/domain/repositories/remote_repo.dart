@@ -11,13 +11,15 @@ import '../../data/models/otp_resend_model.dart';
 
 abstract class RemoteRepo {
   Future<Either<Failure, LoginModel>> login(
-      String email,
-      String pass,
-      String phoneNumber,
-      String language,
-      String authType,
-      String fullName,
-      String profilePic);
+    String email,
+    String pass,
+    String phoneNumber,
+    String language,
+    String authType,
+    String fullName,
+    String profilePic,
+    String fcmToken,
+  );
 
   // Future<Either<Failure, SignUpModel>> signUp(
   //   String email,

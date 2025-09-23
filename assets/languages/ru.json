@@ -1,4 +1,11 @@
 {
+  "strAllCollections": "Все коллекции",
+  "strSummary": "Сводка",
+  "strReadBook": "Читать",
+  "strListenBook": "Слушать",
+  "Publisher": "Издатель",
+  "bookCount": "Количество книг в каталоге",
+  "Publishedbooks": "Опубликованные книги",
   "NoReviewsHeading": "Нет отзывов",
   "NoReviewsSubHeading": "Похоже, здесь пока нет отзывов.",
   "CompleteCourse": "Завершить курс",

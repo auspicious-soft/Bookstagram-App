@@ -60,6 +60,7 @@ class CartController extends GetxController {
             title: "Payment",
             url: postOrderResponseModel.value?.data?.payment?.redirectUrl ?? "",
           ));
+      await AddToCartApicall();
       Get.find<PgCoursedetailController>()
           .CourseLessonDetail
           .value
@@ -281,7 +282,6 @@ class CartController extends GetxController {
 
   void proceedToPayment() {
     PostorderApicall();
-    // Get.snackbar('Payment', 'Proceeding to payment with total: 2000 ₸');
   }
 
   void goBack() {

@@ -1,7 +1,7 @@
 class AppConfig {
   static const String baseUrl = "https://duman-backend.onrender.com/";
 
-  // static const String baseUrl = "https://6c89ce46208e.ngrok-free.app/";
+  // static const String baseUrl = "https://575daace83ea.ngrok-free.app/";
   static const String signIn = 'api/user-login';
   static const String signUp = 'api/user-signup';
   static const String verifySignUp = 'api/user-verify-otp';
@@ -33,6 +33,7 @@ class AppConfig {
   static const String getBookLives = 'api/user/book-lives';
   static const String CompeteLesson = 'api/user/read-progress';
   static const String AddToCartEndPoints = 'api/user/cart';
+  static const String AudioChapterEndPoints = 'api/user/audiobook';
   static const String ReviewsEndPoints = 'api/user/books/rating';
   static const String GernateCertificate = 'api/user/generate-certificate';
   static const String GetCertificate = 'api/user/certificate';
@@ -41,4 +42,22 @@ class AppConfig {
   static const String MediaUploadEndPoint = 'api/user/upload-image';
   static const String editProfileEndPoint = 'api/user/user-details';
   static const String getAchievementsEndPoint = 'api/user/get-badge';
+  static const String getBestSellers = 'api/user/best-sellers';
+  static const String getAllNewBooks = 'api/user/new-books';
+  static const String getAllAudioBooksEndPoints = 'api/user/audiobooks';
+  static const String getAllPublishers = 'api/user/publishers';
+  static const String getCollectionDetailEndPoint = 'api/user/collections';
+  static const String getAllSummariesEndPoint = 'api/user/summaries';
+  static const String getReadingNowEndPoint = 'api/user/book-rooms/reading-now';
+  static const String getAllFavouriteEndPoint =
+      "api/user/book-rooms/favourite-books";
+  static const String getAllCompletedBooksEndPoint =
+      "api/user/book-rooms/finished-books";
+
+  static const String getAllFavouriteAuthorsEndPoint =
+      "api/user/author-favourites";
+
+  static const String AddAuthorFavouriteEndPoint = 'api/user/author-favourites';
+
+  static const String CourseFavouriteEndPoint = 'api/user/book-rooms/courses';
 }

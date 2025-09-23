@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:bookstagram/features/data/modules/bookstudy/models/book_market_response_Model.dart';
+
 HomeDataModel homeDataModelFromJson(String str) =>
     HomeDataModel.fromJson(json.decode(str));
 
@@ -36,10 +38,12 @@ class HomeDataModel {
 class TotalData {
   List<Banner>? banners;
   List<Story>? stories;
+  List<ReadProgress>? readProgress;
 
   TotalData({
     this.banners,
     this.stories,
+    this.readProgress,
   });
 
   factory TotalData.fromJson(Map<String, dynamic> json) => TotalData(
@@ -50,6 +54,10 @@ class TotalData {
         stories: json["stories"] == null
             ? []
             : List<Story>.from(json["stories"]!.map((x) => Story.fromJson(x))),
+        readProgress: json["readProgress"] == null
+            ? []
+            : List<ReadProgress>.from(
+                json["readProgress"]!.map((x) => ReadProgress.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -59,6 +67,9 @@ class TotalData {
         "stories": stories == null
             ? []
             : List<dynamic>.from(stories!.map((x) => x.toJson())),
+        "readProgress": readProgress == null
+            ? []
+            : List<dynamic>.from(readProgress!.map((x) => x.toJson())),
       };
 }
 

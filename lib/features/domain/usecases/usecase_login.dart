@@ -13,9 +13,11 @@ class UsecaseLogin {
       required String fullName,
       required String profilePic,
       required String phoneNumber,
+      required String fcmToken,
       required String language,
       required String authType}) {
-    return repository.login(
-        email, pass, phoneNumber, language, authType, fullName, profilePic);
+    print("$fcmToken>>>>>>>>>>>>>fcm");
+    return repository.login(email, pass, phoneNumber, language, authType,
+        fullName, profilePic, fcmToken);
   }
 }

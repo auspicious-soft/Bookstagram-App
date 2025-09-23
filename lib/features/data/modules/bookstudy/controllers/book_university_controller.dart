@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:bookstagram/features/presentation/Pages/CourseDetail/pg_coursedetail.dart';
-import 'package:bookstagram/features/presentation/Pages/CoursesPage/pg_courses_page.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';

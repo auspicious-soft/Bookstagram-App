@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,12 +85,13 @@ class LoginController extends GetxController {
   }) async {
     try {
       isLoading.value = true;
-
+      String? token = await FirebaseMessaging.instance.getToken();
       final data = await loginUseCase.call(
         email: emailController.text,
         pass: passwordController.text,
         fullName: "",
         profilePic: "",
+        fcmToken: token ?? "hello",
         phoneNumber: selectedIndex.value == 0 ? "" : phoneController.text,
         language: language,
         authType: authType,
@@ -125,15 +127,17 @@ class LoginController extends GetxController {
     required String language,
     required String fullName,
     required String profilePic,
+    required String fcmToken,
     required BuildContext context,
   }) async {
     try {
       isLoading.value = true;
-
+      String token = await FirebaseMessaging.instance.getToken() ?? "";
       final data = await loginUseCase.call(
         email: email,
         pass: " ",
         phoneNumber: "",
+        fcmToken: token,
         fullName: fullName,
         profilePic: profilePic,
         language: language,
@@ -189,10 +193,11 @@ class LoginController extends GetxController {
       if (user != null) {
         print("${user.displayName}>>>>>>>>>>>>>>>");
         print(user.photoURL);
-
+        String token = await FirebaseMessaging.instance.getToken() ?? "";
         final data = await loginUseCase.call(
           email: user.email.toString(),
           pass: " ",
+          fcmToken: token,
           phoneNumber: "",
           fullName: user.displayName.toString(),
           profilePic: user.photoURL.toString(),

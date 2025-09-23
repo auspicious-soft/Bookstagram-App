@@ -235,6 +235,19 @@ class PgTeacherProfile extends GetView<PgTeacherProfileController> {
                                                 )
                                               ],
                                             ),
+                                            Obx(() => IconButton(
+                                                  onPressed: () {
+                                                    controller.toggleLike();
+                                                  },
+                                                  icon: Image.asset(
+                                                    controller.selLike.value
+                                                        ? AppAssets.liked
+                                                        : AppAssets.unliked,
+                                                    fit: BoxFit.contain,
+                                                    width: 52,
+                                                    height: 55,
+                                                  ),
+                                                )),
                                           ],
                                         ),
                                         padVertical(8),

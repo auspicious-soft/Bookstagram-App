@@ -1,4 +1,11 @@
 {
+  "strAllCollections": "Барлық жинақтар",
+  "strSummary": "Қорытынды",
+  "strReadBook": "Оқу",
+  "strListenBook": "Тыңдау",
+  "Publisher": "Баспагер",
+  "bookCount": "каталогтағы кітаптар саны",
+  "Publishedbooks": "Басылған кітаптар",
   "NoReviewsHeading": "Пікірлер жоқ",
   "NoReviewsSubHeading": "Мұнда әлі пікірлер жоқ сияқты.",
   "GoToCart": "Себетке өту",

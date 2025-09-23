@@ -129,8 +129,26 @@ class ReadProgress {
   String? userId;
   BookId? bookId;
   num? progress;
+  // Added missing fields from JSON
+  num? audiobookProgress;
+  num? highestProgress;
+  String? certificatePdf;
+  String? certificatePng;
+  bool? isCompleted;
+  List<dynamic>? readAudioChapter;
 
-  ReadProgress({this.sId, this.userId, this.bookId, this.progress});
+  ReadProgress({
+    this.sId,
+    this.userId,
+    this.bookId,
+    this.progress,
+    this.audiobookProgress,
+    this.highestProgress,
+    this.certificatePdf,
+    this.certificatePng,
+    this.isCompleted,
+    this.readAudioChapter,
+  });
 
   ReadProgress.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -138,6 +156,14 @@ class ReadProgress {
     bookId =
         json['bookId'] != null ? new BookId.fromJson(json['bookId']) : null;
     progress = json['progress'];
+    audiobookProgress = json['audiobookProgress'];
+    highestProgress = json['highestProgress'];
+    certificatePdf = json['certificatePdf'];
+    certificatePng = json['certificatePng'];
+    isCompleted = json['isCompleted'];
+    if (json['readAudioChapter'] != null) {
+      readAudioChapter = json['readAudioChapter'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -148,6 +174,14 @@ class ReadProgress {
       data['bookId'] = this.bookId!.toJson();
     }
     data['progress'] = this.progress;
+    data['audiobookProgress'] = this.audiobookProgress;
+    data['highestProgress'] = this.highestProgress;
+    data['certificatePdf'] = this.certificatePdf;
+    data['certificatePng'] = this.certificatePng;
+    data['isCompleted'] = this.isCompleted;
+    if (this.readAudioChapter != null) {
+      data['readAudioChapter'] = this.readAudioChapter;
+    }
     return data;
   }
 }
@@ -156,10 +190,20 @@ class BookId {
   String? sId;
   Name? name;
   List<AuthorId>? authorId;
+  List<String>? genre;
+  num? averageRating;
+
   String? image;
   String? type;
 
-  BookId({this.sId, this.name, this.authorId, this.image, this.type});
+  BookId(
+      {this.sId,
+      this.name,
+      this.authorId,
+      this.image,
+      this.type,
+      this.genre,
+      this.averageRating});
 
   BookId.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -170,7 +214,10 @@ class BookId {
         authorId!.add(new AuthorId.fromJson(v));
       });
     }
+    genre = json['genre'] != null ? List<String>.from(json['genre']) : null;
+    averageRating = json['averageRating'];
     image = json['image'];
+
     type = json['type'];
   }
 
@@ -183,6 +230,8 @@ class BookId {
     if (this.authorId != null) {
       data['authorId'] = this.authorId!.map((v) => v.toJson()).toList();
     }
+    data['genre'] = this.genre;
+    data['averageRating'] = this.averageRating;
     data['image'] = this.image;
     data['type'] = this.type;
     return data;
@@ -215,6 +264,7 @@ class Audiobooks {
   String? sId;
   String? lang;
   String? name;
+
   ProductId? productId;
   num? srNo;
   String? file;
@@ -237,6 +287,7 @@ class Audiobooks {
     sId = json['_id'];
     lang = json['lang'];
     name = json['name'];
+
     productId = json['productId'] != null
         ? new ProductId.fromJson(json['productId'])
         : null;
@@ -252,6 +303,7 @@ class Audiobooks {
     data['_id'] = this.sId;
     data['lang'] = this.lang;
     data['name'] = this.name;
+
     if (this.productId != null) {
       data['productId'] = this.productId!.toJson();
     }
@@ -270,19 +322,22 @@ class ProductId {
   Name? description;
   List<AuthorId>? authorId;
   List<CategoryId>? categoryId;
-  List<SubCategoryId>? subCategoryId;
+  List<SubCategoryId>? subCategoryId; // Added to match JSON
+
   num? price;
   List<String>? genre;
   String? image;
-  File? file;
+  dynamic file; // Changed to dynamic as it's sometimes {} or map
   String? type;
-  AuthorId? publisherId;
+  PublisherId? publisherId; // Changed to PublisherId to match structure
+
   bool? isDiscounted;
   num? discountPercentage;
   num? averageRating;
   String? createdAt;
   String? updatedAt;
   num? iV;
+  String? format; // Added from JSON
 
   ProductId(
       {this.sId,
@@ -302,7 +357,8 @@ class ProductId {
       this.averageRating,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.format});
 
   ProductId.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -328,13 +384,14 @@ class ProductId {
         subCategoryId!.add(new SubCategoryId.fromJson(v));
       });
     }
+
     price = json['price'];
-    genre = json['genre'].cast<String>();
+    genre = json['genre'] != null ? List<String>.from(json['genre']) : null;
     image = json['image'];
-    file = json['file'] != null ? new File.fromJson(json['file']) : null;
+    file = json['file'];
     type = json['type'];
     publisherId = json['publisherId'] != null
-        ? new AuthorId.fromJson(json['publisherId'])
+        ? new PublisherId.fromJson(json['publisherId'])
         : null;
     isDiscounted = json['isDiscounted'];
     discountPercentage = json['discountPercentage'];
@@ -342,6 +399,7 @@ class ProductId {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    format = json['format'];
   }
 
   Map<String, dynamic> toJson() {
@@ -363,22 +421,23 @@ class ProductId {
       data['subCategoryId'] =
           this.subCategoryId!.map((v) => v.toJson()).toList();
     }
+
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    if (this.file != null) {
-      data['file'] = this.file!.toJson();
-    }
+    data['file'] = this.file;
     data['type'] = this.type;
     if (this.publisherId != null) {
       data['publisherId'] = this.publisherId!.toJson();
     }
+
     data['isDiscounted'] = this.isDiscounted;
     data['discountPercentage'] = this.discountPercentage;
     data['averageRating'] = this.averageRating;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    data['format'] = this.format;
     return data;
   }
 }
@@ -497,7 +556,9 @@ class PublisherId {
     sId = json['_id'];
     name = json['name'] != null ? new Name.fromJson(json['name']) : null;
     role = json['role'];
-    categoryId = json['categoryId'].cast<String>();
+    categoryId = json['categoryId'] != null
+        ? List<String>.from(json['categoryId'])
+        : null;
     email = json['email'];
     password = json['password'];
     description = json['description'] != null
@@ -651,15 +712,16 @@ class BooksId {
   num? price;
   List<String>? genre;
   String? image;
-  Name? file;
+  dynamic file; // Changed to dynamic
   String? type;
-  AuthorId? publisherId;
+  PublisherId? publisherId; // Changed to PublisherId
   bool? isDiscounted;
   num? discountPercentage;
   num? averageRating;
   String? createdAt;
   String? updatedAt;
   num? iV;
+  String? format; // Added
 
   BooksId(
       {this.sId,
@@ -679,7 +741,8 @@ class BooksId {
       this.averageRating,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.format});
 
   BooksId.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -706,12 +769,12 @@ class BooksId {
       });
     }
     price = json['price'];
-    genre = json['genre'].cast<String>();
+    genre = json['genre'] != null ? List<String>.from(json['genre']) : null;
     image = json['image'];
-    file = json['file'] != null ? new Name.fromJson(json['file']) : null;
+    file = json['file'];
     type = json['type'];
     publisherId = json['publisherId'] != null
-        ? new AuthorId.fromJson(json['publisherId'])
+        ? new PublisherId.fromJson(json['publisherId'])
         : null;
     isDiscounted = json['isDiscounted'];
     discountPercentage = json['discountPercentage'];
@@ -719,6 +782,7 @@ class BooksId {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    format = json['format'];
   }
 
   Map<String, dynamic> toJson() {
@@ -743,9 +807,7 @@ class BooksId {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    if (this.file != null) {
-      data['file'] = this.file!.toJson();
-    }
+    data['file'] = this.file;
     data['type'] = this.type;
     if (this.publisherId != null) {
       data['publisherId'] = this.publisherId!.toJson();
@@ -756,6 +818,7 @@ class BooksId {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    data['format'] = this.format;
     return data;
   }
 }
@@ -813,10 +876,12 @@ class Author {
   Author.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'] != null ? new Name.fromJson(json['name']) : null;
-    profession = json['profession'].cast<String>();
+    profession = json['profession'] != null
+        ? List<String>.from(json['profession'])
+        : null;
     country = json['country'];
     dob = json['dob'];
-    genres = json['genres'].cast<String>();
+    genres = json['genres'] != null ? List<String>.from(json['genres']) : null;
     image = json['image'];
     description = json['description'] != null
         ? new Name.fromJson(json['description'])
@@ -857,7 +922,7 @@ class NewBooks {
   num? price;
   List<String>? genre;
   String? image;
-  Name? file;
+  dynamic file; // Changed to dynamic
   String? type;
   String? publisherId;
   bool? isDiscounted;
@@ -866,6 +931,7 @@ class NewBooks {
   String? createdAt;
   String? updatedAt;
   num? iV;
+  String? format; // Added
 
   NewBooks(
       {this.sId,
@@ -885,7 +951,8 @@ class NewBooks {
       this.averageRating,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.format});
 
   NewBooks.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -905,11 +972,13 @@ class NewBooks {
         categoryId!.add(new CategoryId.fromJson(v));
       });
     }
-    subCategoryId = json['subCategoryId'].cast<String>();
+    subCategoryId = json['subCategoryId'] != null
+        ? List<String>.from(json['subCategoryId'])
+        : null;
     price = json['price'];
-    genre = json['genre'].cast<String>();
+    genre = json['genre'] != null ? List<String>.from(json['genre']) : null;
     image = json['image'];
-    file = json['file'] != null ? new Name.fromJson(json['file']) : null;
+    file = json['file'];
     type = json['type'];
     publisherId = json['publisherId'];
     isDiscounted = json['isDiscounted'];
@@ -918,6 +987,7 @@ class NewBooks {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    format = json['format'];
   }
 
   Map<String, dynamic> toJson() {
@@ -939,9 +1009,7 @@ class NewBooks {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    if (this.file != null) {
-      data['file'] = this.file!.toJson();
-    }
+    data['file'] = this.file;
     data['type'] = this.type;
     data['publisherId'] = this.publisherId;
     data['isDiscounted'] = this.isDiscounted;
@@ -950,6 +1018,7 @@ class NewBooks {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    data['format'] = this.format;
     return data;
   }
 }
@@ -985,7 +1054,7 @@ class Book {
   num? price;
   List<String>? genre;
   String? image;
-  File? file;
+  dynamic file; // Changed to dynamic
   String? type;
   String? publisherId;
   bool? isDiscounted;
@@ -995,6 +1064,7 @@ class Book {
   String? updatedAt;
   num? iV;
   Author? authors;
+  String? format; // Added
 
   Book(
       {this.sId,
@@ -1015,7 +1085,8 @@ class Book {
       this.createdAt,
       this.updatedAt,
       this.iV,
-      this.authors});
+      this.authors,
+      this.format});
 
   Book.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -1023,13 +1094,18 @@ class Book {
     description = json['description'] != null
         ? new Name.fromJson(json['description'])
         : null;
-    authorId = json['authorId'].cast<String>();
-    categoryId = json['categoryId'].cast<String>();
-    subCategoryId = json['subCategoryId'].cast<String>();
+    authorId =
+        json['authorId'] != null ? List<String>.from(json['authorId']) : null;
+    categoryId = json['categoryId'] != null
+        ? List<String>.from(json['categoryId'])
+        : null;
+    subCategoryId = json['subCategoryId'] != null
+        ? List<String>.from(json['subCategoryId'])
+        : null;
     price = json['price'];
-    genre = json['genre'].cast<String>();
+    genre = json['genre'] != null ? List<String>.from(json['genre']) : null;
     image = json['image'];
-    file = json['file'] != null ? new File.fromJson(json['file']) : null;
+    file = json['file'];
     type = json['type'];
     publisherId = json['publisherId'];
     isDiscounted = json['isDiscounted'];
@@ -1040,6 +1116,7 @@ class Book {
     iV = json['__v'];
     authors =
         json['authors'] != null ? new Author.fromJson(json['authors']) : null;
+    format = json['format'];
   }
 
   Map<String, dynamic> toJson() {
@@ -1057,9 +1134,7 @@ class Book {
     data['price'] = this.price;
     data['genre'] = this.genre;
     data['image'] = this.image;
-    if (this.file != null) {
-      data['file'] = this.file!.toJson();
-    }
+    data['file'] = this.file;
     data['type'] = this.type;
     data['publisherId'] = this.publisherId;
     data['isDiscounted'] = this.isDiscounted;
@@ -1071,6 +1146,7 @@ class Book {
     if (this.authors != null) {
       data['authors'] = this.authors!.toJson();
     }
+    data['format'] = this.format;
     return data;
   }
 }

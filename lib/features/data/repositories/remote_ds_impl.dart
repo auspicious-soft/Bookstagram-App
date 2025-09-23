@@ -24,13 +24,15 @@ class RemoteDsImpl implements RemoteRepo {
       String language,
       String authType,
       String fullName,
-      String profilePic) async {
+      String profilePic,
+      String fcmToken) async {
     try {
       final loginData = await remoteDataSource.loginToBookstagram(
           email: email,
           pass: pass,
           phoneNumber: phoneNumber,
           fullName: fullName,
+          fcmToken: fcmToken,
           profilePic: profilePic,
           language: language,
           authType: authType);
@@ -51,6 +53,7 @@ class RemoteDsImpl implements RemoteRepo {
     String countryCode,
     String phoneNumber,
     String fullname,
+    String fcmToken,
     String firstname,
     String lastname,
     String pass,
@@ -66,6 +69,7 @@ class RemoteDsImpl implements RemoteRepo {
           firstname: firstname,
           lastname: lastname,
           pass: pass,
+          fcmToken: fcmToken,
           language: language,
           authType: authType);
       if (signUpData != null) {

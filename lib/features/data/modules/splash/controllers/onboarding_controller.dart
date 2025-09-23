@@ -1,10 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
 class OnboardingController extends GetxController {
-
-
   @override
-  void onInit() {
+  void onInit() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("$token>>>>>>>>>>>>>>>>>>>>>Token");
     // TODO: implement onInit
     super.onInit();
   }
@@ -14,12 +15,13 @@ class OnboardingController extends GetxController {
     // TODO: implement onClose
     super.onClose();
   }
+
   // Navigation methods
   void navigateToLogin() {
-   Get.toNamed("/login");
+    Get.toNamed("/login");
   }
 
   void navigateToSignup() {
-   Get.toNamed("/signup");
+    Get.toNamed("/signup");
   }
 }

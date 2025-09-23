@@ -1,12 +1,11 @@
 import 'dart:convert';
 
-import 'package:bookstagram/features/presentation/Pages/CourseDetail/pg_coursedetail.dart';
-import 'package:bookstagram/features/presentation/Pages/CoursesPage/pg_courses_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
 import '../../../../../app_settings/constants/app_config.dart';
+import '../../../../../localization/app_localization.dart';
 import '../models/BookStudyModel.dart';
 import 'debouncer.dart';
 
@@ -139,7 +138,10 @@ class PgBookstudyController extends GetxController {
   }
 
   void navigateToCourses() {
-    // Get.to(() => const PgCoursesPage());
+    // Get.toNamed("/allcollections", arguments: {
+    //   "title": '${AppLocalization.of(Get.context!).translate('newbooks')}',
+    //   "id": ""
+    // });
   }
 
   void navigateToCourseDetail() {

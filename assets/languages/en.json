@@ -1,4 +1,11 @@
 {
+  "strAllCollections": "All collections",
+  "strSummary": "Summary",
+  "strReadBook": "Read",
+  "strListenBook": "Listen",
+  "Publisher": "Publisher",
+  "bookCount": "books in the catalog",
+  "Publishedbooks": "Published books",
   "NoReviewsHeading": "No reviews",
   "NoReviewsSubHeading": "It looks like there aren’t any reviews here just yet.",
   "CompleteCourse": "Complete the course",

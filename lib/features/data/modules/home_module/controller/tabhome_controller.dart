@@ -54,7 +54,7 @@ class HomeDataController extends GetxController {
     language.refresh();
   }
 
-  getBookTitle({required String language, required dynamic name}) {
+  getBookTitle({String? language, required dynamic name}) {
     // Default title if name is null or invalid
     const String defaultTitle = 'No Title';
     String selectedLanguage = Get.locale?.languageCode ?? "";
