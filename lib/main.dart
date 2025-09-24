@@ -63,13 +63,17 @@ import 'features/data/modules/bookstudy/bindings/bookeventdetail_binding.dart';
 import 'features/data/modules/bookstudy/views/bookEventDetail.dart';
 import 'features/data/modules/bookstudy/views/book_event.dart';
 import 'features/data/modules/bookstudy/views/teacher_detail_screen.dart';
+import 'features/data/modules/collection_and_summary/bindings/MySchoolBookListBinding.dart';
 import 'features/data/modules/collection_and_summary/bindings/book_room_binding.dart';
 import 'features/data/modules/collection_and_summary/bindings/book_school_bindings.dart';
+import 'features/data/modules/collection_and_summary/bindings/book_school_congrats_binding.dart';
 import 'features/data/modules/collection_and_summary/bindings/collection_summary_binding.dart'
     show CollectionSummaryBinding;
 import 'features/data/modules/collection_and_summary/bindings/completed_books_bindings.dart';
 import 'features/data/modules/collection_and_summary/bindings/favourite_books_binding.dart';
 import 'features/data/modules/collection_and_summary/bindings/reading_now_binding.dart';
+import 'features/data/modules/collection_and_summary/view/BookScool_Congrats.dart';
+import 'features/data/modules/collection_and_summary/view/MySchoolsBookList.dart';
 import 'features/data/modules/collection_and_summary/view/book_School.dart';
 import 'features/data/modules/collection_and_summary/view/book_room_screen.dart';
 import 'features/data/modules/collection_and_summary/view/collection_summary.dart';
@@ -388,6 +392,16 @@ class MyApp extends StatelessWidget {
           name: "/book-schoolCoupon",
           page: () => PgBookSchool(),
           binding: PgBookSchoolBinding(),
+        ),
+        GetPage(
+          name: "/book-school-congrats",
+          page: () => BookschoolCongrats(),
+          binding: BookSchoolCongratsBinding(),
+        ),
+        GetPage(
+          name: "/book-school-List",
+          page: () => Myschoolsbooklist(),
+          binding: Myschoolbooklistbinding(),
         ),
       ],
     );

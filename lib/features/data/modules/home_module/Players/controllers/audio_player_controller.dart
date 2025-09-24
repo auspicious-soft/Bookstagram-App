@@ -166,7 +166,7 @@ class AudioController extends GetxController {
 
     // Prepare JSON payload
     return {
-      "progress": progress,
+      "audiobookProgress": progress,
       "readAudioChapter": chapterId,
       // "voucherId": "6790d426454c2938059091bc" // Uncomment if needed
     };

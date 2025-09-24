@@ -60,4 +60,8 @@ class AppConfig {
   static const String AddAuthorFavouriteEndPoint = 'api/user/author-favourites';
 
   static const String CourseFavouriteEndPoint = 'api/user/book-rooms/courses';
+
+  static const String VerifyCouponEndPoint = 'api/user/book-schools/verify';
+  static const String BookSchoolBooksEndPoint = 'api/user/book-schools/books';
+  static const String ProfilePasswordChange = 'api/user/change-password';
 }

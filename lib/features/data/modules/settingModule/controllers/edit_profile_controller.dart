@@ -308,12 +308,4 @@ class PgEditProfileController extends GetxController {
       countryController.text = country.name;
     }
   }
-
-  void changePassword() {
-    Get.snackbar(
-      'Info',
-      'Change password functionality not implemented yet',
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  }
 }

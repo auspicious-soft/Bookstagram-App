@@ -17,7 +17,6 @@ import '../controller/password_change_controller.dart';
 class ChangePassSheet extends StatefulWidget {
   final String otp;
 
-
   const ChangePassSheet({super.key, required this.otp});
 
   @override
@@ -25,6 +24,7 @@ class ChangePassSheet extends StatefulWidget {
 }
 
 class _ChangePassSheetState extends State<ChangePassSheet> {
+  // Use Get.find or ensure controller is initialized elsewhere
   final controller = Get.put(ChangePassController());
 
   @override
@@ -39,73 +39,73 @@ class _ChangePassSheetState extends State<ChangePassSheet> {
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              padVertical(10),
-              Center(
-                child: Label(
-                  txt: AppLocalization.of(context).translate('newpassword'),
-                  type: TextTypes.f_17_500,
-                ),
-              ),
-              padVertical(15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Center(
-                  child: Label(
-                    txt: AppLocalization.of(context)
-                        .translate('setnewpassword'),
-                    forceAlignment: TextAlign.center,
-                    type: TextTypes.f_34_500,
+          child: Obx(() => Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  padVertical(10),
+                  Center(
+                    child: Label(
+                      txt: AppLocalization.of(context).translate('newpassword'),
+                      type: TextTypes.f_17_500,
+                    ),
                   ),
-                ),
-              ),
-              padVertical(20),
-              Label(
-                txt: AppLocalization.of(context).translate('newpassword'),
-                forceAlignment: TextAlign.center,
-                type: TextTypes.f_13_400,
-              ),
-              padVertical(15),
-              Obx(() => _buildPasswordField(
-                controller.newPassController,
-                AppLocalization.of(context).translate('Password'),
-                controller.passEye.value,
-                controller.togglePassEye,
+                  padVertical(15),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Center(
+                      child: Label(
+                        txt: AppLocalization.of(context)
+                            .translate('setnewpassword'),
+                        forceAlignment: TextAlign.center,
+                        type: TextTypes.f_34_500,
+                      ),
+                    ),
+                  ),
+                  padVertical(20),
+                  Label(
+                    txt: AppLocalization.of(context).translate('newpassword'),
+                    forceAlignment: TextAlign.center,
+                    type: TextTypes.f_13_400,
+                  ),
+                  padVertical(15),
+                  Obx(() => _buildPasswordField(
+                        controller.newPassController,
+                        AppLocalization.of(context).translate('Password'),
+                        controller.passEye.value,
+                        controller.togglePassEye,
+                      )),
+                  padVertical(15),
+                  Label(
+                    txt: AppLocalization.of(context)
+                        .translate('repeatnewpassword'),
+                    forceAlignment: TextAlign.center,
+                    type: TextTypes.f_13_400,
+                  ),
+                  padVertical(15),
+                  Obx(() => _buildPasswordField(
+                        controller.repPassController,
+                        AppLocalization.of(context).translate('Password'),
+                        controller.passEye2.value,
+                        controller.togglePassEye2,
+                      )),
+                  padVertical(40),
+                  Obx(() => controller.isLoading.value
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primaryColor,
+                          ),
+                        )
+                      : commonButton(
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            controller.changePassword(widget.otp, context);
+                          },
+                          context: context,
+                          txt: AppLocalization.of(context).translate('save'),
+                        )),
+                ],
               )),
-              padVertical(15),
-              Label(
-                txt: AppLocalization.of(context)
-                    .translate('repeatnewpassword'),
-                forceAlignment: TextAlign.center,
-                type: TextTypes.f_13_400,
-              ),
-              padVertical(15),
-              Obx(() => _buildPasswordField(
-                controller.repPassController,
-                AppLocalization.of(context).translate('Password'),
-                controller.passEye2.value,
-                controller.togglePassEye2,
-              )),
-              padVertical(40),
-              Obx(() => controller.isLoading.value
-                  ? const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ),
-              )
-                  : commonButton(
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  controller.changePassword(widget.otp, context);
-                },
-                context: context,
-                txt: AppLocalization.of(context).translate('save'),
-              )),
-            ],
-          ),
         ),
       ),
     );

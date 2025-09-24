@@ -39,11 +39,13 @@ class TotalData {
   List<Banner>? banners;
   List<Story>? stories;
   List<ReadProgress>? readProgress;
+  bool? userSchoolVoucher;
 
   TotalData({
     this.banners,
     this.stories,
     this.readProgress,
+    this.userSchoolVoucher,
   });
 
   factory TotalData.fromJson(Map<String, dynamic> json) => TotalData(
@@ -58,6 +60,7 @@ class TotalData {
             ? []
             : List<ReadProgress>.from(
                 json["readProgress"]!.map((x) => ReadProgress.fromJson(x))),
+        userSchoolVoucher: json["userSchoolVoucher"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,6 +73,7 @@ class TotalData {
         "readProgress": readProgress == null
             ? []
             : List<dynamic>.from(readProgress!.map((x) => x.toJson())),
+        "userSchoolVoucher": userSchoolVoucher,
       };
 }
 

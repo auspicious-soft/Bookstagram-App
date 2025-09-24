@@ -129,6 +129,7 @@ class ReadProgress {
   String? userId;
   BookId? bookId;
   num? progress;
+
   // Added missing fields from JSON
   num? audiobookProgress;
   num? highestProgress;
@@ -337,6 +338,7 @@ class ProductId {
   String? createdAt;
   String? updatedAt;
   num? iV;
+  bool? isFavorite;
   String? format; // Added from JSON
 
   ProductId(
@@ -357,6 +359,7 @@ class ProductId {
       this.averageRating,
       this.createdAt,
       this.updatedAt,
+      this.isFavorite,
       this.iV,
       this.format});
 
@@ -396,8 +399,12 @@ class ProductId {
     isDiscounted = json['isDiscounted'];
     discountPercentage = json['discountPercentage'];
     averageRating = json['averageRating'];
+
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+
+    isFavorite = json['isFavorite'];
+
     iV = json['__v'];
     format = json['format'];
   }
@@ -437,6 +444,7 @@ class ProductId {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    data['isFavorite'] = this.isFavorite;
     data['format'] = this.format;
     return data;
   }

@@ -4,6 +4,7 @@ import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
+import 'package:bookstagram/features/data/modules/settingModule/view/set_Password_Sheet.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -160,15 +161,33 @@ class PgEditProfileView extends GetView<PgEditProfileController> {
                             padVertical(10),
                             _buildDatePicker(context),
                             padVertical(20),
-                            TextButton(
-                              onPressed: () {},
-                              child: Label(
-                                txt: AppLocalization.of(context)
-                                    .translate('changepass'),
-                                type: TextTypes.f_15_400,
-                                forceColor: AppColors.primaryColor,
-                              ),
-                            ),
+                            controller.proileData.value?.data?.data?.authType ==
+                                    "Google"
+                                ? SizedBox(
+                                    height: 10,
+                                  )
+                                : TextButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                        backgroundColor: AppColors.background,
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20)),
+                                        ),
+                                        isScrollControlled: true,
+                                        builder: (context) {
+                                          return SetPasswordSheet();
+                                        },
+                                      );
+                                    },
+                                    child: Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('changepass'),
+                                      type: TextTypes.f_15_400,
+                                      forceColor: AppColors.primaryColor,
+                                    ),
+                                  ),
                             Container(
                               width: Get.width,
                               height: 50,

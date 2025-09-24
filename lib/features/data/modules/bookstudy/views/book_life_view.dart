@@ -352,91 +352,256 @@ class BookLifeView extends GetView<BookLifeController> {
                                   padVertical(15),
                                   Column(
                                     children: [
-                                      SizedBox(
-                                        height: 80,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: controller.bookevent.value
-                                              ?.data?.categories?.length,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          itemBuilder: (context, index) {
-                                            // Define the list of category names
-                                            final categories = controller
-                                                .bookevent
-                                                .value
-                                                ?.data
-                                                ?.categories?[index];
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  controller.selectedIndex
-                                                      .value = index;
-                                                  controller.selectedIndex
-                                                      .refresh();
-                                                  controller
-                                                      .updateIndicatorPosition(
-                                                          index);
-                                                  controller.setCategory();
-                                                },
-                                                child: Obx(() => Container(
-                                                      width: Get.width * 0.25,
-                                                      key: controller
-                                                          .tabKeys[index],
-                                                      alignment:
-                                                          Alignment.center,
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                      child: Text(
-                                                        controller.getBookTitle(
-                                                            name: categories
-                                                                ?.name),
-                                                        // Display the corresponding category name
-                                                        style: TextStyle(
-                                                          fontFamily: AppConst
-                                                              .fontFamily,
-                                                          fontSize: 17,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: controller
+                                      Column(
+                                        children: [
+                                          LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              final screenWidth =
+                                                  constraints.maxWidth;
+                                              const tabWidth =
+                                                  200.0; // Fixed width for each tab
+                                              final RxDouble scrollOffset = 0.0
+                                                  .obs; // Track scroll offset
+                                              final ScrollController
+                                                  scrollController =
+                                                  ScrollController();
+
+                                              // Update scroll offset when the ListView scrolls
+                                              scrollController.addListener(() {
+                                                scrollOffset.value =
+                                                    scrollController.offset;
+                                              });
+
+                                              // Scroll to the selected tab when it changes
+                                              void scrollToSelectedTab(
+                                                  int index) {
+                                                if (scrollController
+                                                    .hasClients) {
+                                                  final targetOffset =
+                                                      index * tabWidth;
+                                                  final maxScrollExtent =
+                                                      scrollController.position
+                                                          .maxScrollExtent;
+                                                  final adjustedOffset =
+                                                      targetOffset >
+                                                              maxScrollExtent
+                                                          ? maxScrollExtent
+                                                          : targetOffset;
+                                                  scrollController.animateTo(
+                                                    adjustedOffset,
+                                                    duration: const Duration(
+                                                        milliseconds: 300),
+                                                    curve: Curves.easeInOut,
+                                                  );
+                                                }
+                                              }
+
+                                              // Listen to selectedIndex changes and scroll to the selected tab
+                                              ever(controller.selectedIndex,
+                                                  (int index) {
+                                                scrollToSelectedTab(index);
+                                                controller
+                                                    .updateIndicatorPosition(
+                                                        index);
+                                                controller.setCategory();
+                                              });
+
+                                              return Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 40,
+                                                    // Height for the tab bar
+                                                    child: ListView.builder(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      controller:
+                                                          scrollController,
+                                                      itemCount: controller
+                                                              .bookevent
+                                                              .value
+                                                              ?.data
+                                                              ?.categories
+                                                              ?.length ??
+                                                          0,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final categories =
+                                                            controller
+                                                                    .bookevent
+                                                                    .value
+                                                                    ?.data
+                                                                    ?.categories?[
+                                                                index];
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            controller
+                                                                .selectedIndex
+                                                                .value = index;
+                                                            controller
+                                                                .selectedIndex
+                                                                .refresh();
+                                                            controller
+                                                                .updateIndicatorPosition(
+                                                                    index);
+                                                            controller
+                                                                .setCategory();
+                                                          },
+                                                          child: Container(
+                                                            width: tabWidth,
+                                                            key: controller
+                                                                .tabKeys[index],
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom: 10),
+                                                            child:
+                                                                Obx(() => Text(
+                                                                      controller.getBookTitle(
+                                                                          name:
+                                                                              categories?.name),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            AppConst.fontFamily,
+                                                                        fontSize:
+                                                                            17,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: controller.selectedIndex.value ==
+                                                                                index
+                                                                            ? AppColors.primaryColor
+                                                                            : AppColors.blackColor,
+                                                                      ),
+                                                                    )),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Stack(
+                                                    children: [
+                                                      Container(
+                                                        width: screenWidth,
+                                                        height: 2,
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                      ),
+                                                      Obx(
+                                                        () =>
+                                                            AnimatedPositioned(
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      300),
+                                                          left: (controller
                                                                       .selectedIndex
-                                                                      .value ==
-                                                                  index
-                                                              ? AppColors
-                                                                  .primaryColor
-                                                              : AppColors
-                                                                  .blackColor,
+                                                                      .value *
+                                                                  tabWidth) -
+                                                              scrollOffset
+                                                                  .value,
+                                                          width: tabWidth,
+                                                          height: 2,
+                                                          child: Container(
+                                                            color: AppColors
+                                                                .primaryColor,
+                                                          ),
                                                         ),
                                                       ),
-                                                    )),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Stack(
-                                        children: [
-                                          Container(
-                                            height: 2,
-                                            color: Colors.grey.shade300,
+                                                    ],
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
-                                          AnimatedPositioned(
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            left:
-                                                controller.indicatorLeft.value,
-                                            width: Get.width * 0.2,
-                                            height: 2,
-                                            child: Container(
-                                              color: AppColors.primaryColor,
-                                            ),
-                                          )
                                         ],
                                       ),
+                                      // SizedBox(
+                                      //   height: 80,
+                                      //   child: ListView.builder(
+                                      //     scrollDirection: Axis.horizontal,
+                                      //     itemCount: controller.bookevent.value
+                                      //         ?.data?.categories?.length,
+                                      //     padding: const EdgeInsets.symmetric(
+                                      //         horizontal: 10),
+                                      //     itemBuilder: (context, index) {
+                                      //       // Define the list of category names
+                                      //       final categories = controller
+                                      //           .bookevent
+                                      //           .value
+                                      //           ?.data
+                                      //           ?.categories?[index];
+                                      //       return Padding(
+                                      //         padding:
+                                      //             const EdgeInsets.symmetric(
+                                      //                 horizontal: 10),
+                                      //         child: GestureDetector(
+                                      //           onTap: () {
+                                      //             controller.selectedIndex
+                                      //                 .value = index;
+                                      //             controller.selectedIndex
+                                      //                 .refresh();
+                                      //             controller
+                                      //                 .updateIndicatorPosition(
+                                      //                     index);
+                                      //             controller.setCategory();
+                                      //           },
+                                      //           child: Obx(() => Container(
+                                      //                 width: Get.width * 0.25,
+                                      //                 key: controller
+                                      //                     .tabKeys[index],
+                                      //                 alignment:
+                                      //                     Alignment.center,
+                                      //                 padding:
+                                      //                     const EdgeInsets.only(
+                                      //                         bottom: 10),
+                                      //                 child: Text(
+                                      //                   controller.getBookTitle(
+                                      //                       name: categories
+                                      //                           ?.name),
+                                      //                   // Display the corresponding category name
+                                      //                   style: TextStyle(
+                                      //                     fontFamily: AppConst
+                                      //                         .fontFamily,
+                                      //                     fontSize: 17,
+                                      //                     fontWeight:
+                                      //                         FontWeight.w500,
+                                      //                     color: controller
+                                      //                                 .selectedIndex
+                                      //                                 .value ==
+                                      //                             index
+                                      //                         ? AppColors
+                                      //                             .primaryColor
+                                      //                         : AppColors
+                                      //                             .blackColor,
+                                      //                   ),
+                                      //                 ),
+                                      //               )),
+                                      //         ),
+                                      //       );
+                                      //     },
+                                      //   ),
+                                      // ),
+                                      // Stack(
+                                      //   children: [
+                                      //     Container(
+                                      //       height: 2,
+                                      //       color: Colors.grey.shade300,
+                                      //     ),
+                                      //     AnimatedPositioned(
+                                      //       duration: const Duration(
+                                      //           milliseconds: 300),
+                                      //       left:
+                                      //           controller.indicatorLeft.value,
+                                      //       width: Get.width * 0.2,
+                                      //       height: 2,
+                                      //       child: Container(
+                                      //         color: AppColors.primaryColor,
+                                      //       ),
+                                      //     )
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                   padVertical(10),
@@ -536,7 +701,7 @@ class BookLifeView extends GetView<BookLifeController> {
                                                                           ?.name ??
                                                                       "",
                                                                   type: TextTypes
-                                                                      .f_22_700,
+                                                                      .f_18_700,
                                                                 ),
                                                               ),
                                                               SizedBox(

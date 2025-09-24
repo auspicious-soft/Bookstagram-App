@@ -430,7 +430,7 @@ class PgBookEvent extends GetView<PgBookEventController> {
                                                       child: Label(
                                                         txt: event?.name ?? "",
                                                         type:
-                                                            TextTypes.f_22_700,
+                                                            TextTypes.f_18_700,
                                                       ),
                                                     ),
                                                     SizedBox(

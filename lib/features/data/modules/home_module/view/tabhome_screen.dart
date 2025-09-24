@@ -8,8 +8,6 @@ import 'package:bookstagram/app_settings/constants/app_const.dart';
 
 import 'package:bookstagram/features/data/models/homedata_model.dart';
 
-import 'package:bookstagram/features/presentation/Pages/BookSchool/pg_Book_school.dart';
-
 import 'package:bookstagram/features/presentation/Pages/Notification/pg_notification.dart';
 import 'package:bookstagram/features/presentation/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/localization/app_localization.dart';
@@ -241,7 +239,13 @@ class TabhomeScreen extends GetView<HomeDataController> {
             FeatureButton(
                 imagePath: AppAssets.school,
                 labelKey: 'Bookschool',
-                onTap: () => {Get.toNamed("/book-schoolCoupon")}),
+                onTap: () => {
+                      if (controller.homeData.value?.data?.userSchoolVoucher ==
+                          true)
+                        {Get.toNamed("/book-school-List")}
+                      else
+                        {Get.toNamed("/book-schoolCoupon")}
+                    }),
             FeatureButton(
               imagePath: AppAssets.study,
               labelKey: 'Bookstudy',

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../../../../../app_settings/components/loader.dart';
 import '../../../../../app_settings/constants/app_config.dart';
 import '../../../../../app_settings/constants/app_dim.dart';
+import '../../../../../app_settings/constants/helpers.dart';
 import '../../home_module/models/homeProductModel.dart';
 import '../controllers/bookstudy_home_controller.dart';
 import '../models/BookStudyModel.dart';
@@ -275,125 +276,240 @@ class PgBookstudy extends GetView<PgBookstudyController> {
                                       ],
                                     )
                                   : SizedBox(),
-                              GestureDetector(
-                                onTap: controller.navigateToCourses,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Label(
-                                      txt:
-                                          '${AppLocalization.of(context).translate('continuecourse')} 💌',
-                                      type: TextTypes.f_20_500,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: screenWidth * 0.045,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.015),
-                              Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                  vertical: screenHeight * 0.012,
-                                  horizontal: screenWidth * 0.04,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.border,
-                                  borderRadius: BorderRadius.circular(
-                                      screenWidth * 0.045),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(screenWidth * 0.025)),
-                                      child: Center(
-                                        child: Image.asset(
-                                          width: screenWidth * 0.25,
-                                          height: screenWidth * 0.25,
-                                          AppAssets.book,
-                                          fit: BoxFit.contain,
-                                        ),
+                              controller.bookStudy.value?.data?.readBooks
+                                          ?.length !=
+                                      0
+                                  ? GestureDetector(
+                                      onTap: controller.navigateToCourses,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Label(
+                                              txt:
+                                                  '${AppLocalization.of(context).translate('continuereading')} 💌',
+                                              type: TextTypes.f_20_500),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            size: 18,
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                    SizedBox(width: screenWidth * 0.025),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Label(
-                                          txt: "Course_title",
-                                          type: TextTypes.f_15_500,
-                                        ),
-                                        Label(
-                                          txt: "Course_category",
-                                          type: TextTypes.f_15_400,
-                                          forceColor: AppColors.resnd,
-                                        ),
-                                        SizedBox(height: screenHeight * 0.01),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: screenWidth * 0.35,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        screenWidth * 0.012),
-                                                child:
-                                                    const LinearProgressIndicator(
-                                                  value: 0.73,
-                                                  backgroundColor:
-                                                      AppColors.inputBorder,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    AppColors.primaryColor,
+                                    )
+                                  : SizedBox(),
+                              SizedBox(height: 30),
+                              Obx(() => controller.bookStudy.value?.data
+                                          ?.readBooks?.length !=
+                                      0
+                                  ? SizedBox(
+                                      height: 160,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: controller.bookStudy.value
+                                                ?.data?.readBooks?.length ??
+                                            0, // Adjust based on your data
+                                        itemBuilder: (context, index) {
+                                          final book = controller.bookStudy
+                                              .value?.data?.readBooks?[index];
+                                          return Container(
+                                            width: ScreenUtils.screenWidth(
+                                                    context) *
+                                                0.9,
+                                            // Set a fixed width (e.g., 80% of screen width)
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            // Space between items
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 15),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.border,
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      const BorderRadius.all(
+                                                          Radius.circular(10)),
+                                                  child: book?.bookId?.image !=
+                                                          null
+                                                      ? Image.network(
+                                                          width: 113,
+                                                          height: 144,
+                                                          "${AppConfig.imgBaseUrl}${book?.bookId?.image}",
+                                                          fit: BoxFit.fill,
+                                                          errorBuilder: (context,
+                                                                  error,
+                                                                  stackTrace) =>
+                                                              Image.asset(
+                                                            AppAssets.book,
+                                                            width: 113,
+                                                            height: 144,
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        )
+                                                      : Image.asset(
+                                                          width: 113,
+                                                          height: 144,
+                                                          AppAssets.book,
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                ),
+
+                                                const SizedBox(
+                                                    width:
+                                                        10), // Replaced padHorizontal(10)
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Label(
+                                                        txt: controller
+                                                            .getBookTitle(
+                                                                name: book
+                                                                    ?.bookId
+                                                                    ?.name),
+                                                        type:
+                                                            TextTypes.f_15_500,
+                                                      ),
+                                                      Label(
+                                                        txt: controller
+                                                            .getBookTitle(
+                                                                name: book
+                                                                    ?.bookId
+                                                                    ?.authorId
+                                                                    ?.first
+                                                                    ?.name),
+                                                        type:
+                                                            TextTypes.f_15_400,
+                                                        forceColor:
+                                                            AppColors.resnd,
+                                                      ),
+                                                      Label(
+                                                        txt: book?.bookId
+                                                                ?.type ??
+                                                            "",
+                                                        type:
+                                                            TextTypes.f_13_400,
+                                                        forceColor:
+                                                            AppColors.resnd,
+                                                      ),
+                                                      const SizedBox(
+                                                          height:
+                                                              5), // Replaced padVertical(5)
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child:
+                                                                  LinearProgressIndicator(
+                                                                value:
+                                                                    (book?.progress ??
+                                                                            0) /
+                                                                        100,
+                                                                backgroundColor:
+                                                                    AppColors
+                                                                        .inputBorder,
+                                                                valueColor: AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                    AppColors
+                                                                        .primaryColor),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 10),
+                                                          Label(
+                                                            txt:
+                                                                "${book?.progress?.toString()}%",
+                                                            // Replace with dynamic value like "${(book.progress * 100).toInt()}%"
+                                                            type: TextTypes
+                                                                .f_12_400,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(
+                                                          height:
+                                                              2), // Replaced padVertical(2)
+                                                      SizedBox(
+                                                        height: 38,
+                                                        child: ElevatedButton(
+                                                          onPressed: () => {
+                                                            if (book?.bookId
+                                                                    ?.type ==
+                                                                "course")
+                                                              {
+                                                                Get.toNamed(
+                                                                    '/Course-detail',
+                                                                    arguments: {
+                                                                      "id": book
+                                                                          ?.bookId
+                                                                          ?.sId,
+                                                                    })
+                                                              }
+                                                            else
+                                                              {
+                                                                Get.toNamed(
+                                                                    '/book-detail',
+                                                                    arguments: {
+                                                                      "id": book
+                                                                          ?.bookId
+                                                                          ?.sId,
+                                                                    })
+                                                              }
+                                                          }, // Pass index if needed
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            elevation: 0.0,
+                                                            backgroundColor:
+                                                                AppColors
+                                                                    .primaryColor,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                          ),
+                                                          child: Label(
+                                                            txt: AppLocalization
+                                                                    .of(context)
+                                                                .translate(
+                                                                    'continue'),
+                                                            type: TextTypes
+                                                                .f_13_400,
+                                                            forceColor:
+                                                                AppColors
+                                                                    .whiteColor,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
-                                            SizedBox(
-                                                width: screenWidth * 0.025),
-                                            Label(
-                                              txt: "73%",
-                                              type: TextTypes.f_12_400,
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: screenHeight * 0.005),
-                                        SizedBox(
-                                          height: screenHeight * 0.05,
-                                          child: ElevatedButton(
-                                            onPressed:
-                                                controller.onContinuePressed,
-                                            style: ElevatedButton.styleFrom(
-                                              elevation: 0.0,
-                                              backgroundColor:
-                                                  AppColors.primaryColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        screenWidth * 0.025),
-                                              ),
-                                            ),
-                                            child: Label(
-                                              txt: AppLocalization.of(context)
-                                                  .translate('continue'),
-                                              type: TextTypes.f_13_400,
-                                              forceColor: AppColors.whiteColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: screenHeight * 0.025),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : SizedBox()),
+                              SizedBox(height: 30),
                               (controller.bookStudy.value?.data?.newBooks
                                               ?.length ??
                                           0) >

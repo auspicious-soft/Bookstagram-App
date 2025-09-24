@@ -3,6 +3,7 @@ import 'package:bookstagram/features/data/modules/home_module/models/author_list
 import '../../home_module/models/CollectionDataModel.dart';
 import '../../home_module/models/homeProductModel.dart';
 import 'Category_data_model.dart';
+import 'book_market_response_Model.dart' show ReadProgress;
 
 class BookStudyModel {
   bool? success;
@@ -30,17 +31,19 @@ class BookStudyModel {
 }
 
 class BookStudyData {
-  List<NewBooks>? readBooks;
+  List<ReadProgress>? readBooks;
   List<NewBooks>? newBooks;
   List<AuthorModel>? teachers;
   List<NewBooks>? popularCourses;
   List<Categories>? categories;
+  List<ReadProgress>? readProgress;
 
   BookStudyData(
       {this.newBooks,
       this.teachers,
       this.readBooks,
       this.categories,
+      this.readProgress,
       this.popularCourses});
 
   BookStudyData.fromJson(Map<String, dynamic> json) {
@@ -56,16 +59,23 @@ class BookStudyData {
         popularCourses!.add(new NewBooks.fromJson(v));
       });
     }
+
     if (json['readBooks'] != null) {
-      readBooks = <NewBooks>[];
+      readBooks = <ReadProgress>[];
       json['readBooks'].forEach((v) {
-        readBooks!.add(new NewBooks.fromJson(v));
+        readBooks!.add(new ReadProgress.fromJson(v));
       });
     }
     if (json['teachers'] != null) {
       teachers = <AuthorModel>[];
       json['teachers'].forEach((v) {
         teachers!.add(new AuthorModel.fromJson(v));
+      });
+    }
+    if (json['readProgress'] != null) {
+      readProgress = <ReadProgress>[];
+      json['readProgress'].forEach((v) {
+        readProgress!.add(new ReadProgress.fromJson(v));
       });
     }
     if (json['categories'] != null) {
@@ -91,6 +101,9 @@ class BookStudyData {
     }
     if (this.teachers != null) {
       data['teachers'] = this.teachers!.map((v) => v.toJson()).toList();
+    }
+    if (this.readProgress != null) {
+      data['readProgress'] = this.readProgress!.map((v) => v.toJson()).toList();
     }
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();

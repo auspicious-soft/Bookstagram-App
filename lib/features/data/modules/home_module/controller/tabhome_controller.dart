@@ -109,6 +109,7 @@ class HomeDataController extends GetxController {
         showErrorToast(context, errorMsg.message);
       }, (fetchedData) {
         homeData.value = fetchedData;
+        print(homeData.value?.data?.userSchoolVoucher);
       });
     } catch (e) {
       error?.value = e.toString();

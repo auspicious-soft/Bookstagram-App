@@ -275,6 +275,38 @@ class BookMastersScreen extends GetView<BookMastersController> {
                                       ],
                                     )
                                   : SizedBox(),
+                              (controller.bookStudy.value?.data?.newBooks
+                                              ?.length ??
+                                          0) >
+                                      0
+                                  ? Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: controller.navigateToCourses,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Label(
+                                                txt: AppLocalization.of(context)
+                                                    .translate('newcourses'),
+                                                type: TextTypes.f_20_500,
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                size: screenWidth * 0.045,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: screenHeight * 0.02),
+                                        _buildCoursesRow(controller.bookStudy
+                                                .value?.data?.newBooks ??
+                                            []),
+                                        SizedBox(height: screenHeight * 0.025),
+                                      ],
+                                    )
+                                  : SizedBox(),
                             ],
                           ).marginSymmetric(horizontal: 20, vertical: 20),
                         ).marginOnly(top: screenHeight * 0.22),
@@ -369,127 +401,140 @@ class BookMastersScreen extends GetView<BookMastersController> {
         itemCount: courses.length,
         itemBuilder: (context, index) {
           final course = courses[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 144,
-                  width: 246,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
+          return GestureDetector(
+            onTap: () {
+              if (courses?[index]?.productsId?.type == "course") {
+                Get.toNamed('/Course-detail', arguments: {
+                  "id": courses?[index]?.productsId?.sId,
+                });
+              } else {
+                Get.toNamed('/book-detail', arguments: {
+                  "id": courses?[index]?.productsId?.sId,
+                });
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 144,
+                    width: 246,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: course.productsId?.image != null
-                          ? Image.network(
-                              "${AppConfig.imgBaseUrl}${course.productsId?.image}",
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Image.asset(AppAssets.book,
-                                      fit: BoxFit.contain),
-                            )
-                          : Image.asset(AppAssets.book, fit: BoxFit.contain),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: course.productsId?.image != null
+                            ? Image.network(
+                                "${AppConfig.imgBaseUrl}${course.productsId?.image}",
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppAssets.book,
+                                        fit: BoxFit.contain),
+                              )
+                            : Image.asset(AppAssets.book, fit: BoxFit.contain),
+                      ),
                     ),
                   ),
-                ),
-                padVertical(5),
-                Label(
-                  txt: controller.getBookTitle(
-                      name: course.productsId?.name ?? 'Unknown'),
-                  type: TextTypes.f_13_500,
-                ),
-                SizedBox(
-                  width: 240,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 16,
-                            color: AppColors.primaryColor,
-                          ),
-                          Label(
-                            txt: (course.productsId?.averageRating ?? 0.0)
-                                .toString(),
-                            type: TextTypes.f_11_500,
-                          ),
-                          padHorizontal(8),
-                          Container(
-                            height: 12,
-                            width: 1,
-                            decoration: BoxDecoration(
-                              color: AppColors.buttongroupBorder,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          padHorizontal(8),
-                          SizedBox(
-                            width: 120,
-                            child: Label(
-                              txt: controller.getBookTitle(
-                                  name:
-                                      course.productsId?.authorId?.isNotEmpty ==
-                                              true
-                                          ? course.productsId?.authorId![0].name
-                                          : 'Unknown'),
-                              type: TextTypes.f_13_400,
-                              forceColor: AppColors.resnd,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          if (course.productsId?.isDiscounted == true)
-                            Text(
-                              course.productsId?.price?.toString() ?? '0',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: AppConst.fontFamily,
-                                decoration: TextDecoration.lineThrough,
-                                decorationThickness: 2,
-                                decorationColor: AppColors.blackColor,
-                                color: AppColors.blackColor,
-                              ),
-                            ),
-                          SizedBox(width: 10),
-                          Text(
-                            course.productsId?.isDiscounted == true
-                                ? (course.productsId?.price != null
-                                        ? course.productsId?.price! ??
-                                            0 *
-                                                (1 -
-                                                    (course.productsId
-                                                                ?.discountPercentage ??
-                                                            0) /
-                                                        100)
-                                        : 0)
-                                    .toStringAsFixed(2)
-                                : (course.productsId?.price ?? 0)
-                                    .toStringAsFixed(2),
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: AppConst.fontFamily,
+                  padVertical(5),
+                  Label(
+                    txt: controller.getBookTitle(
+                        name: course.productsId?.name ?? 'Unknown'),
+                    type: TextTypes.f_13_500,
+                  ),
+                  SizedBox(
+                    width: 240,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              size: 16,
                               color: AppColors.primaryColor,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Label(
+                              txt: (course.productsId?.averageRating ?? 0.0)
+                                  .toString(),
+                              type: TextTypes.f_11_500,
+                            ),
+                            padHorizontal(8),
+                            Container(
+                              height: 12,
+                              width: 1,
+                              decoration: BoxDecoration(
+                                color: AppColors.buttongroupBorder,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            padHorizontal(8),
+                            SizedBox(
+                              width: 120,
+                              child: Label(
+                                txt: controller.getBookTitle(
+                                    name: course.productsId?.authorId
+                                                ?.isNotEmpty ==
+                                            true
+                                        ? course.productsId?.authorId![0].name
+                                        : 'Unknown'),
+                                type: TextTypes.f_13_400,
+                                forceColor: AppColors.resnd,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            if (course.productsId?.isDiscounted == true)
+                              Text(
+                                course.productsId?.price?.toString() ?? '0',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: AppConst.fontFamily,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationThickness: 2,
+                                  decorationColor: AppColors.blackColor,
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                            SizedBox(width: 10),
+                            Text(
+                              course.productsId?.isDiscounted == true
+                                  ? (course.productsId?.price != null
+                                          ? course.productsId?.price! ??
+                                              0 *
+                                                  (1 -
+                                                      (course.productsId
+                                                                  ?.discountPercentage ??
+                                                              0) /
+                                                          100)
+                                          : 0)
+                                      .toStringAsFixed(2)
+                                  : (course.productsId?.price ?? 0)
+                                      .toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: AppConst.fontFamily,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

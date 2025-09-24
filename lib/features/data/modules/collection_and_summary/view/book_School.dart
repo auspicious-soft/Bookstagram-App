@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../../presentation/Pages/Support/pg_support.dart';
 import '../controller/book_school_controller.dart';
 
 class PgBookSchool extends GetView<PgBookSchoolController> {
@@ -180,15 +181,19 @@ class PgBookSchool extends GetView<PgBookSchoolController> {
                               bottomRight: Radius.circular(5),
                             ),
                           ),
-                          child: IconButton(
-                            icon: Image.asset(
-                              AppAssets.applycoup,
-                              fit: BoxFit.contain,
-                              width: 21,
-                              height: 21,
-                            ),
-                            onPressed: controller.toggleApplyCoupon,
-                          ),
+                          child: Obx(() => controller.isLoading.value == true
+                              ? CircularProgressIndicator(
+                                  color: AppColors.whiteColor,
+                                )
+                              : IconButton(
+                                  icon: Image.asset(
+                                    AppAssets.applycoup,
+                                    fit: BoxFit.contain,
+                                    width: 21,
+                                    height: 21,
+                                  ),
+                                  onPressed: controller.toggleApplyCoupon,
+                                )),
                         ),
                       ],
                     ),
@@ -254,6 +259,48 @@ class PgBookSchool extends GetView<PgBookSchoolController> {
                 ],
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PgSupport(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    child: Label(
+                      txt: AppLocalization.of(context)
+                          .translate('School Conditions'),
+                      type: TextTypes.f_16_300,
+                      forceColor: AppColors.grey,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const PgSupport(initialTabIndex: 1),
+                      ),
+                    );
+                  },
+                  child: Label(
+                    txt: AppLocalization.of(context)
+                        .translate('School Get a consultation'),
+                    type: TextTypes.f_16_300,
+                    forceColor: AppColors.grey,
+                  ),
+                ),
+              ],
+            ).marginSymmetric(horizontal: 20, vertical: 40)
           ],
         ),
       ),

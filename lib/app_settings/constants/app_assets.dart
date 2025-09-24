@@ -91,4 +91,5 @@ class AppAssets {
   static String Sufibadge = "assets/images/badge16.png";
   static String Sufibadgeblank = "assets/images/badge15.png";
   static String MarketSlider = "assets/images/marketSlider.png";
+  static String DonkeyRead = "assets/images/DonkeyRead.png";
 }
