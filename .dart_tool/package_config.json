@@ -764,6 +764,24 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "sign_in_with_apple",
+      "rootUri": "file:///Users/puneetkumar/.pub-cache/hosted/pub.dev/sign_in_with_apple-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "rootUri": "file:///Users/puneetkumar/.pub-cache/hosted/pub.dev/sign_in_with_apple_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "rootUri": "file:///Users/puneetkumar/.pub-cache/hosted/pub.dev/sign_in_with_apple_web-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/puneetkumar/Desktop/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -980,7 +998,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2025-09-18T04:58:15.649076Z",
+  "generated": "2025-09-26T04:39:57.617658Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/puneetkumar/Desktop/flutter",

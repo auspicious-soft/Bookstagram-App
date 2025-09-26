@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/features/domain/repositories/remote_repo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../domain/usecases/usecase_login.dart';
 import '../../../../presentation/providers/auth_google_service.dart';
@@ -281,6 +283,103 @@ class SignUpController extends GetxController {
     }
   }
 
+  Future<void> signInWithApple(BuildContext context) async {
+    try {
+      isLoading.value = true;
+
+      // Force account selection by clearing any cached credentials first
+      await FirebaseAuth.instance.signOut();
+      // Then proceed with sign in
+      var appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      String email = appleCredential.email ?? "";
+      String appletoken = appleCredential.identityToken ?? "";
+      String fullName = (appleCredential.givenName != null &&
+              appleCredential.familyName != null)
+          ? "${appleCredential.givenName} ${appleCredential.familyName}"
+          : "Apple User";
+
+      print(email);
+      print(appletoken);
+
+      String token = await FirebaseMessaging.instance.getToken() ?? "";
+      final data = await _useCaseLogin.call(
+        email: email,
+        pass: " ",
+        fcmToken: token,
+        phoneNumber: "",
+        fullName: fullName,
+        profilePic: "",
+        appleToken: appletoken,
+        language: "en",
+        authType: "Apple",
+      );
+
+      data.fold(
+        (error) {
+          MotionToast.error(
+            title: const Label(
+              txt: "Error",
+              type: TextTypes.f_15_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            description: Label(
+              txt: error.message,
+              type: TextTypes.f_13_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            animationType: AnimationType.slideInFromBottom,
+            toastAlignment: Alignment.topRight,
+            dismissable: true,
+          ).show(context);
+        },
+        (fineData) async {
+          await UserStorage.con.saveToken(fineData.data?.token);
+          // MotionToast.success(
+          //   title: const Label(
+          //     txt: "Success",
+          //     type: TextTypes.f_15_500,
+          //     forceColor: AppColors.whiteColor,
+          //   ),
+          //   description: Label(
+          //     txt: fineData.message ?? "Login successful",
+          //     type: TextTypes.f_13_500,
+          //     forceColor: AppColors.whiteColor,
+          //   ),
+          //   animationType: AnimationType.fromTop,
+          //   position: MotionToastPosition.top,
+          //   dismissable: true,
+          // ).show(context);
+
+          Get.offAllNamed('/congratulations');
+        },
+      );
+    } catch (e) {
+      MotionToast.error(
+        title: const Label(
+          txt: "Error",
+          type: TextTypes.f_15_500,
+          forceColor: AppColors.whiteColor,
+        ),
+        description: Label(
+          txt: "Google sign-in error: $e",
+          type: TextTypes.f_13_500,
+          forceColor: AppColors.whiteColor,
+        ),
+        animationType: AnimationType.slideInFromBottom,
+        toastAlignment: Alignment.topRight,
+        dismissable: true,
+      ).show(context);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> signInWithGoogle(BuildContext context) async {
     // Force account selection by clearing any cached credentials first
     await GoogleSignIn().signOut();
@@ -297,6 +396,7 @@ class SignUpController extends GetxController {
           profilePic: user.photoURL.toString(),
           pass: " ",
           fcmToken: token,
+          appleToken: "",
           phoneNumber: "",
           language: "en",
           authType: "Google",

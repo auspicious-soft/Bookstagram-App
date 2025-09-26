@@ -73,6 +73,7 @@ class RemoteDs {
     required String language,
     required String fullName,
     required String fcmToken,
+    String appleToken = "",
     required String profilePic,
     required String authType,
   }) async {
@@ -83,6 +84,7 @@ class RemoteDs {
       "phoneNumber": phoneNumber,
       "fullName": {"eng": fullName},
       "fcmToken": fcmToken,
+      "appleToken": appleToken,
       "profilePic": profilePic,
       "language": language,
       "authType": authType

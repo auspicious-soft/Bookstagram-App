@@ -48,7 +48,6 @@ class SettingData {
 }
 
 class SettingProfileData {
-  SchoolVoucher? schoolVoucher;
   String? sId;
   String? identifier;
   String? role;
@@ -58,6 +57,7 @@ class SettingProfileData {
   String? email;
   String? authType;
   String? phoneNumber;
+  bool? notificationAllowed;
   String? profilePic;
   String? language;
   List<String>? productsLanguage;
@@ -67,12 +67,12 @@ class SettingProfileData {
   num? wallet;
 
   SettingProfileData(
-      {this.schoolVoucher,
-      this.sId,
+      {this.sId,
       this.identifier,
       this.role,
       this.firstName,
       this.fullName,
+      this.notificationAllowed,
       this.lastName,
       this.email,
       this.authType,
@@ -86,12 +86,10 @@ class SettingProfileData {
       this.wallet});
 
   SettingProfileData.fromJson(Map<String, dynamic> json) {
-    schoolVoucher = json['schoolVoucher'] != null
-        ? new SchoolVoucher.fromJson(json['schoolVoucher'])
-        : null;
     sId = json['_id'];
     identifier = json['identifier'];
     role = json['role'];
+    notificationAllowed = json['notificationAllowed'];
     firstName =
         json['firstName'] != null ? new Name.fromJson(json['firstName']) : null;
     fullName =
@@ -113,11 +111,12 @@ class SettingProfileData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.schoolVoucher != null) {
-      data['schoolVoucher'] = this.schoolVoucher!.toJson();
-    }
+
     data['_id'] = this.sId;
     data['identifier'] = this.identifier;
+
+    data['notificationAllowed'] = this.notificationAllowed;
+
     data['role'] = this.role;
     if (this.firstName != null) {
       data['firstName'] = this.firstName!.toJson();
@@ -138,25 +137,6 @@ class SettingProfileData {
     data['updatedAt'] = this.updatedAt;
     data['country'] = this.country;
     data['wallet'] = this.wallet;
-    return data;
-  }
-}
-
-class SchoolVoucher {
-  String? createdAt;
-  String? expiredAt;
-
-  SchoolVoucher({this.createdAt, this.expiredAt});
-
-  SchoolVoucher.fromJson(Map<String, dynamic> json) {
-    createdAt = json['createdAt'];
-    expiredAt = json['expiredAt'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['createdAt'] = this.createdAt;
-    data['expiredAt'] = this.expiredAt;
     return data;
   }
 }

@@ -22,9 +22,8 @@ class PgTabprofile extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: AppColors.background, // Set status bar color
-        statusBarIconBrightness:
-            Brightness.dark, // Ensure icons are visible on white
+        statusBarColor: AppColors.background,
+        statusBarIconBrightness: Brightness.dark,
       ),
     );
     return Scaffold(
@@ -105,8 +104,7 @@ class PgTabprofile extends GetView<ProfileController> {
                                                     return Container(
                                                       color: AppColors.grey,
                                                       child: Icon(
-                                                        Icons
-                                                            .person, // Error image/icon
+                                                        Icons.person,
                                                         size: 60,
                                                         color: AppColors.grey,
                                                       ),
@@ -116,8 +114,7 @@ class PgTabprofile extends GetView<ProfileController> {
                                               : Container(
                                                   color: AppColors.grey,
                                                   child: Icon(
-                                                    Icons
-                                                        .person, // Error image/icon
+                                                    Icons.person,
                                                     size: 60,
                                                     color: AppColors.grey,
                                                   ),
@@ -168,8 +165,7 @@ class PgTabprofile extends GetView<ProfileController> {
                                             ),
                                           ),
                                           child: Padding(
-                                              padding: const EdgeInsets.all(
-                                                  1), // Gradient border width
+                                              padding: const EdgeInsets.all(1),
                                               child: Container(
                                                 padding:
                                                     const EdgeInsets.all(10),
@@ -375,10 +371,9 @@ class PgTabprofile extends GetView<ProfileController> {
                                 ]),
                                 Obx(() => SizedBox(
                                       height: 50,
-                                      width: 70, // give desired width here
+                                      width: 70,
                                       child: Transform.scale(
                                         scale: 0.7,
-                                        // Increase/decrease to adjust visual size
                                         child: Switch(
                                           value: controller.isSwitched.value,
                                           onChanged: controller.toggleSwitch,
@@ -393,7 +388,7 @@ class PgTabprofile extends GetView<ProfileController> {
                             padVertical(15),
                             GestureDetector(
                                 onTap: () {
-                                  Get.toNamed("/language");
+                                  Get.toNamed("/language-options");
                                 },
                                 child: Row(
                                   mainAxisAlignment:
@@ -440,12 +435,7 @@ class PgTabprofile extends GetView<ProfileController> {
                             padVertical(25),
                             GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const PgSupport(),
-                                    ),
-                                  );
+                                  Get.toNamed("/Support");
                                 },
                                 child: Row(
                                   mainAxisAlignment:
@@ -472,28 +462,35 @@ class PgTabprofile extends GetView<ProfileController> {
                                   ],
                                 )),
                             padVertical(20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(children: [
-                                  Image.asset(
-                                    AppAssets.privacy,
-                                    width: 22,
-                                    height: 22,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  padHorizontal(15),
-                                  Label(
-                                    txt: AppLocalization.of(context)
-                                        .translate('privacypolicy'),
-                                    type: TextTypes.f_17_500,
-                                  ),
-                                ]),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 18,
-                                )
-                              ],
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed("/privacy",
+                                    arguments: {"title": "privacyPolicy"});
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(children: [
+                                    Image.asset(
+                                      AppAssets.privacy,
+                                      width: 22,
+                                      height: 22,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    padHorizontal(15),
+                                    Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('privacypolicy'),
+                                      type: TextTypes.f_17_500,
+                                    ),
+                                  ]),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 18,
+                                  )
+                                ],
+                              ),
                             ),
                             padVertical(20),
                             GestureDetector(
@@ -531,14 +528,48 @@ class PgTabprofile extends GetView<ProfileController> {
                                 )),
                             padVertical(20),
                             GestureDetector(
-                              onTap: controller.logout,
+                              onTap: () {
+                                _showDeleteDialog(context);
+                              },
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(children: [
-                                    Image.asset(AppAssets.logout,
-                                        width: 22, height: 22),
+                                    Image.asset(
+                                      AppAssets.delete,
+                                      width: 22,
+                                      height: 22,
+                                    ),
+                                    padHorizontal(15),
+                                    Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('Delete Account'),
+                                      type: TextTypes.f_17_500,
+                                    ),
+                                  ]),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 18,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            padVertical(20),
+                            GestureDetector(
+                              onTap: () {
+                                _showLogoutDialog(context);
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(children: [
+                                    Image.asset(
+                                      AppAssets.logout,
+                                      width: 22,
+                                      height: 22,
+                                    ),
                                     padHorizontal(15),
                                     Label(
                                       txt: AppLocalization.of(context)
@@ -547,8 +578,10 @@ class PgTabprofile extends GetView<ProfileController> {
                                       forceColor: AppColors.red,
                                     ),
                                   ]),
-                                  const Icon(Icons.arrow_forward_ios_rounded,
-                                      size: 18),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 18,
+                                  ),
                                 ],
                               ),
                             ),
@@ -561,6 +594,150 @@ class PgTabprofile extends GetView<ProfileController> {
                 )),
         ),
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: Icon(Icons.close, color: Colors.grey),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              Text(
+                AppLocalization.of(context).translate('logout'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                AppLocalization.of(context)
+                    .translate('Are you sure you want to log out?'),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 24.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child:
+                        Text(AppLocalization.of(context).translate('Cancel')),
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        controller.logout();
+                      },
+                      child: Text(
+                        AppLocalization.of(context).translate('Yes, Logout'),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: Icon(Icons.close, color: Colors.grey),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              Text(
+                AppLocalization.of(context).translate('Delete'),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                AppLocalization.of(context)
+                    .translate('Are you sure you want to delete?'),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 24.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child:
+                        Text(AppLocalization.of(context).translate('Cancel')),
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        controller.delete();
+                      },
+                      child: Text(
+                        AppLocalization.of(context).translate('Yes, Delete'),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

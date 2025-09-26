@@ -107,9 +107,9 @@ class PgCategoryController extends GetxController {
   }
 
   // Navigate to subcategory page
-  void navigateToSubcategory(String label) {
-    Get.to(() => PgSubcategory(label: label));
-  }
+  // void navigateToSubcategory(String label) {
+  //   Get.to(() => PgSubcategory(label: label));
+  // }
 
   // Show filter bottom sheet
   void showFilterBottomSheet() {

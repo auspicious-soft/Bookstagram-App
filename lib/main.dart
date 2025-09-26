@@ -34,6 +34,14 @@ import 'package:bookstagram/features/data/modules/home_module/Players/bindings/c
 import 'package:bookstagram/features/data/modules/home_module/Players/views/cart_view.dart';
 import 'package:bookstagram/features/data/modules/home_module/binding/dashboard_binding.dart';
 import 'package:bookstagram/features/data/modules/home_module/view/dashboard_screen.dart';
+import 'package:bookstagram/features/data/modules/settingModule/bindings/Support_bindings.dart';
+import 'package:bookstagram/features/data/modules/settingModule/bindings/course_language_bindings.dart';
+import 'package:bookstagram/features/data/modules/settingModule/bindings/interface_languages_Bindings.dart';
+import 'package:bookstagram/features/data/modules/settingModule/bindings/language_options_bindings.dart';
+import 'package:bookstagram/features/data/modules/settingModule/view/Interface_languages.dart';
+import 'package:bookstagram/features/data/modules/settingModule/view/coursesLanguage.dart';
+import 'package:bookstagram/features/data/modules/settingModule/view/language_options.dart';
+import 'package:bookstagram/features/data/modules/settingModule/view/support.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/all_collection_binding.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/onboarding_binding.dart';
 import 'package:bookstagram/firebase_options.dart';
@@ -89,6 +97,8 @@ import 'features/data/modules/home_module/view/search_screen.dart';
 import 'features/data/modules/settingModule/bindings/balance_bindings.dart';
 import 'features/data/modules/settingModule/bindings/editProfileBinding.dart';
 import 'features/data/modules/settingModule/bindings/level_binding.dart';
+import 'features/data/modules/settingModule/bindings/notification_bindings.dart';
+import 'features/data/modules/settingModule/view/Notification_view.dart';
 import 'features/data/modules/settingModule/view/balance_screen.dart';
 import 'features/data/modules/settingModule/view/edit_profile.dart';
 import 'features/data/modules/settingModule/view/levels.dart';
@@ -402,6 +412,31 @@ class MyApp extends StatelessWidget {
           name: "/book-school-List",
           page: () => Myschoolsbooklist(),
           binding: Myschoolbooklistbinding(),
+        ),
+        GetPage(
+          name: "/language-options",
+          page: () => LanguageOptions(),
+          binding: LanguageOptionsBindings(),
+        ),
+        GetPage(
+          name: "/interface_bindings",
+          page: () => InterfaceLanguages(),
+          binding: InterfaceLanguagesBindings(),
+        ),
+        GetPage(
+          name: "/course-language",
+          page: () => Courseslanguage(),
+          binding: CourseLanguageBindings(),
+        ),
+        GetPage(
+          name: "/Support",
+          page: () => PgSupport(),
+          binding: SupportBinding(),
+        ),
+        GetPage(
+          name: "/Notifications",
+          page: () => PgNotification(),
+          binding: PgNotificationBinding(),
         ),
       ],
     );

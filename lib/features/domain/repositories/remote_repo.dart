@@ -19,6 +19,7 @@ abstract class RemoteRepo {
     String fullName,
     String profilePic,
     String fcmToken,
+    String? appleToken,
   );
 
   // Future<Either<Failure, SignUpModel>> signUp(

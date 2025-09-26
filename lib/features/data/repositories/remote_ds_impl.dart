@@ -18,21 +18,24 @@ class RemoteDsImpl implements RemoteRepo {
 
   @override
   Future<Either<Failure, LoginModel>> login(
-      String email,
-      String pass,
-      String phoneNumber,
-      String language,
-      String authType,
-      String fullName,
-      String profilePic,
-      String fcmToken) async {
+    String email,
+    String pass,
+    String phoneNumber,
+    String language,
+    String authType,
+    String fullName,
+    String profilePic,
+    String? fcmToken,
+    String? appleToken,
+  ) async {
     try {
       final loginData = await remoteDataSource.loginToBookstagram(
           email: email,
           pass: pass,
           phoneNumber: phoneNumber,
           fullName: fullName,
-          fcmToken: fcmToken,
+          fcmToken: fcmToken ?? "",
+          appleToken: appleToken ?? "",
           profilePic: profilePic,
           language: language,
           authType: authType);

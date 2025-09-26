@@ -222,6 +222,19 @@
   "School Get a consultation": "Get a consultation",
   "Congratulations!": "Congratulations!",
   "Your coupon has been successfully activated": "Your coupon has been successfully activated. Now you can read all the books in the Bookstagram book collection, for a whole year.",
-  "Go to catalog": "Go to catalog 📚"
+  "Go to catalog": "Go to catalog 📚",
+  "TransactionId": "Transaction ID",
+  "no_transactions": "No Transactions",
+  "Interface language": "Interface language",
+  "Books/Courses languages": "Books/Courses languages",
+  "language will you read": "In what language will you read books and take courses?",
+  "you can choose several": "you can choose several",
+  "Cancel": "Cancel",
+  "Are you sure you want to log out?": "Are you sure you want to log out?",
+  "Yes, Logout": "Yes, Logout",
+  "Delete": "Delete",
+  "Are you sure you want to delete?": "Are you sure you want to delete?",
+  "Yes, Delete": "Yes, Delete",
+  "Delete Account": "Delete Account"
 }
 

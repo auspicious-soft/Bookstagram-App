@@ -233,9 +233,10 @@ class PgBookmarketController extends GetxController {
     }
   }
 
-  void navigateToAuthors() {
-    Get.to(() => const PgAuthors());
-  }
+  //
+  // void navigateToAuthors() {
+  //   Get.to(() => const PgAuthors());
+  // }
 
   void navigateToPublishers() {
     Get.toNamed("/allPublishers");

@@ -442,21 +442,25 @@ class PgSignup extends GetView<SignUpController> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     if (Platform.isIOS)
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: AppColors.inputBorder,
-                                            width: 2,
+                                      GestureDetector(
+                                        onTap: () =>
+                                            controller.signInWithApple(context),
+                                        child: Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: AppColors.inputBorder,
+                                              width: 2,
+                                            ),
                                           ),
-                                        ),
-                                        child: const Icon(
-                                          Icons.apple,
-                                          color: AppColors.blackColor,
-                                          size: 32,
+                                          child: const Icon(
+                                            Icons.apple,
+                                            color: AppColors.blackColor,
+                                            size: 32,
+                                          ),
                                         ),
                                       ),
                                     if (Platform.isAndroid)
@@ -485,23 +489,23 @@ class PgSignup extends GetView<SignUpController> {
                                           ),
                                         ),
                                       ),
-                                    padHorizontal(20),
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: AppColors.inputBorder,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.facebook,
-                                        color: AppColors.facebook,
-                                        size: 32,
-                                      ),
-                                    ),
+                                    // padHorizontal(20),
+                                    // Container(
+                                    //   height: 50,
+                                    //   width: 50,
+                                    //   decoration: BoxDecoration(
+                                    //     borderRadius: BorderRadius.circular(10),
+                                    //     border: Border.all(
+                                    //       color: AppColors.inputBorder,
+                                    //       width: 2,
+                                    //     ),
+                                    //   ),
+                                    //   child: const Icon(
+                                    //     Icons.facebook,
+                                    //     color: AppColors.facebook,
+                                    //     size: 32,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                                 padVertical(15),
@@ -567,22 +571,27 @@ class PgSignup extends GetView<SignUpController> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: AppLocalization.of(context)
-                                                  .translate('termofservice'),
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                color: AppColors.blackColor,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: AppConst.fontFamily,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () {
-                                                Get.toNamed("/privacy",arguments: {"title":"Terms and Conditions"});
-
-                                                }
-                                            ),
+                                                text: AppLocalization.of(
+                                                        context)
+                                                    .translate('termofservice'),
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  color: AppColors.blackColor,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily:
+                                                      AppConst.fontFamily,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        Get.toNamed("/privacy",
+                                                            arguments: {
+                                                              "title":
+                                                                  "Terms and Conditions"
+                                                            });
+                                                      }),
                                             TextSpan(
                                               text: AppLocalization.of(context)
                                                   .translate('and'),
@@ -606,9 +615,11 @@ class PgSignup extends GetView<SignUpController> {
                                               ),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Get.toNamed("/privacy",arguments: {"title":"Privacy Policy"});
-
-
+                                                  Get.toNamed("/privacy",
+                                                      arguments: {
+                                                        "title":
+                                                            "Privacy Policy"
+                                                      });
                                                 },
                                             ),
                                             TextSpan(
@@ -626,13 +637,8 @@ class PgSignup extends GetView<SignUpController> {
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: (){
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const PgSupport(),
-                                          ),
-                                        );
+                                      onTap: () {
+                                        Get.toNamed("/Support");
                                       },
                                       child: Label(
                                         txt: AppLocalization.of(context)

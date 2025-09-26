@@ -1,33 +1,62 @@
+import 'dart:convert';
+import 'package:bookstagram/features/data/modules/auth_module/models/StaticResponseModel.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:pretty_http_logger/pretty_http_logger.dart';
+import '../../../../../app_settings/constants/app_config.dart';
 
 class PrivacyPolicyController extends GetxController {
-  var title="".obs;
+  var title = 'privacyPolicy'.obs; // Title for the screen
+  var profileData = Rx<StaticReponseModel?>(null); // Reactive profile data
+  var isLoading = true.obs; // Loading state
+
   @override
   void onInit() {
-   if(Get.arguments!=null){
-     title.value=Get.arguments["title"];
-   }
+    fetchPrivacyPolicy();
     super.onInit();
   }
-  // Static HTML content for the Privacy Policy
-  final String privacyPolicyHtml = """
 
-    <p>At Bookstagram, we respect and protect the privacy of our users. This Privacy Policy outlines the types of personal information we collect, how we use it, and how we protect your information.</p>
-    
-    <h3>Information We Collect</h3>
-    <p>When you use our app, we may collect the following types of personal information:</p>
-    <ul>
-      <li><b>Device Information:</b> We may collect information about the type of device you use, its operating system, and other technical details to help us improve our app.</li>
-      <li><b>Usage Information:</b> We may collect information about how you use our app, such as which features you use and how often you use them.</li>
-      <li><b>Personal Information:</b> We may collect personal information, such as your name, email address, or phone number, if you choose to provide it to us.</li>
-    </ul>
-    
-    <h3>How We Use Your Information</h3>
-    <p>We use your information for the following purposes:</p>
-    <ul>
-      <li><b>To provide and improve our app:</b> We use your information to provide and improve our app, including to personalize your experience and to analyze how our app is used.</li>
-      <li><b>To communicate with you:</b> We may use your information to communicate with you about our app, including to provide you with updates and news about our app.</li>
-      <li><b>To protect our rights and the rights of others:</b> We may use your information to protect our rights and the rights of others, such as to investigate and prevent fraud or other illegal activity.</li>
-    </ul>
-  """;
+  Future<void> fetchPrivacyPolicy() async {
+    isLoading.value = true;
+    try {
+      final data = await getPrivacyPolicyData();
+      profileData.value = data;
+      profileData?.refresh();
+    } catch (e) {
+      print("Error fetching privacy policy: $e");
+      profileData.value = null; // Ensure profileData is null on error
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<StaticReponseModel> getPrivacyPolicyData() async {
+    final token = await getToken();
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+      'role': 'admin',
+      'x-client-type': 'mobile',
+    };
+
+    HttpWithMiddleware httpClient = HttpWithMiddleware.build(
+      middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
+    );
+
+    final uri = Uri.parse(
+        '${AppConfig.baseUrl}${AppConfig.StaticData}?type=${title.value == "privacyPolicy" ? "privacyPolicy" : "terms"}');
+    final response = await httpClient.get(uri, headers: headers);
+
+    if (response.statusCode == 200) {
+      final jsonBody = json.decode(response.body);
+      return StaticReponseModel.fromJson(jsonBody);
+    } else {
+      throw Exception('Failed to fetch privacy policy: ${response.statusCode}');
+    }
+  }
+
+  Future<String> getToken() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    return await secureStorage.read(key: 'token') ?? "";
+  }
 }

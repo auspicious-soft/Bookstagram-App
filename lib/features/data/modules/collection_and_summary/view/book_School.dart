@@ -265,12 +265,7 @@ class PgBookSchool extends GetView<PgBookSchoolController> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PgSupport(),
-                      ),
-                    );
+                    Get.toNamed("/Support");
                   },
                   child: Container(
                     child: Label(
@@ -284,13 +279,14 @@ class PgBookSchool extends GetView<PgBookSchoolController> {
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const PgSupport(initialTabIndex: 1),
-                      ),
-                    );
+                    Get.toNamed("/Support", arguments: {'initialTabIndex': 1});
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         const PgSupport(initialTabIndex: 1),
+                    //   ),
+                    // );
                   },
                   child: Label(
                     txt: AppLocalization.of(context)

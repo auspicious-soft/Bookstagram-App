@@ -40,9 +40,12 @@ class Data {
   String? role;
   FullName? fullName;
   String? email;
+
   String? authType;
   String? countryCode;
+
   String? phoneNumber;
+
   dynamic profilePic;
   bool? emailVerified;
   bool? whatsappNumberVerified;

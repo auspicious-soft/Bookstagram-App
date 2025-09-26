@@ -10,6 +10,7 @@ import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/features/data/models/login_model.dart';
 import 'package:bookstagram/features/domain/usecases/usecase_login.dart';
 import 'package:bookstagram/features/data/datasources/user_storage.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../presentation/providers/auth_google_service.dart';
 
@@ -91,6 +92,7 @@ class LoginController extends GetxController {
         pass: passwordController.text,
         fullName: "",
         profilePic: "",
+        appleToken: "",
         fcmToken: token ?? "hello",
         phoneNumber: selectedIndex.value == 0 ? "" : phoneController.text,
         language: language,
@@ -139,6 +141,7 @@ class LoginController extends GetxController {
         phoneNumber: "",
         fcmToken: token,
         fullName: fullName,
+        appleToken: "",
         profilePic: profilePic,
         language: language,
         authType: authType,
@@ -197,6 +200,7 @@ class LoginController extends GetxController {
         final data = await loginUseCase.call(
           email: user.email.toString(),
           pass: " ",
+          appleToken: "",
           fcmToken: token,
           phoneNumber: "",
           fullName: user.displayName.toString(),
@@ -245,6 +249,103 @@ class LoginController extends GetxController {
           },
         );
       }
+    } catch (e) {
+      MotionToast.error(
+        title: const Label(
+          txt: "Error",
+          type: TextTypes.f_15_500,
+          forceColor: AppColors.whiteColor,
+        ),
+        description: Label(
+          txt: "Google sign-in error: $e",
+          type: TextTypes.f_13_500,
+          forceColor: AppColors.whiteColor,
+        ),
+        animationType: AnimationType.slideInFromBottom,
+        toastAlignment: Alignment.topRight,
+        dismissable: true,
+      ).show(context);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> signInWithApple(BuildContext context) async {
+    try {
+      isLoading.value = true;
+
+      // Force account selection by clearing any cached credentials first
+      await FirebaseAuth.instance.signOut();
+      // Then proceed with sign in
+      var appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      String email = appleCredential.email ?? "";
+      String appletoken = appleCredential.identityToken ?? "";
+      String fullName = (appleCredential.givenName != null &&
+              appleCredential.familyName != null)
+          ? "${appleCredential.givenName} ${appleCredential.familyName}"
+          : "Apple User";
+
+      print(email);
+      print(appletoken);
+
+      String token = await FirebaseMessaging.instance.getToken() ?? "";
+      final data = await loginUseCase.call(
+        email: email,
+        pass: " ",
+        fcmToken: token,
+        phoneNumber: "",
+        fullName: fullName,
+        profilePic: "",
+        appleToken: appletoken,
+        language: "en",
+        authType: "Apple",
+      );
+
+      data.fold(
+        (error) {
+          MotionToast.error(
+            title: const Label(
+              txt: "Error",
+              type: TextTypes.f_15_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            description: Label(
+              txt: error.message,
+              type: TextTypes.f_13_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            animationType: AnimationType.slideInFromBottom,
+            toastAlignment: Alignment.topRight,
+            dismissable: true,
+          ).show(context);
+        },
+        (fineData) async {
+          await UserStorage.con.saveToken(fineData.data?.token);
+          // MotionToast.success(
+          //   title: const Label(
+          //     txt: "Success",
+          //     type: TextTypes.f_15_500,
+          //     forceColor: AppColors.whiteColor,
+          //   ),
+          //   description: Label(
+          //     txt: fineData.message ?? "Login successful",
+          //     type: TextTypes.f_13_500,
+          //     forceColor: AppColors.whiteColor,
+          //   ),
+          //   animationType: AnimationType.fromTop,
+          //   position: MotionToastPosition.top,
+          //   dismissable: true,
+          // ).show(context);
+
+          Get.offAllNamed('/congratulations');
+        },
+      );
     } catch (e) {
       MotionToast.error(
         title: const Label(

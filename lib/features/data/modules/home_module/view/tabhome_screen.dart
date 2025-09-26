@@ -72,7 +72,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                                 ]),
                                 GestureDetector(
                                     onTap: () {
-                                      Get.to(() => const PgNotification());
+                                      Get.toNamed("/Notifications");
                                     },
                                     child: const Icon(
                                         Icons.notifications_none_outlined))

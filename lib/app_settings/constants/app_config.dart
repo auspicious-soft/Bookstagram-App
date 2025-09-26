@@ -1,7 +1,7 @@
 class AppConfig {
-  static const String baseUrl = "https://duman-backend.onrender.com/";
+  // static const String baseUrl = "https://duman-backend.onrender.com/";
 
-  // static const String baseUrl = "https://575daace83ea.ngrok-free.app/";
+  static const String baseUrl = "https://9f370faebf96.ngrok-free.app/";
   static const String signIn = 'api/user-login';
   static const String signUp = 'api/user-signup';
   static const String verifySignUp = 'api/user-verify-otp';
@@ -64,4 +64,8 @@ class AppConfig {
   static const String VerifyCouponEndPoint = 'api/user/book-schools/verify';
   static const String BookSchoolBooksEndPoint = 'api/user/book-schools/books';
   static const String ProfilePasswordChange = 'api/user/change-password';
+  static const String WalletHistory = 'api/user/wallet-history';
+  static const String FAQEndPoints = 'api/user/faqs';
+  static const String NotificationSettingEndPoint = 'api/user/user-language';
+  static const String StaticData = 'api/user/policies';
 }
