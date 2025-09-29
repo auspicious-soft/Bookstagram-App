@@ -1317,8 +1317,11 @@ class PgBookView extends GetView<PgBookViewController> {
                         forceColor: AppColors.resnd,
                       ),
                       Label(
-                        txt:
-                            "${controller.bookDetailResponseModel.value?.data?.book?.price} ₸",
+                        txt: controller.bookDetailResponseModel.value?.data
+                                    ?.book?.price ==
+                                0
+                            ? "Free"
+                            : "${controller.bookDetailResponseModel.value?.data?.book?.price} ₸",
                         type: TextTypes.f_20_500,
                         textDecoration: controller.bookDetailResponseModel.value
                                     ?.data?.book?.isDiscounted ==

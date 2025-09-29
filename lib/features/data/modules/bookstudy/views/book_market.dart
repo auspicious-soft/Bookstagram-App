@@ -4,15 +4,12 @@ import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
 import 'package:bookstagram/app_settings/constants/helpers.dart';
-
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 import '../../../../../app_settings/components/loader.dart';
 import '../../../../../app_settings/constants/app_config.dart';
-import '../../home_module/controller/searchcontroller.dart';
 import '../../home_module/models/CollectionDataModel.dart';
 import '../controllers/book_market_controller.dart';
 
@@ -23,21 +20,34 @@ class PgBookmarket extends GetView<PgBookmarketController> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    // Initialize TextEditingController and sync with searchQuery
+    final TextEditingController searchController = TextEditingController(
+      text: controller.searchQuery.value,
+    );
+
+    // Listen to searchQuery changes to keep the TextField in sync
+    ever(controller.searchQuery, (String value) {
+      if (searchController.text != value) {
+        searchController.text = value;
+      }
+    });
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent, // Set status bar color
-        statusBarIconBrightness:
-            Brightness.dark, // Ensure icons are visible on white
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
       ),
     );
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
-        child: Obx(() => controller.isLoading.value == true
-            ? Container(
+        child: Obx(() => controller.isLoading.value
+            ? SizedBox(
                 height: Get.height,
                 width: Get.width,
-                child: Center(child: LoadingScreen()))
+                child: const Center(child: LoadingScreen()),
+              )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,9 +64,7 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                         child: IconButton(
                           icon: const Icon(Icons.arrow_back_ios,
                               color: Colors.black),
-                          onPressed: () {
-                            Get.back();
-                          },
+                          onPressed: controller.goBack,
                         ),
                       ),
                       Positioned(
@@ -105,6 +113,7 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                               padHorizontal(10),
                               Expanded(
                                 child: TextField(
+                                  controller: searchController,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: AppLocalization.of(context)
@@ -114,6 +123,15 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                       fontFamily: AppConst.fontFamily,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w400,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: const Icon(Icons.clear,
+                                          color: AppColors.blackColor),
+                                      onPressed: () {
+                                        searchController.clear();
+                                        controller.searchQuery.value = '';
+                                        controller.fetchBookStudy();
+                                      },
                                     ),
                                   ),
                                   style: const TextStyle(
@@ -151,73 +169,54 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                         Obx(() => _buildButtonGrid(context)
                             .marginSymmetric(vertical: 20)),
                         padVertical(20),
-
-                        // Add the collections tab
                         _buildCollectionsTab(context),
-                        controller.bookMarket.value?.data?.bestSellers
-                                    ?.length !=
-                                0
-                            ? padVertical(20)
-                            : SizedBox(),
-
-                        controller.bookMarket.value?.data?.bestSellers
-                                    ?.length !=
-                                0
-                            ? GestureDetector(
-                                onTap: () {
-                                  Get.toNamed("/allcollections", arguments: {
-                                    "title":
-                                        '${AppLocalization.of(context).translate('bestsellers')}🔥',
-                                    "id": ""
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Label(
-                                        txt:
-                                            '${AppLocalization.of(context).translate('bestsellers')}🔥',
-                                        type: TextTypes.f_20_500),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 18,
-                                    )
-                                  ],
-                                ))
-                            : SizedBox(),
-                        controller.bookMarket.value?.data?.bestSellers
-                                    ?.length !=
-                                0
-                            ? padVertical(20)
-                            : SizedBox(),
-
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List.generate(
+                        if (controller.bookMarket.value?.data?.bestSellers
+                                ?.isNotEmpty ??
+                            false) ...[
+                          padVertical(20),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed("/allcollections", arguments: {
+                                "title":
+                                    '${AppLocalization.of(context).translate('bestsellers')}🔥',
+                                "id": "",
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Label(
+                                  txt:
+                                      '${AppLocalization.of(context).translate('bestsellers')}🔥',
+                                  type: TextTypes.f_20_500,
+                                ),
+                                const Icon(Icons.arrow_forward_ios_rounded,
+                                    size: 18),
+                              ],
+                            ),
+                          ),
+                          padVertical(20),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(
                                 controller.bookMarket.value?.data?.bestSellers
                                         ?.length ??
-                                    0, (index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  if (controller.bookMarket.value?.data
-                                          ?.bestSellers?[index]?.book?.type ==
-                                      "course") {
-                                    Get.toNamed('/Course-detail', arguments: {
-                                      "id": controller.bookMarket.value?.data
-                                          ?.bestSellers?[index]?.book?.sId,
-                                    });
-                                  } else {
-                                    Get.toNamed('/book-detail', arguments: {
-                                      "id": controller.bookMarket.value?.data
-                                          ?.bestSellers?[index]?.book?.sId,
-                                    });
-                                  }
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Column(
+                                    0,
+                                (index) => GestureDetector(
+                                  onTap: () {
+                                    final book = controller.bookMarket.value
+                                        ?.data?.bestSellers?[index]?.book;
+                                    Get.toNamed(
+                                      book?.type == "course"
+                                          ? '/Course-detail'
+                                          : '/book-detail',
+                                      arguments: {"id": book?.sId},
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -227,64 +226,45 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15),
+                                            color: Colors.white,
                                           ),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            child: Image.network(
+                                              "${AppConfig.imgBaseUrl}${controller.bookMarket.value?.data?.bestSellers?[index]?.book?.image}",
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error,
+                                                      stackTrace) =>
+                                                  Image.asset(AppAssets.book,
+                                                      fit: BoxFit.contain),
                                             ),
-                                            child: controller
-                                                        .bookMarket
-                                                        .value
-                                                        ?.data
-                                                        ?.bestSellers?[index]
-                                                        ?.book
-                                                        ?.image !=
-                                                    null
-                                                ? ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                    child: Image.network(
-                                                      "${AppConfig.imgBaseUrl}${controller.bookMarket.value?.data?.bestSellers?[index]?.book?.image}",
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Image.asset(
-                                                        AppAssets.book,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Image.asset(
-                                                    AppAssets.book,
-                                                    fit: BoxFit.contain,
-                                                  ),
                                           ),
                                         ),
                                         padVertical(5),
                                         Label(
-                                            txt: controller.getBookTitle(
-                                                name: controller
-                                                    .bookMarket
-                                                    .value
-                                                    ?.data
-                                                    ?.bestSellers?[index]
-                                                    ?.book
-                                                    ?.name),
-                                            type: TextTypes.f_13_500),
+                                          txt: controller.getBookTitle(
+                                            name: controller
+                                                .bookMarket
+                                                .value
+                                                ?.data
+                                                ?.bestSellers?[index]
+                                                ?.book
+                                                ?.name,
+                                          ),
+                                          type: TextTypes.f_13_500,
+                                        ),
                                         Label(
                                           txt: controller.getBookTitle(
-                                              name: controller
-                                                  .bookMarket
-                                                  .value
-                                                  ?.data
-                                                  ?.bestSellers?[index]
-                                                  ?.book
-                                                  ?.authors
-                                                  ?.name),
+                                            name: controller
+                                                .bookMarket
+                                                .value
+                                                ?.data
+                                                ?.bestSellers?[index]
+                                                ?.book
+                                                ?.authors
+                                                ?.name,
+                                          ),
                                           type: TextTypes.f_13_400,
                                           forceColor: AppColors.resnd,
                                         ),
@@ -300,231 +280,182 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                               "",
                                           type: TextTypes.f_12_400,
                                           forceColor: AppColors.resnd,
-                                        )
-                                      ]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
                           ),
-                        ),
-                        controller.bookMarket.value?.data?.bestSellers
-                                    ?.length !=
-                                0
-                            ? padVertical(20)
-                            : SizedBox(),
-
-                        controller.bookMarket.value?.data?.readProgress
-                                    ?.length !=
-                                0
-                            ? GestureDetector(
-                                onTap: controller.navigateToCourses,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Label(
-                                        txt:
-                                            '${AppLocalization.of(context).translate('continuereading')} 💌',
-                                        type: TextTypes.f_20_500),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: 18,
-                                    )
-                                  ],
+                          padVertical(20),
+                        ],
+                        if (controller.bookMarket.value?.data?.readProgress
+                                ?.isNotEmpty ??
+                            false) ...[
+                          GestureDetector(
+                            onTap: controller.navigateToCourses,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Label(
+                                  txt:
+                                      '${AppLocalization.of(context).translate('continuereading')} 💌',
+                                  type: TextTypes.f_20_500,
                                 ),
-                              )
-                            : SizedBox(),
-                        padVertical(10),
-                        controller.bookMarket.value?.data?.readProgress
-                                    ?.length !=
-                                0
-                            ? SizedBox(
-                                height: 160,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: controller.bookMarket.value?.data
-                                          ?.readProgress?.length ??
-                                      0, // Adjust based on your data
-                                  itemBuilder: (context, index) {
-                                    final book = controller.bookMarket.value
-                                        ?.data?.readProgress?[index];
-                                    return Container(
-                                      width: ScreenUtils.screenWidth(context) *
-                                          0.9,
-                                      // Set a fixed width (e.g., 80% of screen width)
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      // Space between items
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 15),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.border,
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10)),
-                                            child: book?.bookId?.image != null
-                                                ? Image.network(
-                                                    width: 113,
-                                                    height: 144,
-                                                    "${AppConfig.imgBaseUrl}${book?.bookId?.image}",
-                                                    fit: BoxFit.fill,
-                                                    errorBuilder: (context,
-                                                            error,
-                                                            stackTrace) =>
-                                                        Image.asset(
-                                                      AppAssets.book,
-                                                      width: 113,
-                                                      height: 144,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  )
-                                                : Image.asset(
-                                                    width: 113,
-                                                    height: 144,
-                                                    AppAssets.book,
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                const Icon(Icons.arrow_forward_ios_rounded,
+                                    size: 18),
+                              ],
+                            ),
+                          ),
+                          padVertical(10),
+                          SizedBox(
+                            height: 160,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: controller.bookMarket.value?.data
+                                      ?.readProgress?.length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                final book = controller.bookMarket.value?.data
+                                    ?.readProgress?[index];
+                                return Container(
+                                  width: ScreenUtils.screenWidth(context) * 0.9,
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 15),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.border,
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child: Image.network(
+                                          "${AppConfig.imgBaseUrl}${book?.bookId?.image}",
+                                          width: 113,
+                                          height: 144,
+                                          fit: BoxFit.fill,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Image.asset(
+                                            AppAssets.book,
+                                            width: 113,
+                                            height: 144,
+                                            fit: BoxFit.fill,
                                           ),
-
-                                          const SizedBox(
-                                              width:
-                                                  10), // Replaced padHorizontal(10)
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Label(
+                                              txt: controller.getBookTitle(
+                                                  name: book?.bookId?.name),
+                                              type: TextTypes.f_15_500,
+                                            ),
+                                            Label(
+                                              txt: controller.getBookTitle(
+                                                name: book?.bookId?.authorId
+                                                    ?.first?.name,
+                                              ),
+                                              type: TextTypes.f_15_400,
+                                              forceColor: AppColors.resnd,
+                                            ),
+                                            Label(
+                                              txt: book?.bookId?.type ?? "",
+                                              type: TextTypes.f_13_400,
+                                              forceColor: AppColors.resnd,
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Row(
                                               children: [
-                                                Label(
-                                                  txt: controller.getBookTitle(
-                                                      name: book?.bookId?.name),
-                                                  type: TextTypes.f_15_500,
-                                                ),
-                                                Label(
-                                                  txt: controller.getBookTitle(
-                                                      name: book
-                                                          ?.bookId
-                                                          ?.authorId
-                                                          ?.first
-                                                          ?.name),
-                                                  type: TextTypes.f_15_400,
-                                                  forceColor: AppColors.resnd,
-                                                ),
-                                                Label(
-                                                  txt: book?.bookId?.type ?? "",
-                                                  type: TextTypes.f_13_400,
-                                                  forceColor: AppColors.resnd,
-                                                ),
-                                                const SizedBox(
-                                                    height:
-                                                        5), // Replaced padVertical(5)
-                                                Row(
-                                                  children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.3,
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        child:
-                                                            LinearProgressIndicator(
-                                                          value:
-                                                              (book?.progress ??
-                                                                      0) /
-                                                                  100,
-                                                          backgroundColor:
-                                                              AppColors
-                                                                  .inputBorder,
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                  AppColors
-                                                                      .primaryColor),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 10),
-                                                    Label(
-                                                      txt:
-                                                          "${book?.progress?.toString()}%",
-                                                      // Replace with dynamic value like "${(book.progress * 100).toInt()}%"
-                                                      type: TextTypes.f_12_400,
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                    height:
-                                                        2), // Replaced padVertical(2)
                                                 SizedBox(
-                                                  height: 38,
-                                                  child: ElevatedButton(
-                                                    onPressed: () => {
-                                                      if (book?.bookId?.type ==
-                                                          "course")
-                                                        {
-                                                          Get.toNamed(
-                                                              '/Course-detail',
-                                                              arguments: {
-                                                                "id": book
-                                                                    ?.bookId
-                                                                    ?.sId,
-                                                              })
-                                                        }
-                                                      else
-                                                        {
-                                                          Get.toNamed(
-                                                              '/book-detail',
-                                                              arguments: {
-                                                                "id": book
-                                                                    ?.bookId
-                                                                    ?.sId,
-                                                              })
-                                                        }
-                                                    }, // Pass index if needed
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      elevation: 0.0,
-                                                      backgroundColor: AppColors
-                                                          .primaryColor,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                    ),
-                                                    child: Label(
-                                                      txt: AppLocalization.of(
-                                                              context)
-                                                          .translate(
-                                                              'continue'),
-                                                      type: TextTypes.f_13_400,
-                                                      forceColor:
-                                                          AppColors.whiteColor,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.3,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child:
+                                                        LinearProgressIndicator(
+                                                      value: (book?.progress ??
+                                                              0) /
+                                                          100,
+                                                      backgroundColor:
+                                                          AppColors.inputBorder,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              AppColors
+                                                                  .primaryColor),
                                                     ),
                                                   ),
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Label(
+                                                  txt:
+                                                      "${book?.progress?.toString()}%",
+                                                  type: TextTypes.f_12_400,
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 2),
+                                            SizedBox(
+                                              height: 38,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  Get.toNamed(
+                                                    book?.bookId?.type ==
+                                                            "course"
+                                                        ? '/Course-detail'
+                                                        : '/book-detail',
+                                                    arguments: {
+                                                      "id": book?.bookId?.sId
+                                                    },
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  elevation: 0.0,
+                                                  backgroundColor:
+                                                      AppColors.primaryColor,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                                child: Label(
+                                                  txt: AppLocalization.of(
+                                                          context)
+                                                      .translate('continue'),
+                                                  type: TextTypes.f_13_400,
+                                                  forceColor:
+                                                      AppColors.whiteColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              )
-                            : SizedBox(),
-                        padVertical(30),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          padVertical(30),
+                        ],
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -534,46 +465,54 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                   Get.toNamed("/Collection_Summary",
                                       arguments: {
                                         "title": index == 0
-                                            ? '${AppLocalization.of(context).translate('strAllCollections')}'
-                                            : '${AppLocalization.of(context).translate('strSummary')}'
+                                            ? AppLocalization.of(context)
+                                                .translate('strAllCollections')
+                                            : AppLocalization.of(context)
+                                                .translate('strSummary'),
                                       });
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 12.0),
-                                  child: Stack(children: [
-                                    index == 1
-                                        ? Container(
-                                            width: ScreenUtils.screenWidth(
-                                                    context) /
-                                                1.4,
-                                            height: 80,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.primaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                          )
-                                        : ClipRRect(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(8)),
-                                            child: Image.asset(
-                                              AppAssets.MarketSlider,
+                                  child: Stack(
+                                    children: [
+                                      index == 1
+                                          ? Container(
                                               width: ScreenUtils.screenWidth(
                                                       context) /
                                                   1.4,
                                               height: 80,
-                                              fit: BoxFit.cover,
-                                            )),
-                                    Label(
-                                      txt: index == 0
-                                          ? '${AppLocalization.of(context).translate('strAllCollections')}'
-                                          : '${AppLocalization.of(context).translate('strSummary')}',
-                                      type: TextTypes.f_18_700,
-                                      forceColor: AppColors.whiteColor,
-                                      forceAlignment: TextAlign.center,
-                                    ).marginSymmetric(
-                                        horizontal: 30, vertical: 20)
-                                  ]),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                            )
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(8)),
+                                              child: Image.asset(
+                                                AppAssets.MarketSlider,
+                                                width: ScreenUtils.screenWidth(
+                                                        context) /
+                                                    1.4,
+                                                height: 80,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                      Label(
+                                        txt: index == 0
+                                            ? AppLocalization.of(context)
+                                                .translate('strAllCollections')
+                                            : AppLocalization.of(context)
+                                                .translate('strSummary'),
+                                        type: TextTypes.f_18_700,
+                                        forceColor: AppColors.whiteColor,
+                                        forceAlignment: TextAlign.center,
+                                      ).marginSymmetric(
+                                          horizontal: 30, vertical: 20),
+                                    ],
+                                  ),
                                 ),
                               );
                             }),
@@ -581,37 +520,38 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                         ),
                         padVertical(25),
                         GestureDetector(
-                            onTap: () {
-                              Get.toNamed("/allcollections", arguments: {
-                                "title":
+                          onTap: () {
+                            Get.toNamed("/allcollections", arguments: {
+                              "title":
+                                  '${AppLocalization.of(context).translate('Audiobooks')}🎧',
+                              "id": "",
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Label(
+                                txt:
                                     '${AppLocalization.of(context).translate('Audiobooks')}🎧',
-                                "id": ""
-                              });
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Label(
-                                    txt:
-                                        '${AppLocalization.of(context).translate('Audiobooks')}🎧',
-                                    type: TextTypes.f_20_500),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 18,
-                                )
-                              ],
-                            )),
+                                type: TextTypes.f_20_500,
+                              ),
+                              const Icon(Icons.arrow_forward_ios_rounded,
+                                  size: 18),
+                            ],
+                          ),
+                        ),
                         padVertical(15),
                         Obx(() => Column(
                               children: List.generate(
-                                  controller.bookMarket?.value?.data?.audiobooks
-                                          ?.length ??
-                                      0, (index) {
-                                final publisher = controller.bookMarket?.value
-                                    ?.data?.audiobooks?[index];
-                                return GestureDetector(
+                                controller.bookMarket.value?.data?.audiobooks
+                                        ?.length ??
+                                    0,
+                                (index) {
+                                  final publisher = controller.bookMarket.value
+                                      ?.data?.audiobooks?[index];
+                                  return GestureDetector(
                                     onTap: () =>
-                                        {controller.navigateToAudioBook(index)},
+                                        controller.navigateToAudioBook(index),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                           right: 12.0, top: 10),
@@ -625,35 +565,22 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(15),
+                                                  color: Colors.white,
                                                 ),
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: Image.network(
+                                                    "${AppConfig.imgBaseUrl}${publisher?.productId?.image}",
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Image.asset(
+                                                            AppAssets.book,
+                                                            fit:
+                                                                BoxFit.contain),
                                                   ),
-                                                  child: publisher?.file != null
-                                                      ? ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8),
-                                                          child: Image.network(
-                                                            "${AppConfig.imgBaseUrl}${publisher?.productId?.image}",
-                                                            fit: BoxFit.cover,
-                                                            errorBuilder: (context,
-                                                                    error,
-                                                                    stackTrace) =>
-                                                                Image.asset(
-                                                                    AppAssets
-                                                                        .book,
-                                                                    fit: BoxFit
-                                                                        .contain),
-                                                          ),
-                                                        )
-                                                      : Image.asset(
-                                                          AppAssets.book,
-                                                          fit: BoxFit.contain),
                                                 ),
                                               ),
                                               const Positioned(
@@ -674,29 +601,33 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                             children: [
                                               padVertical(5),
                                               Label(
-                                                  txt: controller.getBookTitle(
-                                                          name: publisher
-                                                              ?.productId
-                                                              ?.name) ??
-                                                      'Unknown',
-                                                  type: TextTypes.f_13_500),
-                                              Label(
                                                 txt: controller.getBookTitle(
                                                         name: publisher
                                                             ?.productId
-                                                            ?.authorId
-                                                            ?.first
-                                                            .name) ??
+                                                            ?.name) ??
+                                                    'Unknown',
+                                                type: TextTypes.f_13_500,
+                                              ),
+                                              Label(
+                                                txt: controller.getBookTitle(
+                                                      name: publisher
+                                                          ?.productId
+                                                          ?.authorId
+                                                          ?.first
+                                                          .name,
+                                                    ) ??
                                                     'Unknown',
                                                 type: TextTypes.f_12_400,
                                                 forceColor: AppColors.resnd,
                                               ),
                                             ],
-                                          )
+                                          ),
                                         ],
                                       ),
-                                    ));
-                              }),
+                                    ),
+                                  );
+                                },
+                              ),
                             )),
                         padVertical(20),
                         GestureDetector(
@@ -704,20 +635,19 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                             Get.toNamed("/allcollections", arguments: {
                               "title":
                                   '${AppLocalization.of(context).translate('newbooks')}💌',
-                              "id": ""
+                              "id": "",
                             });
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Label(
-                                  txt:
-                                      '${AppLocalization.of(context).translate('newbooks')}💌',
-                                  type: TextTypes.f_20_500),
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 18,
-                              )
+                                txt:
+                                    '${AppLocalization.of(context).translate('newbooks')}💌',
+                                type: TextTypes.f_20_500,
+                              ),
+                              const Icon(Icons.arrow_forward_ios_rounded,
+                                  size: 18),
                             ],
                           ),
                         ),
@@ -726,40 +656,25 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                           scrollDirection: Axis.horizontal,
                           child: Obx(() => Row(
                                 children: List.generate(
-                                    controller.bookMarket.value?.data?.newBooks
-                                            ?.length ??
-                                        0, (index) {
-                                  final publisher = controller
-                                      .bookMarket.value?.data?.newBooks?[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (controller.bookMarket.value?.data
-                                                ?.newBooks?[index]?.type ==
-                                            "course") {
-                                          Get.toNamed('/Course-detail',
-                                              arguments: {
-                                                "id": controller
-                                                    .bookMarket
-                                                    .value
-                                                    ?.data
-                                                    ?.newBooks?[index]
-                                                    ?.sId,
-                                              });
-                                        } else {
-                                          Get.toNamed('/book-detail',
-                                              arguments: {
-                                                "id": controller
-                                                    .bookMarket
-                                                    .value
-                                                    ?.data
-                                                    ?.newBooks?[index]
-                                                    ?.sId,
-                                              });
-                                        }
-                                      },
-                                      child: Column(
+                                  controller.bookMarket.value?.data?.newBooks
+                                          ?.length ??
+                                      0,
+                                  (index) {
+                                    final publisher = controller.bookMarket
+                                        .value?.data?.newBooks?[index];
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 12.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed(
+                                            publisher?.type == "course"
+                                                ? '/Course-detail'
+                                                : '/book-detail',
+                                            arguments: {"id": publisher?.sId},
+                                          );
+                                        },
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
@@ -769,60 +684,49 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
+                                                color: Colors.white,
                                               ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.network(
+                                                  "${AppConfig.imgBaseUrl}${publisher?.image}",
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Image.asset(
+                                                          AppAssets.book,
+                                                          fit: BoxFit.contain),
                                                 ),
-                                                child: publisher?.image != null
-                                                    ? ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child: Image.network(
-                                                          "${AppConfig.imgBaseUrl}${publisher?.image}",
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder: (context,
-                                                                  error,
-                                                                  stackTrace) =>
-                                                              Image.asset(
-                                                                  AppAssets
-                                                                      .book,
-                                                                  fit: BoxFit
-                                                                      .contain),
-                                                        ),
-                                                      )
-                                                    : Image.asset(
-                                                        AppAssets.book,
-                                                        fit: BoxFit.contain),
                                               ),
                                             ),
                                             padVertical(5),
                                             Label(
-                                                txt: controller.getBookTitle(
-                                                        name:
-                                                            publisher?.name) ??
-                                                    'Unknown',
-                                                type: TextTypes.f_13_500),
+                                              txt: controller.getBookTitle(
+                                                      name: publisher?.name) ??
+                                                  'Unknown',
+                                              type: TextTypes.f_13_500,
+                                            ),
                                             Label(
-                                                txt: controller.getBookTitle(
-                                                        name: publisher
-                                                                ?.authorId
-                                                                ?.first
-                                                                .name ??
-                                                            "") ??
-                                                    'Unknown',
-                                                type: TextTypes.f_13_500),
+                                              txt: controller.getBookTitle(
+                                                    name: publisher?.authorId
+                                                            ?.first.name ??
+                                                        "",
+                                                  ) ??
+                                                  'Unknown',
+                                              type: TextTypes.f_13_500,
+                                            ),
                                             Label(
-                                                txt: publisher?.genre?.first ??
-                                                    "Unknown",
-                                                type: TextTypes.f_13_500),
-                                          ]),
-                                    ),
-                                  );
-                                }),
+                                              txt: publisher?.genre?.first ??
+                                                  "Unknown",
+                                              type: TextTypes.f_13_500,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               )),
                         ),
                         padVertical(30),
@@ -848,126 +752,103 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: List.generate(
-                                    controller.bookMarket.value?.data?.author
-                                            ?.length ??
-                                        0, (index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      final teacherId = controller.bookMarket
-                                          .value?.data?.author?[index].sId;
-                                      if (teacherId != null) {
-                                        print(
-                                            "Navigating to teacher profile: $teacherId");
-                                        Get.toNamed("/teacherDetail",
-                                            arguments: {
-                                              "teacherId": teacherId
-                                            });
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          right: screenWidth * 0.03),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                    screenWidth * 0.14)),
-                                            child: Center(
-                                              child: ClipOval(
-                                                child: controller
-                                                            .bookMarket
-                                                            .value
-                                                            ?.data
-                                                            ?.author?[index]
-                                                            .image !=
-                                                        null
-                                                    ? Image.network(
-                                                        height: 100,
-                                                        width: 100,
-                                                        "${AppConfig.imgBaseUrl}${controller.bookMarket.value?.data?.author?[index].image}",
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (context,
-                                                                error,
-                                                                stackTrace) =>
-                                                            Image.asset(
-                                                                height: 100,
-                                                                width: 100,
-                                                                AppAssets.book,
-                                                                fit: BoxFit
-                                                                    .contain),
-                                                      )
-                                                    : Image.asset(
-                                                        height: 100,
-                                                        width: 100,
-                                                        AppAssets.book,
-                                                        fit: BoxFit.contain),
+                                  controller.bookMarket.value?.data?.author
+                                          ?.length ??
+                                      0,
+                                  (index) {
+                                    final author = controller
+                                        .bookMarket.value?.data?.author?[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (author?.sId != null) {
+                                          Get.toNamed("/teacherDetail",
+                                              arguments: {
+                                                "teacherId": author?.sId
+                                              });
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            right: screenWidth * 0.03),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(
+                                                      screenWidth * 0.14)),
+                                              child: Image.network(
+                                                "${AppConfig.imgBaseUrl}${author?.image}",
+                                                height: 100,
+                                                width: 100,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                        stackTrace) =>
+                                                    Image.asset(
+                                                  AppAssets.book,
+                                                  height: 100,
+                                                  width: 100,
+                                                  fit: BoxFit.contain,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(height: screenHeight * 0.01),
-                                          Label(
-                                            txt: controller.getBookTitle(
-                                                name: controller
-                                                    .bookMarket
-                                                    .value
-                                                    ?.data
-                                                    ?.author?[index]
-                                                    .name),
-                                            type: TextTypes.f_13_500,
-                                            forceAlignment: TextAlign.center,
-                                          ),
-                                        ],
+                                            SizedBox(
+                                                height: screenHeight * 0.01),
+                                            Label(
+                                              txt: controller.getBookTitle(
+                                                  name: author?.name),
+                                              type: TextTypes.f_13_500,
+                                              forceAlignment: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }),
+                                    );
+                                  },
+                                ),
                               ),
                             )),
                         padVertical(30),
                         GestureDetector(
-                            onTap: controller.navigateToPublishers,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Label(
-                                    txt: AppLocalization.of(context)
-                                        .translate('Publishers'),
-                                    type: TextTypes.f_20_500),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 18,
-                                )
-                              ],
-                            )),
+                          onTap: controller.navigateToPublishers,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Label(
+                                txt: AppLocalization.of(context)
+                                    .translate('Publishers'),
+                                type: TextTypes.f_20_500,
+                              ),
+                              const Icon(Icons.arrow_forward_ios_rounded,
+                                  size: 18),
+                            ],
+                          ),
+                        ),
                         padVertical(15),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Obx(() => Row(
                                 children: List.generate(
-                                    controller.bookMarket.value?.data?.publisher
-                                            ?.length ??
-                                        0, (index) {
-                                  final publisher = controller.bookMarket.value
-                                      ?.data?.publisher?[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        final teacherId = controller.bookMarket
-                                            .value?.data?.publisher?[index].sId;
-                                        if (teacherId != null) {
-                                          print(
-                                              "Navigating to teacher profile: $teacherId");
-                                          Get.toNamed('/publisherDetail',
-                                              arguments: {
-                                                "teacherId": teacherId
-                                              });
-                                        }
-                                      },
-                                      child: Column(
+                                  controller.bookMarket.value?.data?.publisher
+                                          ?.length ??
+                                      0,
+                                  (index) {
+                                    final publisher = controller.bookMarket
+                                        .value?.data?.publisher?[index];
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 12.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (publisher?.sId != null) {
+                                            Get.toNamed('/publisherDetail',
+                                                arguments: {
+                                                  "teacherId": publisher?.sId
+                                                });
+                                          }
+                                        },
+                                        child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
@@ -977,47 +858,35 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
+                                                color: Colors.white,
                                               ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Image.network(
+                                                  "${AppConfig.imgBaseUrl}${publisher?.image}",
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
+                                                      Image.asset(
+                                                          AppAssets.book,
+                                                          fit: BoxFit.contain),
                                                 ),
-                                                child: publisher?.image != null
-                                                    ? ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8),
-                                                        child: Image.network(
-                                                          "${AppConfig.imgBaseUrl}${publisher?.image}",
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder: (context,
-                                                                  error,
-                                                                  stackTrace) =>
-                                                              Image.asset(
-                                                                  AppAssets
-                                                                      .book,
-                                                                  fit: BoxFit
-                                                                      .contain),
-                                                        ),
-                                                      )
-                                                    : Image.asset(
-                                                        AppAssets.book,
-                                                        fit: BoxFit.contain),
                                               ),
                                             ),
                                             padVertical(5),
                                             Label(
-                                                txt: controller.getBookTitle(
-                                                        name:
-                                                            publisher?.name) ??
-                                                    'Unknown',
-                                                type: TextTypes.f_13_500),
-                                          ]),
-                                    ),
-                                  );
-                                }),
+                                              txt: controller.getBookTitle(
+                                                      name: publisher?.name) ??
+                                                  'Unknown',
+                                              type: TextTypes.f_13_500,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               )),
                         ),
                       ],
@@ -1034,103 +903,79 @@ class PgBookmarket extends GetView<PgBookmarketController> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        controller.bookMarket.value?.data?.collections?.data?.mindBlowing
-                    ?.isEmpty ==
-                true
-            ? SizedBox()
-            : controller.bookMarket.value?.data?.collections?.data?.mindBlowing
-                        ?.first.booksId?.isEmpty !=
-                    true
-                ? _buildSectionHeader(
-                    context,
-                    id: controller.bookMarket.value?.data?.collections?.data
-                        ?.mindBlowing?.first.sId,
-                    controller.getBookTitle(
-                      name: controller.bookMarket.value?.data?.collections?.data
-                          ?.mindBlowing?.first.name,
-                    ))
-                : SizedBox(),
-        padVertical(15),
-        Obx(() {
-          final popularCollections =
-              controller.bookMarket.value?.data?.collections?.data?.mindBlowing;
-
-          if (popularCollections == null || popularCollections.isEmpty) {
-            return const SizedBox();
-          }
-          final books = popularCollections.first.booksId ?? [];
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return _builCollectioinRow(books);
-        }),
-        padVertical(15),
-        controller.bookMarket.value?.data?.collections?.data?.popularCollections
-                    ?.isEmpty ==
-                true
-            ? SizedBox()
-            : controller.bookMarket.value?.data?.collections?.data
-                        ?.popularCollections?.first.booksId?.isEmpty !=
-                    true
-                ? _buildSectionHeader(
-                    context,
-                    id: controller.bookMarket.value?.data?.collections?.data
-                        ?.popularCollections?.first.sId,
-                    controller.getBookTitle(
-                        name: controller.bookMarket.value?.data?.collections
-                            ?.data?.popularCollections?.first.name))
-                : SizedBox(),
-        padVertical(15),
-        Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final popularCollections = controller
-              .bookMarket.value?.data?.collections?.data?.popularCollections;
-
-          if (popularCollections == null || popularCollections.isEmpty) {
-            return const SizedBox();
-          }
-          final books = popularCollections.first.booksId ?? [];
-
-          return _builCollectioinRow(books);
-        }),
-        padVertical(15)
+        if (controller.bookMarket.value?.data?.collections?.data?.mindBlowing
+                    ?.isNotEmpty ==
+                true &&
+            controller.bookMarket.value?.data?.collections?.data?.mindBlowing
+                    ?.first.booksId?.isNotEmpty ==
+                true) ...[
+          _buildSectionHeader(
+            context,
+            id: controller.bookMarket.value?.data?.collections?.data
+                ?.mindBlowing?.first.sId,
+            controller.getBookTitle(
+                name: controller.bookMarket.value?.data?.collections?.data
+                    ?.mindBlowing?.first.name),
+          ),
+          padVertical(15),
+          Obx(() {
+            final books = controller.bookMarket.value?.data?.collections?.data
+                    ?.mindBlowing?.first.booksId ??
+                [];
+            return _buildCollectionRow(books);
+          }),
+          padVertical(15),
+        ],
+        if (controller.bookMarket.value?.data?.collections?.data
+                    ?.popularCollections?.isNotEmpty ==
+                true &&
+            controller.bookMarket.value?.data?.collections?.data
+                    ?.popularCollections?.first.booksId?.isNotEmpty ==
+                true) ...[
+          _buildSectionHeader(
+            context,
+            id: controller.bookMarket.value?.data?.collections?.data
+                ?.popularCollections?.first.sId,
+            controller.getBookTitle(
+                name: controller.bookMarket.value?.data?.collections?.data
+                    ?.popularCollections?.first.name),
+          ),
+          padVertical(15),
+          Obx(() {
+            final books = controller.bookMarket.value?.data?.collections?.data
+                    ?.popularCollections?.first.booksId ??
+                [];
+            return _buildCollectionRow(books);
+          }),
+          padVertical(15),
+        ],
       ],
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String titleKey,
-      {String emoji = '', String? id}) {
-    String title = emoji.isEmpty
-        ? AppLocalization.of(context).translate(titleKey)
-        : '${emoji}${AppLocalization.of(context).translate(titleKey)}';
-
+  Widget _buildSectionHeader(BuildContext context, String title, {String? id}) {
     return id != null
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Label(txt: title, type: TextTypes.f_20_500),
               GestureDetector(
-                  onTap: () {
-                    print("$id");
-
-                    Get.toNamed("/allcollections",
-                        arguments: {"title": title, "id": id});
-                  },
-                  child: const Icon(Icons.arrow_forward_ios_rounded, size: 18))
+                onTap: () {
+                  Get.toNamed("/allcollections",
+                      arguments: {"title": title, "id": id});
+                },
+                child: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
+              ),
             ],
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _buildButtonGrid(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Wrap(
-      spacing: screenWidth * 0.015, // Horizontal spacing between items
-      runSpacing: screenWidth * 0.025, // Vertical spacing between rows
+      spacing: screenWidth * 0.015,
+      runSpacing: screenWidth * 0.025,
       children: controller.bookMarket.value?.data?.categories
               ?.asMap()
               .entries
@@ -1142,7 +987,7 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                 onTap: () {
                   Get.toNamed("/categoryById", arguments: {
                     "teacherId": controller
-                        .bookMarket.value?.data?.categories?[index].sId
+                        .bookMarket.value?.data?.categories?[index].sId,
                   });
                 },
                 child: Container(
@@ -1162,8 +1007,7 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                     ],
                   ),
                   child: Row(
-                    mainAxisSize:
-                        MainAxisSize.min, // Ensure Row takes minimum width
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       ClipRRect(
                         child: item.image != null
@@ -1172,15 +1016,12 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                 width: 20,
                                 "${AppConfig.imgBaseUrl}${controller.bookMarket.value?.data?.categories?[index].image}",
                                 errorBuilder: (context, error, stackTrace) =>
-                                    Label(
+                                    const Label(
                                   txt: "📋",
                                   type: TextTypes.f_18_400,
                                 ),
                               )
-                            : Label(
-                                txt: "📋",
-                                type: TextTypes.f_18_400,
-                              ),
+                            : const Label(txt: "📋", type: TextTypes.f_18_400),
                       ),
                       Flexible(
                         child: Label(
@@ -1200,31 +1041,17 @@ class PgBookmarket extends GetView<PgBookmarketController> {
     );
   }
 
-  // Add the missing collection row builder
-  Widget _builCollectioinRow(List<BooksId> books) {
+  Widget _buildCollectionRow(List<BooksId> books) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: books.map((book) {
           return GestureDetector(
             onTap: () {
-              // Get.toNamed('/book-detail', arguments: {
-              //   "id": book?.sId,
-              // });
-
-              if (book?.type == "course") {
-                Get.toNamed('/Course-detail', arguments: {
-                  "id": book?.sId,
-                });
-              } else {
-                Get.toNamed('/book-detail', arguments: {
-                  "id": book?.sId,
-                });
-              }
-              // if (book.sId != null) {
-              //   controller.navigateToCollection(book.sId!,
-              //       controller.getBookTitle(name: book.name) ?? 'Unknown');
-              // }
+              Get.toNamed(
+                book.type == "course" ? '/Course-detail' : '/book-detail',
+                arguments: {"id": book.sId},
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 12.0),
@@ -1236,29 +1063,19 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                     width: 144,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        "${AppConfig.imgBaseUrl}${book.image}",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          AppAssets.book,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                      child: book.image != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                "${AppConfig.imgBaseUrl}${book.image}",
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(
-                                  AppAssets.book,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            )
-                          : Image.asset(
-                              AppAssets.book,
-                              fit: BoxFit.contain,
-                            ),
                     ),
                   ),
                   padVertical(5),
@@ -1268,9 +1085,10 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                   ),
                   Label(
                     txt: controller.getBookTitle(
-                            name: book.authorId?.isNotEmpty == true
-                                ? book.authorId?.first.name
-                                : null) ??
+                          name: book.authorId?.isNotEmpty == true
+                              ? book.authorId?.first.name
+                              : null,
+                        ) ??
                         'Unknown',
                     type: TextTypes.f_13_400,
                     forceColor: AppColors.resnd,

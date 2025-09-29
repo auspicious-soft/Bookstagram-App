@@ -10,6 +10,7 @@ import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controller/dashboard_controller.dart';
 import '../controllers/cart_controller.dart';
 
 class CartView extends StatelessWidget {
@@ -21,7 +22,6 @@ class CartView extends StatelessWidget {
       init: CartController(),
       builder: (controller) {
         getBookTitle({required dynamic name}) {
-          // Default title if name is null or invalid
           const String defaultTitle = 'No Title';
           String selectedLanguage = Get.locale?.languageCode ?? "";
 
@@ -38,37 +38,42 @@ class CartView extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.background,
+          resizeToAvoidBottomInset:
+              true, // Allow resizing when keyboard appears
           body: SafeArea(
-            child: WidgetGlobalMargin(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back_ios),
-                            onPressed: controller.goBack,
-                          ),
-                          padVertical(10),
-                          Label(
-                            txt: AppLocalization.of(context).translate('cart'),
-                            type: TextTypes.f_20_500,
-                          ),
-                        ],
-                      ),
-                      GestureDetector(
+            child: SingleChildScrollView(
+              // Wrap content in SingleChildScrollView
+              child: WidgetGlobalMargin(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_back_ios),
+                              onPressed: controller.goBack,
+                            ),
+                            padVertical(10),
+                            Label(
+                              txt:
+                                  AppLocalization.of(context).translate('cart'),
+                              type: TextTypes.f_20_500,
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
                           onTap: () {
                             controller.DeleteWholeCartApicall();
                           },
-                          child: const Icon(Icons.delete)),
-                    ],
-                  ),
-                  const Divider(),
-                  Expanded(
-                    child: Obx(
+                          child: const Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    Obx(
                       () => controller.CartData.value?.data == null
                           ? Center(
                               child: Label(
@@ -77,6 +82,10 @@ class CartView extends StatelessWidget {
                               ),
                             )
                           : ListView.builder(
+                              shrinkWrap: true,
+                              // Ensure ListView fits content
+                              physics: const NeverScrollableScrollPhysics(),
+                              // Disable ListView scrolling
                               padding: const EdgeInsets.only(top: 10),
                               itemCount: controller.CartData.value?.data
                                       ?.productId?.length ??
@@ -115,7 +124,8 @@ class CartView extends StatelessWidget {
                                                       )
                                                     : Center(
                                                         child: Image.asset(
-                                                            "assets/images/book.png")),
+                                                            "assets/images/book.png"),
+                                                      ),
                                               ),
                                             ),
                                           ),
@@ -193,144 +203,231 @@ class CartView extends StatelessWidget {
                               },
                             ),
                     ),
-                  ),
-                ],
+                    // Add padding to ensure content is not obscured by keyboard
+                    SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                  ],
+                ),
               ),
             ),
           ),
-          bottomNavigationBar: Obx(() => controller.CartData.value?.data !=
-                      null ||
-                  controller.CartData.value?.data?.productId?.length == 0
-              ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                  decoration: const BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
+          bottomNavigationBar: Obx(
+            () => controller.CartData.value?.data != null &&
+                    controller.CartData.value?.data?.productId?.isNotEmpty ==
+                        true
+                ? Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 30, horizontal: 20),
+                    decoration: const BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Obx(
-                        () => controller.appplycoupn.value
-                            ? Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            hintText:
-                                                AppLocalization.of(context)
-                                                    .translate('entercopan'),
-                                            border: InputBorder.none,
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 12.0),
-                                            hintStyle: const TextStyle(
-                                              color: AppColors.inputBorder,
-                                              fontFamily: AppConst.fontFamily,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Obx(
+                              () => controller.appplycoupn.value
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            controller.VoucherResponse.value !=
+                                                    null
+                                                ? Image.asset(
+                                                    AppAssets.greentick,
+                                                    fit: BoxFit.contain,
+                                                    width: 21,
+                                                    height: 21,
+                                                  ).marginOnly(left: 10)
+                                                : SizedBox(),
+                                            Expanded(
+                                              child: TextField(
+                                                controller:
+                                                    controller.CouponCode,
+                                                decoration: InputDecoration(
+                                                  hintText: AppLocalization.of(
+                                                          context)
+                                                      .translate('entercopan'),
+                                                  border: InputBorder.none,
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12.0),
+                                                  hintStyle: const TextStyle(
+                                                    color:
+                                                        AppColors.inputBorder,
+                                                    fontFamily:
+                                                        AppConst.fontFamily,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              decoration: BoxDecoration(
+                                                color: controller
+                                                            .VoucherResponse
+                                                            .value !=
+                                                        null
+                                                    ? AppColors.green
+                                                    : AppColors.primaryColor,
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(8.0),
+                                                  bottomRight:
+                                                      Radius.circular(8.0),
+                                                ),
+                                              ),
+                                              child: IconButton(
+                                                icon: Image.asset(
+                                                  controller.VoucherResponse
+                                                              .value !=
+                                                          null
+                                                      ? AppAssets.deletewhite
+                                                      : AppAssets.applycoup,
+                                                  fit: BoxFit.contain,
+                                                  width: 21,
+                                                  height: 21,
+                                                ),
+                                                onPressed: () {
+                                                  if (controller.VoucherResponse
+                                                          .value !=
+                                                      null) {
+                                                    controller.removeCoupon();
+                                                  } else if (controller
+                                                      .CouponCode
+                                                      .text
+                                                      .isNotEmpty) {
+                                                    controller
+                                                        .CartVoucherApicall();
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, right: 10),
-                                        decoration: const BoxDecoration(
+                                    )
+                                  : GestureDetector(
+                                      onTap: controller.toggleCoupon,
+                                      child: Text(
+                                        AppLocalization.of(context)
+                                            .translate('havecoupn'),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: AppConst.fontFamily,
+                                          decoration: TextDecoration.underline,
+                                          decorationColor:
+                                              AppColors.primaryColor,
                                           color: AppColors.primaryColor,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(8.0),
-                                            bottomRight: Radius.circular(8.0),
-                                          ),
-                                        ),
-                                        child: IconButton(
-                                          icon: Image.asset(
-                                            AppAssets.applycoup,
-                                            fit: BoxFit.contain,
-                                            width: 21,
-                                            height: 21,
-                                          ),
-                                          onPressed: controller.toggleCoupon,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : GestureDetector(
-                                onTap: controller.toggleCoupon,
-                                child: Text(
-                                  AppLocalization.of(context)
-                                      .translate('havecoupn'),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: AppConst.fontFamily,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.primaryColor,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                ),
-                              ),
-                      ),
-                      padVertical(5),
-                      SizedBox(
-                        width: ScreenUtils.screenWidth(context) / 1.2,
-                        child: ElevatedButton(
-                          onPressed: controller.proceedToPayment,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                                    ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Label(
+                            padVertical(5),
+                            // Add Checkbox for Wallet
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Obx(
+                                  () => Checkbox(
+                                    value: controller.useWallet.value,
+                                    onChanged: (bool? value) {
+                                      controller.useWallet.value =
+                                          value ?? false;
+                                      controller
+                                          .update(); // Update UI if needed
+                                    },
+                                    activeColor: AppColors.primaryColor,
+                                  ),
+                                ),
+                                Label(
+                                  txt: AppLocalization.of(context)
+                                          .translate('use_wallet_amount') ??
+                                      'Do you want to use wallet amount?',
+                                  type: TextTypes.f_15_400,
+                                  forceColor: AppColors.blackColor,
+                                ),
+                              ],
+                            ),
+                            padVertical(5),
+                            SizedBox(
+                              width: ScreenUtils.screenWidth(context) / 1.2,
+                              child: ElevatedButton(
+                                onPressed: controller.proceedToPayment,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Label(
+                                      txt: AppLocalization.of(context)
+                                          .translate('paynow'),
+                                      type: TextTypes.f_17_500,
+                                      forceColor: AppColors.whiteColor,
+                                    ),
+                                    padHorizontal(15),
+                                    Label(
+                                      txt:
+                                          "${controller.getFinalCartTotal()} ₸",
+                                      type: TextTypes.f_17_500,
+                                      forceColor: AppColors.whiteColor,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                if (Get.previousRoute == "/Course-detail" ||
+                                    Get.previousRoute == "/book-detail") {
+                                  Get.back();
+                                } else {
+                                  final dashboardController =
+                                      Get.find<DashboardController>();
+                                  dashboardController.changeTab(1);
+                                }
+                              },
+                              child: Label(
                                 txt: AppLocalization.of(context)
-                                    .translate('paynow'),
+                                    .translate('morecatalog'),
                                 type: TextTypes.f_17_500,
-                                forceColor: AppColors.whiteColor,
+                                forceColor: AppColors.primaryColor,
                               ),
-                              padHorizontal(15),
-                              Label(
-                                txt: "${controller.getCartTotal()} ₸",
-                                type: TextTypes.f_17_500,
-                                forceColor: AppColors.whiteColor,
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Label(
-                          txt: AppLocalization.of(context)
-                              .translate('morecatalog'),
-                          type: TextTypes.f_17_500,
-                          forceColor: AppColors.primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : SizedBox()),
+                    ),
+                  )
+                : SizedBox(),
+          ),
         );
       },
     );

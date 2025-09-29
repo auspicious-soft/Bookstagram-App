@@ -237,5 +237,6 @@
   "Delete": "Удалить",
   "Are you sure you want to delete?": "Вы уверены, что хотите удалить?",
   "Yes, Delete": "Да, удалить",
-  "Delete Account": "Удалить аккаунт"
+  "Delete Account": "Удалить аккаунт",
+  "use_wallet_amount": "Хотите использовать сумму из кошелька?"
 }

@@ -162,7 +162,10 @@ class PgEditProfileView extends GetView<PgEditProfileController> {
                             _buildDatePicker(context),
                             padVertical(20),
                             controller.proileData.value?.data?.data?.authType ==
-                                    "Google"
+                                        "Google" ||
+                                    controller.proileData.value?.data?.data
+                                            ?.authType ==
+                                        "Apple"
                                 ? SizedBox(
                                     height: 10,
                                   )

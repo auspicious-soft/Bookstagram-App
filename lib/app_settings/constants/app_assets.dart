@@ -94,4 +94,6 @@ class AppAssets {
   static String DonkeyRead = "assets/images/DonkeyRead.png";
   static String delete = "assets/images/delete.png";
   static String markall = "assets/images/markall.png";
+  static String deletewhite = "assets/images/deletewhite.png";
+  static String greentick = "assets/images/greenTick.png";
 }

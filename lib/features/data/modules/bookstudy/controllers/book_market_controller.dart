@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bookstagram/features/presentation/Pages/AudioBook/pg_audio_book.dart';
@@ -18,6 +19,7 @@ class PgBookmarketController extends GetxController {
   // Reactive variable for search input (if needed)
   final Rx<BookMarketResponseModel?> bookMarket =
       Rx<BookMarketResponseModel?>(null);
+  Timer? _debounceTimer;
 
   // Add the missing collectiondata property
   final Rx<CollectionDataModel?> collectiondata =
@@ -192,7 +194,15 @@ class PgBookmarketController extends GetxController {
 
   void onSearchChanged(String value) {
     searchQuery.value = value;
-    // Add search logic here if needed (e.g., filter books)
+
+    // Cancel the previous timer if it exists
+    _debounceTimer?.cancel();
+
+    // Start a new timer
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      fetchBookStudy();
+      // Add search logic here if needed (e.g., filter books)
+    });
   }
 
   void navigateToCategories() {
@@ -244,6 +254,13 @@ class PgBookmarketController extends GetxController {
 
   void continueReading() {
     // Implement continue reading logic here
+  }
+
+  @override
+  void onClose() {
+    // Cancel the timer when the controller is disposed
+    _debounceTimer?.cancel();
+    super.onClose();
   }
 
   // Add the missing method to navigate to collection details

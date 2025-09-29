@@ -1,7 +1,7 @@
 class AppConfig {
-  // static const String baseUrl = "https://duman-backend.onrender.com/";
+  static const String baseUrl = "https://duman-backend.onrender.com/";
 
-  static const String baseUrl = "https://9f370faebf96.ngrok-free.app/";
+  // static const String baseUrl = "https://ebab9e4db837.ngrok-free.app/";
   static const String signIn = 'api/user-login';
   static const String signUp = 'api/user-signup';
   static const String verifySignUp = 'api/user-verify-otp';
@@ -68,4 +68,5 @@ class AppConfig {
   static const String FAQEndPoints = 'api/user/faqs';
   static const String NotificationSettingEndPoint = 'api/user/user-language';
   static const String StaticData = 'api/user/policies';
+  static const String getAllNotifications = 'api/user/notifications';
 }

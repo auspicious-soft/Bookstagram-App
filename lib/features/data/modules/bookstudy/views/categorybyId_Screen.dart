@@ -379,8 +379,19 @@ class CategorybyidScreen extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
-                                  // Example: Use controller to handle navigation
-                                  // controller.navigateToCourseDetail(context);
+                                  if (controller.bookStudy.value?.data
+                                          ?.books?[index]?.type ==
+                                      "course") {
+                                    Get.toNamed('/Course-detail', arguments: {
+                                      "id": controller.bookStudy.value?.data
+                                          ?.books?[index]?.sId,
+                                    });
+                                  } else {
+                                    Get.toNamed('/book-detail', arguments: {
+                                      "id": controller.bookStudy.value?.data
+                                          ?.books?[index]?.sId,
+                                    });
+                                  }
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

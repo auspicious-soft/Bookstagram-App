@@ -31,6 +31,9 @@ import 'package:bookstagram/features/data/modules/collection_and_summary/binding
 import 'package:bookstagram/features/data/modules/collection_and_summary/view/fav_course_view.dart';
 import 'package:bookstagram/features/data/modules/collection_and_summary/view/my_all_FavouriteAuthors.dart';
 import 'package:bookstagram/features/data/modules/home_module/Players/bindings/cart_binding.dart';
+import 'package:bookstagram/features/data/modules/home_module/Players/bindings/podcastBinding.dart';
+import 'package:bookstagram/features/data/modules/home_module/Players/controllers/podcast_controller.dart';
+import 'package:bookstagram/features/data/modules/home_module/Players/views/PodcastPlayer.dart';
 import 'package:bookstagram/features/data/modules/home_module/Players/views/cart_view.dart';
 import 'package:bookstagram/features/data/modules/home_module/binding/dashboard_binding.dart';
 import 'package:bookstagram/features/data/modules/home_module/view/dashboard_screen.dart';
@@ -45,7 +48,9 @@ import 'package:bookstagram/features/data/modules/settingModule/view/support.dar
 import 'package:bookstagram/features/data/modules/splash/bindings/all_collection_binding.dart';
 import 'package:bookstagram/features/data/modules/splash/bindings/onboarding_binding.dart';
 import 'package:bookstagram/firebase_options.dart';
+import 'package:bookstagram/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -118,6 +123,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  @pragma('vm:entry-point')
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    // Initialize Firebase if not already initialized
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
   // Initialize ConnectivityController
   final connectivityController = ConnectivityController();
   Get.put(connectivityController);
@@ -137,7 +151,13 @@ void main() async {
 
   // Set initial route based on connectivity
   final initialRoute = isConnected ? '/splash' : '/no-internet';
+// Set up background message handler
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  // Initialize notification service
+  final notificationService = NotificationService();
+  await notificationService.init();
+  Get.put(notificationService, permanent: true);
   runApp(MyApp(initialRoute: initialRoute, savedLocale: savedLocale));
 }
 
@@ -437,6 +457,11 @@ class MyApp extends StatelessWidget {
           name: "/Notifications",
           page: () => PgNotification(),
           binding: PgNotificationBinding(),
+        ),
+        GetPage(
+          name: "/podcastPlayer",
+          page: () => Podcastplayer(),
+          binding: Podcastbinding(),
         ),
       ],
     );

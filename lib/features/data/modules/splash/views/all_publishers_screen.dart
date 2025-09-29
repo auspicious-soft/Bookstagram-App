@@ -101,7 +101,16 @@ class PgPublishers extends StatelessWidget {
                         itemCount: controller.allPublishers.value!.data!.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              if (controller
+                                      .allPublishers.value?.data?[index]?.sId !=
+                                  null) {
+                                Get.toNamed('/publisherDetail', arguments: {
+                                  "teacherId": controller
+                                      .allPublishers.value?.data?[index]?.sId
+                                });
+                              }
+                            },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [

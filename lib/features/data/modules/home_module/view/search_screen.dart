@@ -244,7 +244,12 @@ class PgTabsearch extends GetView<TabSearchController> {
       physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () {},
+          onTap: () {
+            print(authors[index]?.sId);
+            Get.toNamed("/teacherDetail", arguments: {
+              "teacherId": authors[index]?.sId,
+            });
+          },
           child: Column(
             children: [
               AspectRatio(
@@ -425,7 +430,11 @@ class PgTabsearch extends GetView<TabSearchController> {
         itemBuilder: (context, index) {
           final book = books[index];
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Get.toNamed('/book-detail', arguments: {
+                "id": books[index]?.sId,
+              });
+            },
             child: Column(
               children: [
                 Row(

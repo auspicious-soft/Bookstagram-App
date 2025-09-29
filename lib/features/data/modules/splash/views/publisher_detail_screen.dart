@@ -186,71 +186,88 @@ class PublisherDetailScreen extends StatelessWidget {
                                     controller.bookStudy.value?.data?.publisher
                                             ?.categoryId?.length ??
                                         0,
-                                    (index) => Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 12.0, top: 10, bottom: 10),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 5, horizontal: 10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.whiteColor,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.black12,
-                                              blurRadius: 4,
-                                              offset: Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          // Ensure Row takes minimum width
-                                          children: [
-                                            ClipRRect(
-                                              child: controller
-                                                          .bookStudy
-                                                          .value
-                                                          ?.data
-                                                          ?.publisher
-                                                          ?.categoryId?[index]
-                                                          .image !=
-                                                      null
-                                                  ? Image.network(
-                                                      height: 20,
-                                                      width: 20,
-                                                      "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.publisher?.categoryId?[index].image}",
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Label(
-                                                        txt: "📋",
-                                                        type:
-                                                            TextTypes.f_18_400,
-                                                      ),
-                                                    )
-                                                  : Label(
-                                                      txt: "📋",
-                                                      type: TextTypes.f_18_400,
-                                                    ),
-                                            ),
-                                            Flexible(
-                                              child: Label(
-                                                maxLines: 3,
-                                                txt: controller.getBookTitle(
-                                                        name: controller
+                                    (index) => GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed("/categoryById",
+                                            arguments: {
+                                              "teacherId": controller
+                                                  .bookStudy
+                                                  .value
+                                                  ?.data
+                                                  ?.publisher
+                                                  ?.categoryId?[index]
+                                                  .sId
+                                            });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12.0, top: 10, bottom: 10),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5, horizontal: 10),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.whiteColor,
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.black12,
+                                                blurRadius: 4,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            // Ensure Row takes minimum width
+                                            children: [
+                                              ClipRRect(
+                                                child: controller
                                                             .bookStudy
                                                             .value
                                                             ?.data
                                                             ?.publisher
                                                             ?.categoryId?[index]
-                                                            .name) ??
-                                                    'Unknown',
-                                                type: TextTypes.f_18_400,
-                                              ).marginSymmetric(horizontal: 8),
-                                            ),
-                                          ],
+                                                            .image !=
+                                                        null
+                                                    ? Image.network(
+                                                        height: 20,
+                                                        width: 20,
+                                                        "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.publisher?.categoryId?[index].image}",
+                                                        errorBuilder: (context,
+                                                                error,
+                                                                stackTrace) =>
+                                                            Label(
+                                                          txt: "📋",
+                                                          type: TextTypes
+                                                              .f_18_400,
+                                                        ),
+                                                      )
+                                                    : Label(
+                                                        txt: "📋",
+                                                        type:
+                                                            TextTypes.f_18_400,
+                                                      ),
+                                              ),
+                                              Flexible(
+                                                child: Label(
+                                                  maxLines: 3,
+                                                  txt: controller.getBookTitle(
+                                                          name: controller
+                                                              .bookStudy
+                                                              .value
+                                                              ?.data
+                                                              ?.publisher
+                                                              ?.categoryId?[
+                                                                  index]
+                                                              .name) ??
+                                                      'Unknown',
+                                                  type: TextTypes.f_18_400,
+                                                ).marginSymmetric(
+                                                    horizontal: 8),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -285,34 +302,103 @@ class PublisherDetailScreen extends StatelessWidget {
                                       controller.bookStudy.value?.data
                                               ?.publisherBooks?.length ??
                                           0, (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 12.0, top: 10),
-                                      child: Column(
-                                        children: [
-                                          padVertical(5),
-                                          Row(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                child: controller
-                                                            .bookStudy
-                                                            .value
-                                                            ?.data
-                                                            ?.publisherBooks?[
-                                                                index]
-                                                            ?.image !=
-                                                        null
-                                                    ? Image.network(
-                                                        height: 100,
-                                                        width: 100,
-                                                        fit: BoxFit.cover,
-                                                        "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.publisherBooks?[index]?.image}",
-                                                        errorBuilder: (context,
-                                                                error,
-                                                                stackTrace) =>
-                                                            Container(
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (controller
+                                                .bookStudy
+                                                .value
+                                                ?.data
+                                                ?.publisherBooks?[index]
+                                                ?.type ==
+                                            "course") {
+                                          Get.toNamed('/Course-detail',
+                                              arguments: {
+                                                "id": controller
+                                                    .bookStudy
+                                                    .value
+                                                    ?.data
+                                                    ?.publisherBooks?[index]
+                                                    ?.sId,
+                                              });
+                                        } else if (controller
+                                                .bookStudy
+                                                .value
+                                                ?.data
+                                                ?.publisherBooks?[index]
+                                                ?.type ==
+                                            "video-lecture") {
+                                          Get.toNamed("/podcastPlayer",
+                                              arguments: {
+                                                "url": controller.getBookTitle(
+                                                    name: controller
+                                                        .bookStudy
+                                                        .value
+                                                        ?.data
+                                                        ?.publisherBooks?[index]
+                                                        ?.file)
+                                              });
+                                          print(
+                                              "${AppConfig.imgBaseUrl}${controller.getBookTitle(name: controller.bookStudy.value?.data?.publisherBooks?[index]?.file)}");
+                                        } else {
+                                          Get.toNamed('/book-detail',
+                                              arguments: {
+                                                "id": controller
+                                                    .bookStudy
+                                                    .value
+                                                    ?.data
+                                                    ?.publisherBooks?[index]
+                                                    ?.sId,
+                                              });
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 12.0, top: 10),
+                                        child: Column(
+                                          children: [
+                                            padVertical(5),
+                                            Row(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: controller
+                                                              .bookStudy
+                                                              .value
+                                                              ?.data
+                                                              ?.publisherBooks?[
+                                                                  index]
+                                                              ?.image !=
+                                                          null
+                                                      ? Image.network(
+                                                          height: 100,
+                                                          width: 100,
+                                                          fit: BoxFit.cover,
+                                                          "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.publisherBooks?[index]?.image}",
+                                                          errorBuilder: (context,
+                                                                  error,
+                                                                  stackTrace) =>
+                                                              Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                            ),
+                                                            child: Center(
+                                                              child:
+                                                                  Image.asset(
+                                                                AppAssets.book,
+                                                                fit: BoxFit
+                                                                    .contain,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(
                                                           decoration:
                                                               BoxDecoration(
                                                             color: Colors.white,
@@ -329,121 +415,108 @@ class PublisherDetailScreen extends StatelessWidget {
                                                             ),
                                                           ),
                                                         ),
-                                                      )
-                                                    : Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(16),
+                                                ),
+                                                padHorizontal(10),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    padVertical(5),
+                                                    Label(
+                                                      txt: controller.getBookTitle(
+                                                          name: controller
+                                                              .bookStudy
+                                                              .value
+                                                              ?.data
+                                                              ?.publisherBooks?[
+                                                                  index]
+                                                              ?.name),
+                                                      type: TextTypes.f_17_500,
+                                                    ),
+                                                    Label(
+                                                      txt: controller.getBookTitle(
+                                                          name: controller
+                                                              .bookStudy
+                                                              .value
+                                                              ?.data
+                                                              ?.publisherBooks?[
+                                                                  index]
+                                                              ?.authorId
+                                                              ?.first
+                                                              ?.name),
+                                                      type: TextTypes.f_13_400,
+                                                      forceColor:
+                                                          AppColors.resnd,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            padVertical(10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.star),
+                                                    Label(
+                                                      txt:
+                                                          "${controller.bookStudy.value?.data?.publisherBooks?[index]?.averageRating}.0",
+                                                      type: TextTypes.f_11_500,
+                                                    ),
+                                                    padHorizontal(8),
+                                                    Container(
+                                                      height: 20,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .buttongroupBorder,
+                                                          width: 0.6,
                                                         ),
-                                                        child: Center(
-                                                          child: Image.asset(
-                                                            AppAssets.book,
-                                                            fit: BoxFit.contain,
-                                                          ),
-                                                        ),
-                                                      ),
-                                              ),
-                                              padHorizontal(10),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  padVertical(5),
-                                                  Label(
-                                                    txt: controller.getBookTitle(
-                                                        name: controller
-                                                            .bookStudy
-                                                            .value
-                                                            ?.data
-                                                            ?.publisherBooks?[
-                                                                index]
-                                                            ?.name),
-                                                    type: TextTypes.f_17_500,
-                                                  ),
-                                                  Label(
-                                                    txt: controller.getBookTitle(
-                                                        name: controller
-                                                            .bookStudy
-                                                            .value
-                                                            ?.data
-                                                            ?.publisherBooks?[
-                                                                index]
-                                                            ?.authorId
-                                                            ?.first
-                                                            ?.name),
-                                                    type: TextTypes.f_13_400,
-                                                    forceColor: AppColors.resnd,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          padVertical(10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.star),
-                                                  Label(
-                                                    txt:
-                                                        "${controller.bookStudy.value?.data?.publisherBooks?[index]?.averageRating}.0",
-                                                    type: TextTypes.f_11_500,
-                                                  ),
-                                                  padHorizontal(8),
-                                                  Container(
-                                                    height: 20,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      border: Border.all(
-                                                        color: AppColors
-                                                            .buttongroupBorder,
-                                                        width: 0.6,
                                                       ),
                                                     ),
-                                                  ),
-                                                  padHorizontal(8),
-                                                  Label(
-                                                    txt: controller
-                                                            .bookStudy
-                                                            .value
-                                                            ?.data
-                                                            ?.publisherBooks?[
-                                                                index]
-                                                            ?.genre
-                                                            ?.first ??
-                                                        "",
-                                                    type: TextTypes.f_11_500,
-                                                  ),
-                                                ],
-                                              ),
-                                              // GestureDetector(
-                                              //   onTap: () {
-                                              //     controller.toggleLike(index);
-                                              //   },
-                                              //   child: Image.asset(
-                                              //     width: 17,
-                                              //     height: 17,
-                                              //     controller.likeStatus[index]
-                                              //         ? AppAssets.like
-                                              //         : AppAssets.unlike,
-                                              //     fit: BoxFit.contain,
-                                              //   ),
-                                              // ),
-                                            ],
-                                          ),
-                                          padVertical(5),
-                                          if (controller.bookStudy.value?.data
-                                                  ?.publisherBooks?.length !=
-                                              (index + 1))
-                                            Divider(),
-                                        ],
+                                                    padHorizontal(8),
+                                                    Label(
+                                                      txt: controller
+                                                              .bookStudy
+                                                              .value
+                                                              ?.data
+                                                              ?.publisherBooks?[
+                                                                  index]
+                                                              ?.genre
+                                                              ?.first ??
+                                                          "",
+                                                      type: TextTypes.f_11_500,
+                                                    ),
+                                                  ],
+                                                ),
+                                                // GestureDetector(
+                                                //   onTap: () {
+                                                //     controller.toggleLike(index);
+                                                //   },
+                                                //   child: Image.asset(
+                                                //     width: 17,
+                                                //     height: 17,
+                                                //     controller.likeStatus[index]
+                                                //         ? AppAssets.like
+                                                //         : AppAssets.unlike,
+                                                //     fit: BoxFit.contain,
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
+                                            padVertical(5),
+                                            if (controller.bookStudy.value?.data
+                                                    ?.publisherBooks?.length !=
+                                                (index + 1))
+                                              Divider(),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   }),

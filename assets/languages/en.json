@@ -235,6 +235,7 @@
   "Delete": "Delete",
   "Are you sure you want to delete?": "Are you sure you want to delete?",
   "Yes, Delete": "Yes, Delete",
-  "Delete Account": "Delete Account"
+  "Delete Account": "Delete Account",
+  "use_wallet_amount": "Do you want to use wallet amount?"
 }
 

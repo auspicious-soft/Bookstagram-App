@@ -101,35 +101,86 @@ class PgCollections extends GetView<PgCollectionsController> {
                                             controller.bestSellerData.value
                                                     ?.data?.length ??
                                                 0, (index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 12.0, top: 10),
-                                            child: Column(
-                                              children: [
-                                                padVertical(5),
-                                                Row(
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      child: controller
-                                                                  .bestSellerData
-                                                                  .value
-                                                                  ?.data?[index]
-                                                                  ?.book
-                                                                  ?.image !=
-                                                              null
-                                                          ? Image.network(
-                                                              height: 100,
-                                                              width: 100,
-                                                              fit: BoxFit.cover,
-                                                              "${AppConfig.imgBaseUrl}${controller.bestSellerData.value?.data?[index]?.book?.image}",
-                                                              errorBuilder:
-                                                                  (context,
-                                                                          error,
-                                                                          stackTrace) =>
-                                                                      Container(
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (controller
+                                                      .bestSellerData
+                                                      .value
+                                                      ?.data?[index]
+                                                      ?.book
+                                                      ?.type ==
+                                                  "course") {
+                                                Get.toNamed('/Course-detail',
+                                                    arguments: {
+                                                      "id": controller
+                                                          .bestSellerData
+                                                          .value
+                                                          ?.data?[index]
+                                                          ?.book
+                                                          ?.sId,
+                                                    });
+                                              } else {
+                                                Get.toNamed('/book-detail',
+                                                    arguments: {
+                                                      "id": controller
+                                                          .bestSellerData
+                                                          .value
+                                                          ?.data?[index]
+                                                          ?.book
+                                                          ?.sId,
+                                                    });
+                                              }
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 12.0, top: 10),
+                                              child: Column(
+                                                children: [
+                                                  padVertical(5),
+                                                  Row(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        child: controller
+                                                                    .bestSellerData
+                                                                    .value
+                                                                    ?.data?[
+                                                                        index]
+                                                                    ?.book
+                                                                    ?.image !=
+                                                                null
+                                                            ? Image.network(
+                                                                height: 100,
+                                                                width: 100,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                "${AppConfig.imgBaseUrl}${controller.bestSellerData.value?.data?[index]?.book?.image}",
+                                                                errorBuilder: (context,
+                                                                        error,
+                                                                        stackTrace) =>
+                                                                    Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16),
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Image
+                                                                        .asset(
+                                                                      AppAssets
+                                                                          .book,
+                                                                      fit: BoxFit
+                                                                          .contain,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Container(
                                                                 decoration:
                                                                     BoxDecoration(
                                                                   color: Colors
@@ -149,132 +200,120 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                            )
-                                                          : Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            16),
+                                                      ),
+                                                      padHorizontal(10),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          padVertical(5),
+                                                          Label(
+                                                            txt: getBookTitle(
+                                                                name: controller
+                                                                    .bestSellerData
+                                                                    .value
+                                                                    ?.data?[
+                                                                        index]
+                                                                    ?.book
+                                                                    ?.name),
+                                                            type: TextTypes
+                                                                .f_17_500,
+                                                          ),
+                                                          Label(
+                                                            txt: getBookTitle(
+                                                                name: controller
+                                                                    .bestSellerData
+                                                                    .value
+                                                                    ?.data?[
+                                                                        index]
+                                                                    ?.book
+                                                                    ?.name),
+                                                            type: TextTypes
+                                                                .f_13_400,
+                                                            forceColor:
+                                                                AppColors.resnd,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  padVertical(10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          const Icon(
+                                                              Icons.star),
+                                                          Label(
+                                                            txt:
+                                                                "${controller.bestSellerData.value?.data?[index]?.book?.averageRating}.0",
+                                                            type: TextTypes
+                                                                .f_11_500,
+                                                          ),
+                                                          padHorizontal(8),
+                                                          Container(
+                                                            height: 20,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              border:
+                                                                  Border.all(
+                                                                color: AppColors
+                                                                    .buttongroupBorder,
+                                                                width: 0.6,
                                                               ),
-                                                              child: Center(
-                                                                child:
-                                                                    Image.asset(
-                                                                  AppAssets
-                                                                      .book,
-                                                                  fit: BoxFit
-                                                                      .contain,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                    ),
-                                                    padHorizontal(10),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        padVertical(5),
-                                                        Label(
-                                                          txt: getBookTitle(
-                                                              name: controller
-                                                                  .bestSellerData
-                                                                  .value
-                                                                  ?.data?[index]
-                                                                  ?.book
-                                                                  ?.name),
-                                                          type: TextTypes
-                                                              .f_17_500,
-                                                        ),
-                                                        Label(
-                                                          txt: getBookTitle(
-                                                              name: controller
-                                                                  .bestSellerData
-                                                                  .value
-                                                                  ?.data?[index]
-                                                                  ?.book
-                                                                  ?.name),
-                                                          type: TextTypes
-                                                              .f_13_400,
-                                                          forceColor:
-                                                              AppColors.resnd,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                padVertical(10),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        const Icon(Icons.star),
-                                                        Label(
-                                                          txt:
-                                                              "${controller.bestSellerData.value?.data?[index]?.book?.averageRating}.0",
-                                                          type: TextTypes
-                                                              .f_11_500,
-                                                        ),
-                                                        padHorizontal(8),
-                                                        Container(
-                                                          height: 20,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            border: Border.all(
-                                                              color: AppColors
-                                                                  .buttongroupBorder,
-                                                              width: 0.6,
                                                             ),
                                                           ),
-                                                        ),
-                                                        padHorizontal(8),
-                                                        Label(
-                                                          txt: controller
-                                                                  .bestSellerData
-                                                                  .value
-                                                                  ?.data?[index]
-                                                                  ?.book
-                                                                  ?.genre
-                                                                  ?.first ??
-                                                              "",
-                                                          type: TextTypes
-                                                              .f_11_500,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    // GestureDetector(
-                                                    //   onTap: () {
-                                                    //     // controller
-                                                    //     //     .toggleLike(index);
-                                                    //   },
-                                                    //   child: Image.asset(
-                                                    //     width: 17,
-                                                    //     height: 17,
-                                                    //     controller.likeStatus[
-                                                    //             index]
-                                                    //         ? AppAssets.like
-                                                    //         : AppAssets.unlike,
-                                                    //     fit: BoxFit.contain,
-                                                    //   ),
-                                                    // ),
-                                                  ],
-                                                ),
-                                                padVertical(5),
-                                                if (controller.bestSellerData
-                                                        .value?.data?.length !=
-                                                    (index + 1))
-                                                  Divider(),
-                                              ],
+                                                          padHorizontal(8),
+                                                          Label(
+                                                            txt: controller
+                                                                    .bestSellerData
+                                                                    .value
+                                                                    ?.data?[
+                                                                        index]
+                                                                    ?.book
+                                                                    ?.genre
+                                                                    ?.first ??
+                                                                "",
+                                                            type: TextTypes
+                                                                .f_11_500,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      // GestureDetector(
+                                                      //   onTap: () {
+                                                      //     // controller
+                                                      //     //     .toggleLike(index);
+                                                      //   },
+                                                      //   child: Image.asset(
+                                                      //     width: 17,
+                                                      //     height: 17,
+                                                      //     controller.likeStatus[
+                                                      //             index]
+                                                      //         ? AppAssets.like
+                                                      //         : AppAssets.unlike,
+                                                      //     fit: BoxFit.contain,
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                  padVertical(5),
+                                                  if (controller
+                                                          .bestSellerData
+                                                          .value
+                                                          ?.data
+                                                          ?.length !=
+                                                      (index + 1))
+                                                    Divider(),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         }),
@@ -292,36 +331,91 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                         ?.audioBooks
                                                         ?.length ??
                                                     0, (index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 12.0, top: 10),
-                                                child: Column(
-                                                  children: [
-                                                    padVertical(5),
-                                                    Row(
-                                                      children: [
-                                                        ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          child: controller
-                                                                      .allAudioBooks
-                                                                      ?.value
-                                                                      ?.data
-                                                                      ?.audioBooks?[
-                                                                          index]
-                                                                      ?.image !=
-                                                                  null
-                                                              ? Image.network(
-                                                                  height: 100,
-                                                                  width: 100,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  "${AppConfig.imgBaseUrl}${controller.allAudioBooks?.value?.data?.audioBooks?[index].image}",
-                                                                  errorBuilder: (context,
-                                                                          error,
-                                                                          stackTrace) =>
-                                                                      Container(
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  if (controller
+                                                          .allAudioBooks
+                                                          ?.value
+                                                          ?.data
+                                                          ?.audioBooks?[index]
+                                                          ?.type ==
+                                                      "course") {
+                                                    Get.toNamed(
+                                                        '/Course-detail',
+                                                        arguments: {
+                                                          "id": controller
+                                                              .allAudioBooks
+                                                              ?.value
+                                                              ?.data
+                                                              ?.audioBooks?[
+                                                                  index]
+                                                              ?.sId,
+                                                        });
+                                                  } else {
+                                                    Get.toNamed('/book-detail',
+                                                        arguments: {
+                                                          "id": controller
+                                                              .allAudioBooks
+                                                              ?.value
+                                                              ?.data
+                                                              ?.audioBooks?[
+                                                                  index]
+                                                              ?.sId,
+                                                        });
+                                                  }
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 12.0, top: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      padVertical(5),
+                                                      Row(
+                                                        children: [
+                                                          ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            child: controller
+                                                                        .allAudioBooks
+                                                                        ?.value
+                                                                        ?.data
+                                                                        ?.audioBooks?[
+                                                                            index]
+                                                                        ?.image !=
+                                                                    null
+                                                                ? Image.network(
+                                                                    height: 100,
+                                                                    width: 100,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    "${AppConfig.imgBaseUrl}${controller.allAudioBooks?.value?.data?.audioBooks?[index].image}",
+                                                                    errorBuilder: (context,
+                                                                            error,
+                                                                            stackTrace) =>
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(16),
+                                                                      ),
+                                                                      child:
+                                                                          Center(
+                                                                        child: Image
+                                                                            .asset(
+                                                                          AppAssets
+                                                                              .book,
+                                                                          fit: BoxFit
+                                                                              .contain,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Container(
                                                                     decoration:
                                                                         BoxDecoration(
                                                                       color: Colors
@@ -334,6 +428,10 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                                         Center(
                                                                       child: Image
                                                                           .asset(
+                                                                        height:
+                                                                            100,
+                                                                        width:
+                                                                            100,
                                                                         AppAssets
                                                                             .book,
                                                                         fit: BoxFit
@@ -341,160 +439,140 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                )
-                                                              : Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16),
+                                                          ),
+                                                          padHorizontal(10),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              padVertical(5),
+                                                              Label(
+                                                                txt: getBookTitle(
+                                                                    name: controller
+                                                                        .allAudioBooks
+                                                                        ?.value
+                                                                        ?.data
+                                                                        ?.audioBooks?[
+                                                                            index]
+                                                                        ?.name),
+                                                                type: TextTypes
+                                                                    .f_17_500,
+                                                              ),
+                                                              Label(
+                                                                txt: getBookTitle(
+                                                                    name: controller
+                                                                        .allAudioBooks
+                                                                        ?.value
+                                                                        ?.data
+                                                                        ?.audioBooks?[
+                                                                            index]
+                                                                        ?.authorId
+                                                                        ?.first
+                                                                        ?.name),
+                                                                type: TextTypes
+                                                                    .f_13_400,
+                                                                forceColor:
+                                                                    AppColors
+                                                                        .resnd,
+                                                              ),
+                                                              // Label(
+                                                              //   txt: getBookTitle(
+                                                              //       name: controller.allAudioBooks?.value?.data?.audioBooks?[
+                                                              //       index]
+                                                              //           ?.publisherId
+                                                              //           ?. ??
+                                                              //           ""),
+                                                              //   type: TextTypes
+                                                              //       .f_13_400,
+                                                              //   forceColor:
+                                                              //   AppColors
+                                                              //       .resnd,
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      padVertical(10),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              const Icon(
+                                                                  Icons.star),
+                                                              Label(
+                                                                txt:
+                                                                    "${controller.allAudioBooks?.value?.data?.audioBooks?[index].averageRating?.toString()}.0",
+                                                                type: TextTypes
+                                                                    .f_11_500,
+                                                              ),
+                                                              padHorizontal(8),
+                                                              Container(
+                                                                height: 20,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  border: Border
+                                                                      .all(
+                                                                    color: AppColors
+                                                                        .buttongroupBorder,
+                                                                    width: 0.6,
                                                                   ),
-                                                                  child: Center(
-                                                                    child: Image
-                                                                        .asset(
-                                                                      AppAssets
-                                                                          .book,
-                                                                      fit: BoxFit
-                                                                          .contain,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                        ),
-                                                        padHorizontal(10),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            padVertical(5),
-                                                            Label(
-                                                              txt: getBookTitle(
-                                                                  name: controller
-                                                                      .allAudioBooks
-                                                                      ?.value
-                                                                      ?.data
-                                                                      ?.audioBooks?[
-                                                                          index]
-                                                                      ?.name),
-                                                              type: TextTypes
-                                                                  .f_17_500,
-                                                            ),
-                                                            Label(
-                                                              txt: getBookTitle(
-                                                                  name: controller
-                                                                      .allAudioBooks
-                                                                      ?.value
-                                                                      ?.data
-                                                                      ?.audioBooks?[
-                                                                          index]
-                                                                      ?.authorId
-                                                                      ?.first
-                                                                      ?.name),
-                                                              type: TextTypes
-                                                                  .f_13_400,
-                                                              forceColor:
-                                                                  AppColors
-                                                                      .resnd,
-                                                            ),
-                                                            // Label(
-                                                            //   txt: getBookTitle(
-                                                            //       name: controller.allAudioBooks?.value?.data?.audioBooks?[
-                                                            //       index]
-                                                            //           ?.publisherId
-                                                            //           ?. ??
-                                                            //           ""),
-                                                            //   type: TextTypes
-                                                            //       .f_13_400,
-                                                            //   forceColor:
-                                                            //   AppColors
-                                                            //       .resnd,
-                                                            // ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    padVertical(10),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            const Icon(
-                                                                Icons.star),
-                                                            Label(
-                                                              txt:
-                                                                  "${controller.allAudioBooks?.value?.data?.audioBooks?[index].averageRating?.toString()}.0",
-                                                              type: TextTypes
-                                                                  .f_11_500,
-                                                            ),
-                                                            padHorizontal(8),
-                                                            Container(
-                                                              height: 20,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15),
-                                                                border:
-                                                                    Border.all(
-                                                                  color: AppColors
-                                                                      .buttongroupBorder,
-                                                                  width: 0.6,
                                                                 ),
                                                               ),
-                                                            ),
-                                                            padHorizontal(8),
-                                                            Label(
-                                                              txt: getBookTitle(
-                                                                  name: controller
-                                                                          .allAudioBooks
-                                                                          ?.value
-                                                                          ?.data
-                                                                          ?.audioBooks?[
-                                                                              index]
-                                                                          ?.categoryId
-                                                                          ?.first
-                                                                          ?.name ??
-                                                                      ""),
-                                                              type: TextTypes
-                                                                  .f_11_500,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        // GestureDetector(
-                                                        //   onTap: () {
-                                                        //     controller
-                                                        //         .toggleLike(
-                                                        //             index);
-                                                        //   },
-                                                        //   child: Image.asset(
-                                                        //     width: 17,
-                                                        //     height: 17,
-                                                        //     controller.likeStatus[
-                                                        //             index]
-                                                        //         ? AppAssets.like
-                                                        //         : AppAssets
-                                                        //             .unlike,
-                                                        //     fit: BoxFit.contain,
-                                                        //   ),
-                                                        // ),
-                                                      ],
-                                                    ),
-                                                    padVertical(5),
-                                                    if (controller
-                                                            .allAudioBooks
-                                                            ?.value
-                                                            ?.data
-                                                            ?.audioBooks
-                                                            ?.length !=
-                                                        (index + 1))
-                                                      Divider(),
-                                                  ],
+                                                              padHorizontal(8),
+                                                              Label(
+                                                                txt: getBookTitle(
+                                                                    name: controller
+                                                                            .allAudioBooks
+                                                                            ?.value
+                                                                            ?.data
+                                                                            ?.audioBooks?[index]
+                                                                            ?.categoryId
+                                                                            ?.first
+                                                                            ?.name ??
+                                                                        ""),
+                                                                type: TextTypes
+                                                                    .f_11_500,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          // GestureDetector(
+                                                          //   onTap: () {
+                                                          //     controller
+                                                          //         .toggleLike(
+                                                          //             index);
+                                                          //   },
+                                                          //   child: Image.asset(
+                                                          //     width: 17,
+                                                          //     height: 17,
+                                                          //     controller.likeStatus[
+                                                          //             index]
+                                                          //         ? AppAssets.like
+                                                          //         : AppAssets
+                                                          //             .unlike,
+                                                          //     fit: BoxFit.contain,
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                      padVertical(5),
+                                                      if (controller
+                                                              .allAudioBooks
+                                                              ?.value
+                                                              ?.data
+                                                              ?.audioBooks
+                                                              ?.length !=
+                                                          (index + 1))
+                                                        Divider(),
+                                                    ],
+                                                  ),
                                                 ),
                                               );
                                             }),
@@ -512,42 +590,94 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                             ?.newBooks
                                                             ?.length ??
                                                         0, (index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 12.0,
-                                                            top: 10),
-                                                    child: Column(
-                                                      children: [
-                                                        padVertical(5),
-                                                        Row(
-                                                          children: [
-                                                            ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              child: controller
-                                                                          .allNewBooks
-                                                                          ?.value
-                                                                          ?.data
-                                                                          ?.newBooks?[
-                                                                              index]
-                                                                          ?.image !=
-                                                                      null
-                                                                  ? Image
-                                                                      .network(
-                                                                      height:
-                                                                          100,
-                                                                      width:
-                                                                          100,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      "${AppConfig.imgBaseUrl}${controller.allNewBooks?.value?.data?.newBooks?[index].image}",
-                                                                      errorBuilder: (context,
-                                                                              error,
-                                                                              stackTrace) =>
-                                                                          Container(
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      if (controller
+                                                              .allNewBooks
+                                                              ?.value
+                                                              ?.data
+                                                              ?.newBooks?[index]
+                                                              ?.type ==
+                                                          "course") {
+                                                        Get.toNamed(
+                                                            '/Course-detail',
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .allNewBooks
+                                                                  ?.value
+                                                                  ?.data
+                                                                  ?.newBooks?[
+                                                                      index]
+                                                                  ?.sId,
+                                                            });
+                                                      } else {
+                                                        Get.toNamed(
+                                                            '/book-detail',
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .allNewBooks
+                                                                  ?.value
+                                                                  ?.data
+                                                                  ?.newBooks?[
+                                                                      index]
+                                                                  ?.sId,
+                                                            });
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 12.0,
+                                                              top: 10),
+                                                      child: Column(
+                                                        children: [
+                                                          padVertical(5),
+                                                          Row(
+                                                            children: [
+                                                              ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child: controller
+                                                                            .allNewBooks
+                                                                            ?.value
+                                                                            ?.data
+                                                                            ?.newBooks?[
+                                                                                index]
+                                                                            ?.image !=
+                                                                        null
+                                                                    ? Image
+                                                                        .network(
+                                                                        height:
+                                                                            100,
+                                                                        width:
+                                                                            100,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        "${AppConfig.imgBaseUrl}${controller.allNewBooks?.value?.data?.newBooks?[index].image}",
+                                                                        errorBuilder: (context,
+                                                                                error,
+                                                                                stackTrace) =>
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(16),
+                                                                          ),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Image.asset(
+                                                                              AppAssets.book,
+                                                                              fit: BoxFit.contain,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Container(
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:
@@ -565,165 +695,139 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                    )
-                                                                  : Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(16),
+                                                              ),
+                                                              padHorizontal(10),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  padVertical(
+                                                                      5),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller
+                                                                            .allNewBooks
+                                                                            ?.value
+                                                                            ?.data
+                                                                            ?.newBooks?[index]
+                                                                            ?.name),
+                                                                    type: TextTypes
+                                                                        .f_17_500,
+                                                                  ),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller
+                                                                            .allNewBooks
+                                                                            ?.value
+                                                                            ?.data
+                                                                            ?.newBooks?[index]
+                                                                            ?.authorId
+                                                                            ?.first
+                                                                            ?.name),
+                                                                    type: TextTypes
+                                                                        .f_13_400,
+                                                                    forceColor:
+                                                                        AppColors
+                                                                            .resnd,
+                                                                  ),
+                                                                  // Label(
+                                                                  //   txt: getBookTitle(
+                                                                  //       name: controller.allAudioBooks?.value?.data?.audioBooks?[
+                                                                  //       index]
+                                                                  //           ?.publisherId
+                                                                  //           ?. ??
+                                                                  //           ""),
+                                                                  //   type: TextTypes
+                                                                  //       .f_13_400,
+                                                                  //   forceColor:
+                                                                  //   AppColors
+                                                                  //       .resnd,
+                                                                  // ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          padVertical(10),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  const Icon(
+                                                                      Icons
+                                                                          .star),
+                                                                  Label(
+                                                                    txt:
+                                                                        "${controller.allNewBooks?.value?.data?.newBooks?[index].averageRating?.toString()}.0",
+                                                                    type: TextTypes
+                                                                        .f_11_500,
+                                                                  ),
+                                                                  padHorizontal(
+                                                                      8),
+                                                                  Container(
+                                                                    height: 20,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: AppColors
+                                                                            .buttongroupBorder,
+                                                                        width:
+                                                                            0.6,
                                                                       ),
-                                                                      child:
-                                                                          Center(
-                                                                        child: Image
-                                                                            .asset(
-                                                                          AppAssets
-                                                                              .book,
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                            ),
-                                                            padHorizontal(10),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                padVertical(5),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                          .allNewBooks
-                                                                          ?.value
-                                                                          ?.data
-                                                                          ?.newBooks?[
-                                                                              index]
-                                                                          ?.name),
-                                                                  type: TextTypes
-                                                                      .f_17_500,
-                                                                ),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                          .allNewBooks
-                                                                          ?.value
-                                                                          ?.data
-                                                                          ?.newBooks?[
-                                                                              index]
-                                                                          ?.authorId
-                                                                          ?.first
-                                                                          ?.name),
-                                                                  type: TextTypes
-                                                                      .f_13_400,
-                                                                  forceColor:
-                                                                      AppColors
-                                                                          .resnd,
-                                                                ),
-                                                                // Label(
-                                                                //   txt: getBookTitle(
-                                                                //       name: controller.allAudioBooks?.value?.data?.audioBooks?[
-                                                                //       index]
-                                                                //           ?.publisherId
-                                                                //           ?. ??
-                                                                //           ""),
-                                                                //   type: TextTypes
-                                                                //       .f_13_400,
-                                                                //   forceColor:
-                                                                //   AppColors
-                                                                //       .resnd,
-                                                                // ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        padVertical(10),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Icon(
-                                                                    Icons.star),
-                                                                Label(
-                                                                  txt:
-                                                                      "${controller.allNewBooks?.value?.data?.newBooks?[index].averageRating?.toString()}.0",
-                                                                  type: TextTypes
-                                                                      .f_11_500,
-                                                                ),
-                                                                padHorizontal(
-                                                                    8),
-                                                                Container(
-                                                                  height: 20,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color: AppColors
-                                                                          .buttongroupBorder,
-                                                                      width:
-                                                                          0.6,
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                padHorizontal(
-                                                                    8),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                              .allNewBooks
-                                                                              ?.value
-                                                                              ?.data
-                                                                              ?.newBooks?[index]
-                                                                              ?.categoryId
-                                                                              ?.first
-                                                                              ?.name ??
-                                                                          ""),
-                                                                  type: TextTypes
-                                                                      .f_11_500,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            // GestureDetector(
-                                                            //   onTap: () {
-                                                            //     controller
-                                                            //         .toggleLike(
-                                                            //             index);
-                                                            //   },
-                                                            //   child:
-                                                            //       Image.asset(
-                                                            //     width: 17,
-                                                            //     height: 17,
-                                                            //     controller.likeStatus[
-                                                            //             index]
-                                                            //         ? AppAssets
-                                                            //             .like
-                                                            //         : AppAssets
-                                                            //             .unlike,
-                                                            //     fit: BoxFit
-                                                            //         .contain,
-                                                            //   ),
-                                                            // ),
-                                                          ],
-                                                        ),
-                                                        padVertical(5),
-                                                        if (controller
-                                                                .allNewBooks
-                                                                ?.value
-                                                                ?.data
-                                                                ?.newBooks
-                                                                ?.length !=
-                                                            (index + 1))
-                                                          Divider(),
-                                                      ],
+                                                                  padHorizontal(
+                                                                      8),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller.allNewBooks?.value?.data?.newBooks?[index]?.categoryId?.first?.name ??
+                                                                            ""),
+                                                                    type: TextTypes
+                                                                        .f_11_500,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              // GestureDetector(
+                                                              //   onTap: () {
+                                                              //     controller
+                                                              //         .toggleLike(
+                                                              //             index);
+                                                              //   },
+                                                              //   child:
+                                                              //       Image.asset(
+                                                              //     width: 17,
+                                                              //     height: 17,
+                                                              //     controller.likeStatus[
+                                                              //             index]
+                                                              //         ? AppAssets
+                                                              //             .like
+                                                              //         : AppAssets
+                                                              //             .unlike,
+                                                              //     fit: BoxFit
+                                                              //         .contain,
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                          padVertical(5),
+                                                          if (controller
+                                                                  .allNewBooks
+                                                                  ?.value
+                                                                  ?.data
+                                                                  ?.newBooks
+                                                                  ?.length !=
+                                                              (index + 1))
+                                                            Divider(),
+                                                        ],
+                                                      ),
                                                     ),
                                                   );
                                                 }),
@@ -739,42 +843,94 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                             ?.booksId
                                                             ?.length ??
                                                         0, (index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 12.0,
-                                                            top: 10),
-                                                    child: Column(
-                                                      children: [
-                                                        padVertical(5),
-                                                        Row(
-                                                          children: [
-                                                            ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              child: controller
-                                                                          .collectiondata
-                                                                          .value
-                                                                          ?.data
-                                                                          ?.booksId?[
-                                                                              index]
-                                                                          ?.image !=
-                                                                      null
-                                                                  ? Image
-                                                                      .network(
-                                                                      height:
-                                                                          100,
-                                                                      width:
-                                                                          100,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      "${AppConfig.imgBaseUrl}${controller.collectiondata.value?.data?.booksId?[index].image}",
-                                                                      errorBuilder: (context,
-                                                                              error,
-                                                                              stackTrace) =>
-                                                                          Container(
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      if (controller
+                                                              .collectiondata
+                                                              .value
+                                                              ?.data
+                                                              ?.booksId?[index]
+                                                              ?.type ==
+                                                          "course") {
+                                                        Get.toNamed(
+                                                            '/Course-detail',
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .collectiondata
+                                                                  .value
+                                                                  ?.data
+                                                                  ?.booksId?[
+                                                                      index]
+                                                                  ?.sId,
+                                                            });
+                                                      } else {
+                                                        Get.toNamed(
+                                                            '/book-detail',
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .collectiondata
+                                                                  .value
+                                                                  ?.data
+                                                                  ?.booksId?[
+                                                                      index]
+                                                                  ?.sId,
+                                                            });
+                                                      }
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 12.0,
+                                                              top: 10),
+                                                      child: Column(
+                                                        children: [
+                                                          padVertical(5),
+                                                          Row(
+                                                            children: [
+                                                              ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child: controller
+                                                                            .collectiondata
+                                                                            .value
+                                                                            ?.data
+                                                                            ?.booksId?[
+                                                                                index]
+                                                                            ?.image !=
+                                                                        null
+                                                                    ? Image
+                                                                        .network(
+                                                                        height:
+                                                                            100,
+                                                                        width:
+                                                                            100,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        "${AppConfig.imgBaseUrl}${controller.collectiondata.value?.data?.booksId?[index].image}",
+                                                                        errorBuilder: (context,
+                                                                                error,
+                                                                                stackTrace) =>
+                                                                            Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(16),
+                                                                          ),
+                                                                          child:
+                                                                              Center(
+                                                                            child:
+                                                                                Image.asset(
+                                                                              AppAssets.book,
+                                                                              fit: BoxFit.contain,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Container(
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:
@@ -792,168 +948,136 @@ class PgCollections extends GetView<PgCollectionsController> {
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                    )
-                                                                  : Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(16),
+                                                              ),
+                                                              padHorizontal(10),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  padVertical(
+                                                                      5),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller
+                                                                            .collectiondata
+                                                                            .value
+                                                                            ?.data
+                                                                            ?.booksId?[index]
+                                                                            ?.name),
+                                                                    type: TextTypes
+                                                                        .f_17_500,
+                                                                  ),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller
+                                                                            .collectiondata
+                                                                            .value
+                                                                            ?.data
+                                                                            ?.booksId?[index]
+                                                                            ?.authorId
+                                                                            ?.first
+                                                                            ?.name),
+                                                                    type: TextTypes
+                                                                        .f_13_400,
+                                                                    forceColor:
+                                                                        AppColors
+                                                                            .resnd,
+                                                                  ),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller.collectiondata.value?.data?.booksId?[index]?.publisherId?.name ??
+                                                                            ""),
+                                                                    type: TextTypes
+                                                                        .f_13_400,
+                                                                    forceColor:
+                                                                        AppColors
+                                                                            .resnd,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          padVertical(10),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  const Icon(
+                                                                      Icons
+                                                                          .star),
+                                                                  Label(
+                                                                    txt:
+                                                                        "${controller.collectiondata.value?.data?.booksId?[index].averageRating?.toString()}.0",
+                                                                    type: TextTypes
+                                                                        .f_11_500,
+                                                                  ),
+                                                                  padHorizontal(
+                                                                      8),
+                                                                  Container(
+                                                                    height: 20,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: AppColors
+                                                                            .buttongroupBorder,
+                                                                        width:
+                                                                            0.6,
                                                                       ),
-                                                                      child:
-                                                                          Center(
-                                                                        child: Image
-                                                                            .asset(
-                                                                          AppAssets
-                                                                              .book,
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                            ),
-                                                            padHorizontal(10),
-                                                            Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                padVertical(5),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                          .collectiondata
-                                                                          .value
-                                                                          ?.data
-                                                                          ?.booksId?[
-                                                                              index]
-                                                                          ?.name),
-                                                                  type: TextTypes
-                                                                      .f_17_500,
-                                                                ),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                          .collectiondata
-                                                                          .value
-                                                                          ?.data
-                                                                          ?.booksId?[
-                                                                              index]
-                                                                          ?.authorId
-                                                                          ?.first
-                                                                          ?.name),
-                                                                  type: TextTypes
-                                                                      .f_13_400,
-                                                                  forceColor:
-                                                                      AppColors
-                                                                          .resnd,
-                                                                ),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                              .collectiondata
-                                                                              .value
-                                                                              ?.data
-                                                                              ?.booksId?[index]
-                                                                              ?.publisherId
-                                                                              ?.name ??
-                                                                          ""),
-                                                                  type: TextTypes
-                                                                      .f_13_400,
-                                                                  forceColor:
-                                                                      AppColors
-                                                                          .resnd,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        padVertical(10),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Icon(
-                                                                    Icons.star),
-                                                                Label(
-                                                                  txt:
-                                                                      "${controller.collectiondata.value?.data?.booksId?[index].averageRating?.toString()}.0",
-                                                                  type: TextTypes
-                                                                      .f_11_500,
-                                                                ),
-                                                                padHorizontal(
-                                                                    8),
-                                                                Container(
-                                                                  height: 20,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15),
-                                                                    border:
-                                                                        Border
-                                                                            .all(
-                                                                      color: AppColors
-                                                                          .buttongroupBorder,
-                                                                      width:
-                                                                          0.6,
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                padHorizontal(
-                                                                    8),
-                                                                Label(
-                                                                  txt: getBookTitle(
-                                                                      name: controller
-                                                                              .collectiondata
-                                                                              .value
-                                                                              ?.data
-                                                                              ?.booksId?[index]
-                                                                              ?.categoryId
-                                                                              ?.first
-                                                                              ?.name ??
-                                                                          ""),
-                                                                  type: TextTypes
-                                                                      .f_11_500,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            // GestureDetector(
-                                                            //   onTap: () {
-                                                            //     controller
-                                                            //         .toggleLike(
-                                                            //             index);
-                                                            //   },
-                                                            //   child:
-                                                            //       Image.asset(
-                                                            //     width: 17,
-                                                            //     height: 17,
-                                                            //     controller.likeStatus[
-                                                            //             index]
-                                                            //         ? AppAssets
-                                                            //             .like
-                                                            //         : AppAssets
-                                                            //             .unlike,
-                                                            //     fit: BoxFit
-                                                            //         .contain,
-                                                            //   ),
-                                                            // ),
-                                                          ],
-                                                        ),
-                                                        padVertical(5),
-                                                        if (controller
-                                                                .collectiondata
-                                                                .value
-                                                                ?.data
-                                                                ?.booksId
-                                                                ?.length !=
-                                                            (index + 1))
-                                                          Divider(),
-                                                      ],
+                                                                  padHorizontal(
+                                                                      8),
+                                                                  Label(
+                                                                    txt: getBookTitle(
+                                                                        name: controller.collectiondata.value?.data?.booksId?[index]?.categoryId?.first?.name ??
+                                                                            ""),
+                                                                    type: TextTypes
+                                                                        .f_11_500,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              // GestureDetector(
+                                                              //   onTap: () {
+                                                              //     controller
+                                                              //         .toggleLike(
+                                                              //             index);
+                                                              //   },
+                                                              //   child:
+                                                              //       Image.asset(
+                                                              //     width: 17,
+                                                              //     height: 17,
+                                                              //     controller.likeStatus[
+                                                              //             index]
+                                                              //         ? AppAssets
+                                                              //             .like
+                                                              //         : AppAssets
+                                                              //             .unlike,
+                                                              //     fit: BoxFit
+                                                              //         .contain,
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                          padVertical(5),
+                                                          if (controller
+                                                                  .collectiondata
+                                                                  .value
+                                                                  ?.data
+                                                                  ?.booksId
+                                                                  ?.length !=
+                                                              (index + 1))
+                                                            Divider(),
+                                                        ],
+                                                      ),
                                                     ),
                                                   );
                                                 }),

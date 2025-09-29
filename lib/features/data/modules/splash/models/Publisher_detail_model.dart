@@ -1,4 +1,5 @@
 import '../../bookstudy/models/book_market_response_Model.dart';
+import '../../bookstudy/models/categoryGetBy_id_model.dart' show File;
 
 class PublisherDetailResponseModel {
   bool? success;
@@ -144,7 +145,7 @@ class PublisherBooks {
   num? price;
   List<String>? genre;
   String? image;
-
+  Name? file;
   String? type;
   String? publisherId;
   bool? isDiscounted;
@@ -164,6 +165,7 @@ class PublisherBooks {
       this.subCategoryId,
       this.price,
       this.genre,
+      this.file,
       this.image,
       this.type,
       this.publisherId,
@@ -193,6 +195,7 @@ class PublisherBooks {
         categoryId!.add(new CategoryId.fromJson(v));
       });
     }
+
     if (json['subCategoryId'] != null) {
       subCategoryId = <SubCategoryId>[];
       json['subCategoryId'].forEach((v) {
@@ -213,6 +216,7 @@ class PublisherBooks {
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     isFavorite = json['isFavorite'];
+    file = json['file'] != null ? new Name.fromJson(json['file']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -242,6 +246,7 @@ class PublisherBooks {
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     data['isFavorite'] = this.isFavorite;
+    data['file'] = this.file;
     return data;
   }
 }

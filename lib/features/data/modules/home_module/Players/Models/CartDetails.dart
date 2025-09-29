@@ -5,14 +5,17 @@ class AddDetailResponseModel {
   bool? success;
   String? message;
   AddtoCartData? data;
+  Balance? balance;
 
-  AddDetailResponseModel({this.success, this.message, this.data});
+  AddDetailResponseModel({this.success, this.message, this.data, this.balance});
 
   AddDetailResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     data =
         json['data'] != null ? new AddtoCartData.fromJson(json['data']) : null;
+    balance =
+        json['balance'] != null ? new Balance.fromJson(json['balance']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,6 +24,9 @@ class AddDetailResponseModel {
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
+    }
+    if (this.balance != null) {
+      data['balance'] = this.balance!.toJson();
     }
     return data;
   }
@@ -233,6 +239,25 @@ class AuthorId {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Balance {
+  String? sId;
+  num? wallet;
+
+  Balance({this.sId, this.wallet});
+
+  Balance.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    wallet = json['wallet'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['wallet'] = this.wallet;
     return data;
   }
 }

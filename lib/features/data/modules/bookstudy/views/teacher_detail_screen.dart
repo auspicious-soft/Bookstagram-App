@@ -307,33 +307,49 @@ class PgTeacherProfile extends GetView<PgTeacherProfileController> {
                                                 controller.bookStudy.value?.data
                                                         ?.genres?.length ??
                                                     0, (index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 12.0,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 5,
-                                                      horizontal: 10),
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.whiteColor,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                        color: Colors.black12,
-                                                        blurRadius: 4,
-                                                        offset: Offset(0, 2),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Label(
-                                                    txt:
-                                                        "🔍 ${controller.bookStudy.value?.data?.genres?[index] ?? ""}",
-                                                    type: TextTypes.f_18_400,
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  // Get.toNamed("/categoryById",
+                                                  //     arguments: {
+                                                  //       "teacherId": controller
+                                                  //           .bookStudy
+                                                  //           .value
+                                                  //           ?.data
+                                                  //           ?.publisher
+                                                  //           ?.categoryId?[index]
+                                                  //           .sId
+                                                  //     });
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 12.0,
+                                                          top: 10,
+                                                          bottom: 10),
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 10),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.whiteColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      boxShadow: const [
+                                                        BoxShadow(
+                                                          color: Colors.black12,
+                                                          blurRadius: 4,
+                                                          offset: Offset(0, 2),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Label(
+                                                      txt:
+                                                          "🔍 ${controller.bookStudy.value?.data?.genres?[index] ?? ""}",
+                                                      type: TextTypes.f_18_400,
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -365,215 +381,257 @@ class PgTeacherProfile extends GetView<PgTeacherProfileController> {
                                               controller.bookStudy.value
                                                       ?.authorBooks?.length ??
                                                   0, (index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 12.0, top: 10),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    height: 144,
-                                                    width: Get.width,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16),
-                                                    ),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                        child: controller
+                                            return GestureDetector(
+                                              onTap: () {
+                                                if (controller
+                                                        .bookStudy
+                                                        .value
+                                                        ?.authorBooks?[index]
+                                                        ?.type ==
+                                                    "course") {
+                                                  Get.toNamed('/Course-detail',
+                                                      arguments: {
+                                                        "id": controller
+                                                            .bookStudy
+                                                            .value
+                                                            ?.authorBooks?[
+                                                                index]
+                                                            ?.sId,
+                                                      });
+                                                } else if (controller
+                                                        .bookStudy
+                                                        .value
+                                                        ?.authorBooks?[index]
+                                                        ?.type ==
+                                                    "video-lecture") {
+                                                  Get.toNamed("/podcastPlayer",
+                                                      arguments: {
+                                                        "url": controller
+                                                            .getBookTitle(
+                                                                name: controller
                                                                     .bookStudy
                                                                     .value
                                                                     ?.authorBooks?[
                                                                         index]
-                                                                    ?.image !=
-                                                                null
-                                                            ? Image.network(
-                                                                "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.authorBooks?[index]?.image}",
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                errorBuilder: (context,
-                                                                        error,
-                                                                        stackTrace) =>
-                                                                    Image.asset(
-                                                                        AppAssets
-                                                                            .book,
-                                                                        fit: BoxFit
-                                                                            .contain),
-                                                              )
-                                                            : Image.asset(
-                                                                AppAssets.book,
-                                                                fit: BoxFit
-                                                                    .contain),
+                                                                    ?.file)
+                                                      });
+                                                  // print(
+                                                  //     "${AppConfig.imgBaseUrl}${controller.getBookTitle(name: controller.bookStudy.value?.data?.publisherBooks?[index]?.file)}");
+                                                } else {
+                                                  Get.toNamed('/book-detail',
+                                                      arguments: {
+                                                        "id": controller
+                                                            .bookStudy
+                                                            .value
+                                                            ?.authorBooks?[
+                                                                index]
+                                                            ?.sId,
+                                                      });
+                                                }
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 12.0, top: 10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: 144,
+                                                      width: Get.width,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                      ),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                        ),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(16),
+                                                          child: controller
+                                                                      .bookStudy
+                                                                      .value
+                                                                      ?.authorBooks?[
+                                                                          index]
+                                                                      ?.image !=
+                                                                  null
+                                                              ? Image.network(
+                                                                  "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.authorBooks?[index]?.image}",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  errorBuilder: (context,
+                                                                          error,
+                                                                          stackTrace) =>
+                                                                      Image.asset(
+                                                                          AppAssets
+                                                                              .book,
+                                                                          fit: BoxFit
+                                                                              .contain),
+                                                                )
+                                                              : Image.asset(
+                                                                  AppAssets
+                                                                      .book,
+                                                                  fit: BoxFit
+                                                                      .contain),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  padVertical(5),
-                                                  Label(
-                                                    txt: controller.getBookTitle(
-                                                        name: controller
-                                                                .bookStudy
-                                                                .value
-                                                                ?.authorBooks?[
-                                                                    index]
-                                                                ?.name ??
-                                                            'Unknown'),
-                                                    type: TextTypes.f_13_500,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 240,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            const Icon(
-                                                              Icons.star,
-                                                              size: 16,
-                                                              color: AppColors
-                                                                  .primaryColor,
-                                                            ),
-                                                            Label(
-                                                              txt: (controller
+                                                    padVertical(5),
+                                                    Label(
+                                                      txt: controller.getBookTitle(
+                                                          name: controller
+                                                                  .bookStudy
+                                                                  .value
+                                                                  ?.authorBooks?[
+                                                                      index]
+                                                                  ?.name ??
+                                                              'Unknown'),
+                                                      type: TextTypes.f_13_500,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 240,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              const Icon(
+                                                                Icons.star,
+                                                                size: 16,
+                                                                color: AppColors
+                                                                    .primaryColor,
+                                                              ),
+                                                              Label(
+                                                                txt: (controller
+                                                                            .bookStudy
+                                                                            .value
+                                                                            ?.authorBooks?[index]
+                                                                            ?.averageRating ??
+                                                                        0.0)
+                                                                    .toString(),
+                                                                type: TextTypes
+                                                                    .f_11_500,
+                                                              ),
+                                                              padHorizontal(8),
+                                                              Container(
+                                                                height: 12,
+                                                                width: 1,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: AppColors
+                                                                      .buttongroupBorder,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16),
+                                                                ),
+                                                              ),
+                                                              padHorizontal(8),
+                                                              SizedBox(
+                                                                width: 120,
+                                                                child: Label(
+                                                                  txt: controller.getBookTitle(
+                                                                      name: controller
+                                                                          .bookStudy
+                                                                          .value
+                                                                          ?.data
+                                                                          ?.name),
+                                                                  type: TextTypes
+                                                                      .f_13_400,
+                                                                  forceColor:
+                                                                      AppColors
+                                                                          .resnd,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              if (controller
+                                                                      .bookStudy
+                                                                      .value
+                                                                      ?.authorBooks?[
+                                                                          index]
+                                                                      ?.isDiscounted ==
+                                                                  true)
+                                                                Text(
+                                                                  controller
                                                                           .bookStudy
                                                                           .value
                                                                           ?.authorBooks?[
                                                                               index]
-                                                                          ?.averageRating ??
-                                                                      0.0)
-                                                                  .toString(),
-                                                              type: TextTypes
-                                                                  .f_11_500,
-                                                            ),
-                                                            padHorizontal(8),
-                                                            Container(
-                                                              height: 12,
-                                                              width: 1,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: AppColors
-                                                                    .buttongroupBorder,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            16),
-                                                              ),
-                                                            ),
-                                                            padHorizontal(8),
-                                                            SizedBox(
-                                                              width: 120,
-                                                              child: Label(
-                                                                txt: controller.getBookTitle(
-                                                                    name: controller
-                                                                        .bookStudy
-                                                                        .value
-                                                                        ?.data
-                                                                        ?.name),
-                                                                type: TextTypes
-                                                                    .f_13_400,
-                                                                forceColor:
-                                                                    AppColors
-                                                                        .resnd,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            if (controller
-                                                                    .bookStudy
-                                                                    .value
-                                                                    ?.authorBooks?[
-                                                                        index]
-                                                                    ?.isDiscounted ==
-                                                                true)
+                                                                          ?.price
+                                                                          ?.toString() ??
+                                                                      '0',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        11,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    fontFamily:
+                                                                        AppConst
+                                                                            .fontFamily,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .lineThrough,
+                                                                    decorationThickness:
+                                                                        2,
+                                                                    decorationColor:
+                                                                        AppColors
+                                                                            .blackColor,
+                                                                    color: AppColors
+                                                                        .blackColor,
+                                                                  ),
+                                                                ),
+                                                              SizedBox(
+                                                                  width: 10),
                                                               Text(
                                                                 controller
-                                                                        .bookStudy
-                                                                        .value
-                                                                        ?.authorBooks?[
-                                                                            index]
-                                                                        ?.price
-                                                                        ?.toString() ??
-                                                                    '0',
+                                                                            .bookStudy
+                                                                            .value
+                                                                            ?.authorBooks?[
+                                                                                index]
+                                                                            ?.isDiscounted ==
+                                                                        true
+                                                                    ? (controller.bookStudy.value?.authorBooks?[index]?.price != null ? (controller.bookStudy.value?.authorBooks?[index]?.price) ?? 0 * (1 - (controller.bookStudy.value?.authorBooks?[index]?.discountPercentage ?? 0) / 100) : 0)
+                                                                        .toStringAsFixed(
+                                                                            2)
+                                                                    : (controller.bookStudy.value?.authorBooks?[index]?.price ??
+                                                                            0)
+                                                                        .toStringAsFixed(
+                                                                            2),
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize: 11,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w400,
+                                                                          .w500,
                                                                   fontFamily:
                                                                       AppConst
                                                                           .fontFamily,
-                                                                  decoration:
-                                                                      TextDecoration
-                                                                          .lineThrough,
-                                                                  decorationThickness:
-                                                                      2,
-                                                                  decorationColor:
-                                                                      AppColors
-                                                                          .blackColor,
                                                                   color: AppColors
-                                                                      .blackColor,
+                                                                      .primaryColor,
                                                                 ),
                                                               ),
-                                                            SizedBox(width: 10),
-                                                            Text(
-                                                              controller
-                                                                          .bookStudy
-                                                                          .value
-                                                                          ?.authorBooks?[
-                                                                              index]
-                                                                          ?.isDiscounted ==
-                                                                      true
-                                                                  ? (controller.bookStudy.value?.authorBooks?[index]?.price !=
-                                                                              null
-                                                                          ? (controller.bookStudy.value?.authorBooks?[index]?.price) ??
-                                                                              0 *
-                                                                                  (1 -
-                                                                                      (controller.bookStudy.value?.authorBooks?[index]?.discountPercentage ?? 0) /
-                                                                                          100)
-                                                                          : 0)
-                                                                      .toStringAsFixed(
-                                                                          2)
-                                                                  : (controller
-                                                                              .bookStudy
-                                                                              .value
-                                                                              ?.authorBooks?[
-                                                                                  index]
-                                                                              ?.price ??
-                                                                          0)
-                                                                      .toStringAsFixed(
-                                                                          2),
-                                                              style: TextStyle(
-                                                                fontSize: 11,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontFamily: AppConst
-                                                                    .fontFamily,
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             );
                                           }),

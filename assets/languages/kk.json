@@ -234,5 +234,6 @@
   "Delete": "Жою",
   "Are you sure you want to delete?": "Жоюға сенімдісіз бе?",
   "Yes, Delete": "Иә, жою",
-  "Delete Account": "Аккаунтты жою"
+  "Delete Account": "Аккаунтты жою",
+  "use_wallet_amount": "Әмиян сомасын пайдаланғыңыз келе ме?"
 }

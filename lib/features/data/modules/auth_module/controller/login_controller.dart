@@ -12,6 +12,7 @@ import 'package:bookstagram/features/domain/usecases/usecase_login.dart';
 import 'package:bookstagram/features/data/datasources/user_storage.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import '../../../../../main.dart';
 import '../../../../presentation/providers/auth_google_service.dart';
 
 class LoginController extends GetxController {

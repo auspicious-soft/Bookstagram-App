@@ -1195,8 +1195,11 @@ class PgCoursedetail extends GetView<PgCoursedetailController> {
                         forceColor: AppColors.resnd,
                       ),
                       Label(
-                        txt:
-                            "${controller.CourseDetail.value?.data?.course?.price} ₸",
+                        txt: controller
+                                    .CourseDetail.value?.data?.course?.price ==
+                                0
+                            ? "Free"
+                            : "${controller.CourseDetail.value?.data?.course?.price} ₸",
                         type: TextTypes.f_20_500,
                         textDecoration: controller.CourseDetail.value?.data
                                     ?.course?.isDiscounted ==
