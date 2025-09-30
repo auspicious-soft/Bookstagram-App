@@ -31,7 +31,7 @@ class TeachersController extends GetxController {
       var data = await getAllCategories();
       bookStudy.value = data;
       bookStudy.refresh();
-      print("Books found: ${bookStudy.value?.data?.teachers?.length ?? 0}");
+      print("Books found: ${bookStudy.value?.data?.authors?.length ?? 0}");
     } catch (e) {
       print("Error fetching books: $e");
     } finally {

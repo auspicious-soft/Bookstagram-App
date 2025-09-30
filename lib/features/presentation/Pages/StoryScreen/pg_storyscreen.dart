@@ -1,9 +1,7 @@
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
-
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
-
 import 'package:bookstagram/features/data/models/homedata_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,11 +24,10 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
   @override
   void initState() {
     super.initState();
-
     // Extract image paths (keys) and links (values) separately
     if (widget.story.file != null) {
-      storyImages = widget.story.file!.keys.toList(); // Get image keys
-      storyLinks = widget.story.file!.values.toList(); // Get site links
+      storyImages = widget.story.file!.keys.toList();
+      storyLinks = widget.story.file!.values.toList();
     } else {
       storyImages = [];
       storyLinks = [];
@@ -47,68 +44,99 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
     }
   }
 
+  void _previousStory() {
+    if (currentIndex > 0) {
+      setState(() {
+        currentIndex--;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _nextStory, // Tap to move to the next story
-      child: Scaffold(
-          backgroundColor: AppColors.blackColor,
-          body: SafeArea(
-            child: WidgetGlobalMargin(
-              child: Column(
+    return Scaffold(
+      backgroundColor: AppColors.blackColor,
+      body: SafeArea(
+        child: WidgetGlobalMargin(
+          child: Stack(
+            children: [
+              // Full-screen story image
+              Positioned.fill(
+                child: Image.network(
+                  "${AppConfig.imgBaseUrl}${storyImages[currentIndex]}",
+                  fit: BoxFit.contain, // Full-screen image
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                ),
+              ),
+              // Gesture detectors for navigation
+              Row(
                 children: [
-                  const SizedBox(height: 15),
-                  // Story progress indicators
-                  Row(
-                    children: List.generate(storyImages.length, (index) {
-                      return Expanded(
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 500),
-                          margin: EdgeInsets.only(
-                              right: index < storyImages.length - 1 ? 4 : 0),
-                          height: 4,
-                          decoration: BoxDecoration(
-                            color: index <= currentIndex
-                                ? Colors.white
-                                : Colors.grey[700],
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      );
-                    }),
+                  // Left side tap for previous story
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: _previousStory,
+                    ),
                   ),
-                  const SizedBox(height: 15),
-
+                  // Right side tap for next story
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: _nextStory,
+                    ),
+                  ),
+                ],
+              ),
+              // Overlay for progress bar, close button, and follow button
+              Column(
+                children: [
+                  // Story progress indicators
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 10),
+                    child: Row(
+                      children: List.generate(storyImages.length, (index) {
+                        return Expanded(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 500),
+                            margin: EdgeInsets.only(
+                                right: index < storyImages.length - 1 ? 4 : 0),
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: index <= currentIndex
+                                  ? Colors.white
+                                  : Colors.grey[700],
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
                   // Close button
                   Align(
                     alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(
-                        Icons.close,
-                        size: 20,
-                        color: AppColors.whiteColor,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: const Icon(
+                          Icons.close,
+                          size: 20,
+                          color: AppColors.whiteColor,
+                        ),
                       ),
                     ),
                   ),
-
-                  // Story image display
-                  Expanded(
-                    child: Center(
-                      child: Image.network(
-                        "${AppConfig.imgBaseUrl}${storyImages[currentIndex]}",
-                        // Show current story image
-                        height: MediaQuery.of(context).size.height / 1.3,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-
+                  const Spacer(),
                   // Follow button
-                  GestureDetector(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
+                    child: GestureDetector(
                       onTap: () async {
-                        final Uri url = Uri.parse(storyLinks[
-                            currentIndex]); // Open the corresponding link
+                        final Uri url = Uri.parse(storyLinks[currentIndex]);
                         if (await canLaunchUrl(url)) {
                           await launchUrl(url);
                         } else {
@@ -131,11 +159,15 @@ class _PgStoryscreenState extends State<PgStoryscreen> {
                             forceColor: Colors.white,
                           ),
                         ),
-                      )).marginSymmetric(vertical: 20),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          )),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

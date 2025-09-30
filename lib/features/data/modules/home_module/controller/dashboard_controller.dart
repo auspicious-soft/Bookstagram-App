@@ -29,8 +29,10 @@ class DashboardController extends GetxController {
 
   void changeTab(int index) {
     final searchController = Get.put(TabSearchController());
+    searchController.searchController.clear();
 
     searchController.selectedIndex.value = 0;
+
     selectedIndex.value = index;
     pageController.jumpToPage(index);
     if (index == 3) {

@@ -1,21 +1,17 @@
 import 'package:bookstagram/app_settings/components/label.dart';
 import 'package:bookstagram/app_settings/components/loader.dart';
-
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_config.dart';
 import 'package:bookstagram/app_settings/constants/app_const.dart';
-
 import 'package:bookstagram/features/data/models/homedata_model.dart';
-
 import 'package:bookstagram/features/presentation/Pages/Notification/pg_notification.dart';
 import 'package:bookstagram/features/presentation/Pages/StoryScreen/pg_storyscreen.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-
 import 'package:get/get.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../../app_settings/constants/app_dim.dart';
 import '../../../../../app_settings/constants/helpers.dart';
 import '../../../../presentation/widgets/home_subwidget.dart';
@@ -40,65 +36,68 @@ class TabhomeScreen extends GetView<HomeDataController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Obx(() => controller.isLoading.value == true
-            ? Container(
+        child: Obx(() => controller.isLoading.value
+            ? SizedBox(
                 height: Get.height,
                 width: Get.width,
-                child: Center(child: LoadingScreen()))
+                child: const Center(child: LoadingScreen()))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          padVertical(20),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(children: [
-                                  Label(
-                                      txt:
-                                          "${AppLocalization.of(context).translate('hello')},",
-                                      type: TextTypes.f_20_700),
-                                  const Label(
-                                    txt: "Duman!",
-                                    type: TextTypes.f_20_500i,
-                                    forceAlignment: TextAlign.center,
-                                    forceColor: AppColors.primaryColor,
-                                  )
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await controller.refreshData(Get.context!);
+                      },
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            padVertical(20),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(children: [
+                                    Label(
+                                        txt:
+                                            "${AppLocalization.of(context).translate('hello')},",
+                                        type: TextTypes.f_20_700),
+                                    const Label(
+                                      txt: "Duman!",
+                                      type: TextTypes.f_20_500i,
+                                      forceAlignment: TextAlign.center,
+                                      forceColor: AppColors.primaryColor,
+                                    )
+                                  ]),
+                                  GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed("/Notifications");
+                                      },
+                                      child: const Icon(
+                                          Icons.notifications_none_outlined))
                                 ]),
-                                GestureDetector(
-                                    onTap: () {
-                                      Get.toNamed("/Notifications");
-                                    },
-                                    child: const Icon(
-                                        Icons.notifications_none_outlined))
-                              ]),
-                          padVertical(15),
-                          _buildStories(controller.homeData.value),
-                          padVertical(15),
-                          GestureDetector(
-                              onTap: () {
-                                print("hello");
-                                final dashboardController =
-                                    Get.find<DashboardController>();
-
-                                // Change tab to index 1 (search screen)
-                                dashboardController.changeTab(1);
-                              },
-                              child: _buildSearchBar(context)),
-                          padVertical(15),
-                          _buildFeatureButtons(context),
-                          padVertical(15),
-                          _buildContinueReading(),
-                          padVertical(15),
-                          _buildCarouselSlider(controller.homeData.value),
-                          padVertical(15),
-                          _buildTabContent(context),
-                        ],
+                            padVertical(15),
+                            _buildStories(controller.homeData.value),
+                            padVertical(15),
+                            GestureDetector(
+                                onTap: () {
+                                  final dashboardController =
+                                      Get.find<DashboardController>();
+                                  dashboardController.changeTab(1);
+                                },
+                                child: _buildSearchBar(context)),
+                            padVertical(15),
+                            _buildFeatureButtons(context),
+                            padVertical(15),
+                            _buildContinueReading(),
+                            padVertical(15),
+                            _buildCarouselSlider(controller.homeData.value),
+                            padVertical(15),
+                            _buildTabContent(context),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -109,24 +108,32 @@ class TabhomeScreen extends GetView<HomeDataController> {
   }
 
   Widget _buildStories(HomeDataModel? findata) {
+    // Handle null or empty stories
+    if (findata == null ||
+        findata.data == null ||
+        findata.data!.stories == null ||
+        findata.data!.stories!.isEmpty) {
+      return const SizedBox
+          .shrink(); // Or a placeholder like Text("No stories available")
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: List.generate(
-          findata?.data?.stories?.length ?? 0,
+          findata.data!.stories!.length,
           (index) {
-            final Story? story = findata?.data?.stories?[index];
+            final Story? story = findata.data!.stories![index];
             if (story == null || story.file == null || story.file!.isEmpty) {
-              return const SizedBox();
+              return const SizedBox.shrink();
             }
             String? firstImageKey = story.file!.keys.first;
             return Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  final Story selectedStory = findata!.data!.stories![index];
-                  Get.to(() => PgStoryscreen(story: selectedStory));
+                  Get.to(() => PgStoryscreen(story: story));
                 },
                 child: Container(
                   height: 80,
@@ -155,6 +162,12 @@ class TabhomeScreen extends GetView<HomeDataController> {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: double.infinity,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                    Icons.image_not_supported,
+                                    size: 30,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               )
                             : const Icon(
@@ -260,7 +273,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
             FeatureButton(
               imagePath: AppAssets.uni,
               labelKey: 'Bookuniversity',
-              onTap: () => {Get.toNamed("/bookuniversity")},
+              onTap: () => Get.toNamed("/bookuniversity"),
             ),
             FeatureButton(
               imagePath: AppAssets.master,
@@ -284,197 +297,191 @@ class TabhomeScreen extends GetView<HomeDataController> {
   }
 
   Widget _buildContinueReading() {
-    return controller.homeData.value?.data?.readProgress?.length != 0
-        ? SizedBox(
-            height: 160,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount:
-                  controller.homeData.value?.data?.readProgress?.length ??
-                      0, // Adjust based on your data
-              itemBuilder: (context, index) {
-                final book =
-                    controller.homeData.value?.data?.readProgress?[index];
-                return Container(
-                  width: ScreenUtils.screenWidth(context) * 0.9,
-                  // Set a fixed width (e.g., 80% of screen width)
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  // Space between items
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: AppColors.border,
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: Row(
+    final readProgress = controller.homeData.value?.data?.readProgress;
+    if (readProgress == null || readProgress.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return SizedBox(
+      height: 160,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: readProgress.length,
+        itemBuilder: (context, index) {
+          final book = readProgress[index];
+          if (book?.bookId == null) {
+            return const SizedBox.shrink();
+          }
+          return Container(
+            width: ScreenUtils.screenWidth(context) * 0.9,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            decoration: BoxDecoration(
+              color: AppColors.border,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  child: book.bookId!.image != null
+                      ? Image.network(
+                          width: 113,
+                          height: 144,
+                          "${AppConfig.imgBaseUrl}${book.bookId!.image}",
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset(
+                            AppAssets.book,
+                            width: 113,
+                            height: 144,
+                            fit: BoxFit.fill,
+                          ),
+                        )
+                      : Image.asset(
+                          width: 113,
+                          height: 144,
+                          AppAssets.book,
+                          fit: BoxFit.fill,
+                        ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        child: book?.bookId?.image != null
-                            ? Image.network(
-                                width: 113,
-                                height: 144,
-                                "${AppConfig.imgBaseUrl}${book?.bookId?.image}",
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(
-                                  AppAssets.book,
-                                  width: 113,
-                                  height: 144,
-                                  fit: BoxFit.fill,
-                                ),
-                              )
-                            : Image.asset(
-                                width: 113,
-                                height: 144,
-                                AppAssets.book,
-                                fit: BoxFit.fill,
-                              ),
+                      Label(
+                        txt: controller.getBookTitle(name: book.bookId!.name),
+                        type: TextTypes.f_15_500,
                       ),
-
-                      const SizedBox(width: 10), // Replaced padHorizontal(10)
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Label(
-                              txt: controller.getBookTitle(
-                                  name: book?.bookId?.name),
-                              type: TextTypes.f_15_500,
-                            ),
-                            Label(
-                              txt: controller.getBookTitle(
-                                  name: book?.bookId?.authorId?.first?.name),
-                              type: TextTypes.f_15_400,
-                              forceColor: AppColors.resnd,
-                            ),
-                            Label(
-                              txt: book?.bookId?.type ?? "",
-                              type: TextTypes.f_13_400,
-                              forceColor: AppColors.resnd,
-                            ),
-                            const SizedBox(
-                                height: 5), // Replaced padVertical(5)
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: LinearProgressIndicator(
-                                      value: (book?.progress ?? 0) / 100,
-                                      backgroundColor: AppColors.inputBorder,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          AppColors.primaryColor),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Label(
-                                  txt: "${book?.progress?.toString()}%",
-                                  // Replace with dynamic value like "${(book.progress * 100).toInt()}%"
-                                  type: TextTypes.f_12_400,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                                height: 2), // Replaced padVertical(2)
-                            SizedBox(
-                              height: 38,
-                              child: ElevatedButton(
-                                onPressed: () => {
-                                  if (book?.bookId?.type == "course")
-                                    {
-                                      Get.toNamed('/Course-detail', arguments: {
-                                        "id": book?.bookId?.sId,
-                                      })
-                                    }
-                                  else
-                                    {
-                                      Get.toNamed('/book-detail', arguments: {
-                                        "id": book?.bookId?.sId,
-                                      })
-                                    }
-                                }, // Pass index if needed
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0.0,
-                                  backgroundColor: AppColors.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                                child: Label(
-                                  txt: AppLocalization.of(context)
-                                      .translate('continue'),
-                                  type: TextTypes.f_13_400,
-                                  forceColor: AppColors.whiteColor,
-                                ),
+                      Label(
+                        txt: controller.getBookTitle(
+                            name: book.bookId!.authorId?.first?.name ?? ''),
+                        type: TextTypes.f_15_400,
+                        forceColor: AppColors.resnd,
+                      ),
+                      Label(
+                        txt: book.bookId!.type ?? "",
+                        type: TextTypes.f_13_400,
+                        forceColor: AppColors.resnd,
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.3,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: LinearProgressIndicator(
+                                value: (book.progress ?? 0) / 100,
+                                backgroundColor: AppColors.inputBorder,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.primaryColor),
                               ),
                             ),
-                          ],
+                          ),
+                          const SizedBox(width: 10),
+                          Label(
+                            txt: "${book.progress?.toString() ?? '0'}%",
+                            type: TextTypes.f_12_400,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      SizedBox(
+                        height: 38,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (book.bookId!.type == "course") {
+                              Get.toNamed('/Course-detail',
+                                  arguments: {"id": book.bookId!.sId});
+                            } else {
+                              Get.toNamed('/book-detail',
+                                  arguments: {"id": book.bookId!.sId});
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0.0,
+                            backgroundColor: AppColors.primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Label(
+                            txt: AppLocalization.of(context)
+                                .translate('continue'),
+                            type: TextTypes.f_13_400,
+                            forceColor: AppColors.whiteColor,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          )
-        : SizedBox();
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildCarouselSlider(HomeDataModel? findata) {
-    return findata?.data?.banners?.length == 0
-        ? SizedBox()
-        : CarouselSlider.builder(
-            itemCount: findata?.data?.banners?.length ?? 0,
-            itemBuilder: (context, index, realIndex) {
-              final banner = findata?.data?.banners?[index];
+    if (findata?.data?.banners == null || findata!.data!.banners!.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-              if (banner == null ||
-                  banner.image == null ||
-                  banner.image!.isEmpty) {
-                return Container(
-                  width: double.infinity, // Ensure full width
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.black,
-                  ),
-                  child: const Center(
-                    child: Label(
-                      txt: "No Image",
-                      type: TextTypes.f_13_600,
-                      forceColor: Colors.white,
-                    ),
-                  ),
-                );
-              }
-
-              return Container(
-                width: double.infinity, // Ensure full width
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "${AppConfig.imgBaseUrl}${banner.image ?? ""}"),
-                    fit: BoxFit.cover, // Use cover to maintain aspect ratio
-                  ),
-                ),
-              ).marginSymmetric(horizontal: 10);
-            },
-            options: CarouselOptions(
-              height: 150,
-              autoPlay: true,
-              enlargeCenterPage: false,
-              // Disable enlargeCenterPage to avoid shrinking
-              viewportFraction: 1.0,
-              // Ensure each item takes full width
-              padEnds: false, // Remove padding at the ends
+    return CarouselSlider.builder(
+      itemCount: findata.data!.banners!.length,
+      itemBuilder: (context, index, realIndex) {
+        final banner = findata.data!.banners![index];
+        if (banner.image == null || banner.image!.isEmpty) {
+          return Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.black,
+            ),
+            child: const Center(
+              child: Label(
+                txt: "No Image",
+                type: TextTypes.f_13_600,
+                forceColor: Colors.white,
+              ),
             ),
           );
+        }
+
+        return GestureDetector(
+          onTap: () async {
+            final Uri url = Uri.parse(banner.link ?? "");
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url);
+            } else {
+              print("Could not launch $url");
+            }
+          },
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              image: DecorationImage(
+                image: NetworkImage("${AppConfig.imgBaseUrl}${banner.image}"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ).marginSymmetric(horizontal: 10),
+        );
+      },
+      options: CarouselOptions(
+        height: 150,
+        autoPlay: true,
+        enlargeCenterPage: false,
+        viewportFraction: 1.0,
+        padEnds: false,
+      ),
+    );
   }
 
   Widget _buildTabContent(BuildContext context) {
@@ -557,22 +564,22 @@ class TabhomeScreen extends GetView<HomeDataController> {
           ),
           padVertical(15),
           if (selectedIndex == 0)
-            Obx(() => controller.isloadlist == true
-                ? Container(
+            Obx(() => controller.isloadlist.value
+                ? SizedBox(
                     height: Get.height * 0.3,
-                    child: Center(child: CircularProgressIndicator()))
+                    child: const Center(child: CircularProgressIndicator()))
                 : _buildStockTab(context)),
           if (selectedIndex == 1)
-            Obx(() => controller.isloadlist == true
-                ? Container(
+            Obx(() => controller.isloadlist.value
+                ? SizedBox(
                     height: Get.height * 0.3,
-                    child: Center(child: CircularProgressIndicator()))
+                    child: const Center(child: CircularProgressIndicator()))
                 : _buildCollectionsTab(context)),
           if (selectedIndex == 2)
-            Obx(() => controller.isloadlist == true
-                ? Container(
+            Obx(() => controller.isloadlist.value
+                ? SizedBox(
                     height: Get.height * 0.3,
-                    child: Center(child: CircularProgressIndicator()))
+                    child: const Center(child: CircularProgressIndicator()))
                 : _buildBlogTab(context)),
         ],
       );
@@ -580,167 +587,179 @@ class TabhomeScreen extends GetView<HomeDataController> {
   }
 
   Widget _buildStockTab(BuildContext context) {
-    return Column(
-      children: [
-        _buildSectionHeader(context, 'Books'),
-        padVertical(15),
-        Obx(() {
-          final books = controller.homeProducts.value?.data.data.books ?? [];
-          print("${books.length}>>>>>>>>>{books.length}>>>>>>>>>>>>>");
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (books.isEmpty) {
-            return const Center(child: Text("No books found."));
-          }
+    return Obx(() {
+      final books = controller.homeProducts.value?.data.data.books ?? [];
+      final courses = controller.homeProducts.value?.data.data.courses ?? [];
 
-          return _buildBooksRow(books);
-        }),
-        padVertical(15),
-        _buildSectionHeader(context, 'Courselect'),
-        padVertical(15),
-        Obx(() {
-          final courses =
-              controller.homeProducts.value?.data.data.courses ?? [];
-          print("${courses.length}>>>>>>>>>>>>>>>{courses.length}>>>>>>>");
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (courses.isEmpty) {
-            return const Center(child: Text("No books found."));
-          }
-          return _buildCoursesRow(courses);
-        }),
-        padVertical(15),
-      ],
-    );
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (books.isEmpty && courses.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                AppAssets.noData,
+                height: 100,
+                width: 100,
+              ),
+              padVertical(10),
+              Label(
+                txt: "Nothing found on this request",
+                type: TextTypes.f_13_500,
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          if (books.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Books'),
+            padVertical(15),
+            _buildBooksRow(books),
+            padVertical(15),
+          ],
+          if (courses.isNotEmpty) ...[
+            _buildSectionHeader(context, 'Courselect'),
+            padVertical(15),
+            _buildCoursesRow(courses),
+            padVertical(15),
+          ],
+        ],
+      );
+    });
   }
 
   Widget _buildCollectionsTab(BuildContext context) {
-    return Column(
-      children: [
-        controller.collectiondata.value?.data?.data?.mindBlowing?.isEmpty ==
-                true
-            ? SizedBox()
-            : _buildSectionHeader(
-                context,
-                controller.getBookTitle(
-                    language: controller.language.value,
-                    name: controller.collectiondata.value?.data?.data
-                        ?.mindBlowing?[0].name),
-                id: controller
-                    .collectiondata.value?.data?.data?.mindBlowing?[0].sId),
-        padVertical(15),
-        Obx(() {
-          final popularCollections =
-              controller.collectiondata.value?.data?.data?.mindBlowing;
+    return Obx(() {
+      final mindBlowing =
+          controller.collectiondata.value?.data?.data?.mindBlowing ?? [];
+      final newCollections =
+          controller.collectiondata.value?.data?.data?.newCollections ?? [];
+      final popularCollections =
+          controller.collectiondata.value?.data?.data?.popularCollections ?? [];
 
-          if (popularCollections == null || popularCollections.isEmpty) {
-            return const SizedBox();
-          }
-          final books = popularCollections.first.booksId ?? [];
-          // final books = controller.collectiondata.value?.data?.data?.mindBlowing
-          //         ?.first.booksId ??
-          //     [];
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (books.isEmpty) {
-            return const SizedBox();
-          }
-          return _builCollectioinRow(books);
-        }),
-        padVertical(15),
-        controller.collectiondata.value?.data?.data?.newCollections?.isEmpty ==
-                true
-            ? SizedBox()
-            : _buildSectionHeader(
-                context,
-                controller.getBookTitle(
-                    language: controller.language.value,
-                    name: controller.collectiondata.value?.data?.data
-                        ?.newCollections?[0].name),
-                id: controller
-                    .collectiondata.value?.data?.data?.newCollections?[0].sId),
-        padVertical(15),
-        Obx(() {
-          final popularCollections =
-              controller.collectiondata.value?.data?.data?.newCollections;
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (popularCollections == null || popularCollections.isEmpty) {
-            return const SizedBox();
-          }
-          final books = popularCollections.first.booksId ?? [];
+      if (mindBlowing.isEmpty &&
+          newCollections.isEmpty &&
+          popularCollections.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                AppAssets.noData,
+                height: 100,
+                width: 100,
+              ),
+              padVertical(10),
+              Label(
+                txt: "Nothing found on this request",
+                type: TextTypes.f_13_500,
+              ),
+            ],
+          ),
+        );
+      }
 
-          // final books = controller.collectiondata.value?.data?.data
-          //         ?.newCollections?.first.booksId ??
-          //     [];
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (books.isEmpty) {
-            return const SizedBox();
-          }
-          return _builCollectioinRow(books);
-        }),
-        padVertical(15),
-        controller.collectiondata.value?.data?.data?.popularCollections
-                    ?.isEmpty ==
-                true
-            ? SizedBox()
-            : _buildSectionHeader(
-                context,
-                controller.getBookTitle(
-                    language: controller.language.value,
-                    name: controller.collectiondata.value?.data?.data
-                        ?.popularCollections?[0].name),
-                id: controller.collectiondata.value?.data?.data
-                    ?.popularCollections?[0].sId),
-        padVertical(15),
-        Obx(() {
-          if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final popularCollections =
-              controller.collectiondata.value?.data?.data?.popularCollections;
-
-          if (popularCollections == null || popularCollections.isEmpty) {
-            return const SizedBox();
-          }
-          final books = popularCollections.first.booksId ?? [];
-
-          if (books.isEmpty) {
-            return const SizedBox();
-          }
-          return _builCollectioinRow(books);
-        }),
-        padVertical(15),
-      ],
-    );
+      return Column(
+        children: [
+          if (mindBlowing.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              controller.getBookTitle(
+                  language: controller.language.value,
+                  name: mindBlowing[0].name),
+              id: mindBlowing[0].sId,
+            ),
+            padVertical(15),
+            _builCollectioinRow(mindBlowing.first.booksId ?? []),
+            padVertical(15),
+          ],
+          if (newCollections.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              controller.getBookTitle(
+                  language: controller.language.value,
+                  name: newCollections[0].name),
+              id: newCollections[0].sId,
+            ),
+            padVertical(15),
+            _builCollectioinRow(newCollections.first.booksId ?? []),
+            padVertical(15),
+          ],
+          if (popularCollections.isNotEmpty) ...[
+            _buildSectionHeader(
+              context,
+              controller.getBookTitle(
+                  language: controller.language.value,
+                  name: popularCollections[0].name),
+              id: popularCollections[0].sId,
+            ),
+            padVertical(15),
+            _builCollectioinRow(popularCollections.first.booksId ?? []),
+            padVertical(15),
+          ],
+        ],
+      );
+    });
   }
 
   Widget _buildBlogTab(BuildContext context) {
-    return Column(
-      children: [
-        _buildSectionHeader(context, 'Blogs'),
-        padVertical(15),
-        _buildArticlesRow(
-            controller.blogcollectiondata.value?.data?.data?.blogs),
-        // _buildSectionHeader(context, 'News'),
-        // padVertical(15),
-        // _buildArticlesRow(
-        //     controller.blogcollectiondata.value?.data?.data?.blogs),
-        padVertical(15),
-      ],
-    );
+    return Obx(() {
+      final articles =
+          controller.blogcollectiondata.value?.data?.data?.blogs ?? [];
+
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (articles.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                AppAssets.noData,
+                height: 100,
+                width: 100,
+              ),
+              padVertical(10),
+              Label(
+                txt: "Nothing found on this request",
+                type: TextTypes.f_13_500,
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          _buildSectionHeader(context, 'Blogs'),
+          padVertical(15),
+          _buildArticlesRow(articles),
+          padVertical(15),
+        ],
+      );
+    });
   }
 
   Widget _buildSectionHeader(BuildContext context, String titleKey,
       {String emoji = '', String? id}) {
     String title = emoji.isEmpty
         ? AppLocalization.of(context).translate(titleKey)
-        : '${emoji}${AppLocalization.of(context).translate(titleKey)}';
+        : '$emoji${AppLocalization.of(context).translate(titleKey)}';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -748,12 +767,9 @@ class TabhomeScreen extends GetView<HomeDataController> {
         Label(txt: title, type: TextTypes.f_20_500),
         GestureDetector(
             onTap: () {
-              // final dashboardController = Get.find<DashboardController>();
               final searchController = Get.put(TabSearchController());
-              print("title>>>>>>>>>>>>>>>>>$title");
               if (title == AppLocalization.of(context).translate("Books")) {
                 searchController.selectedIndex.value = 0;
-                // dashboardController.changeTab(1);
                 Get.toNamed("/searchscreen");
               } else if (title ==
                   AppLocalization.of(context).translate("Courselect")) {
@@ -778,25 +794,26 @@ class TabhomeScreen extends GetView<HomeDataController> {
                     arguments: {"title": title, "id": id});
               }
             },
-            child: title != null && title.isNotEmpty
+            child: title.isNotEmpty
                 ? const Icon(Icons.arrow_forward_ios_rounded, size: 18)
-                : SizedBox())
+                : const SizedBox.shrink())
       ],
     );
   }
 
-  Widget _builCollectioinRow(books) {
+  Widget _builCollectioinRow(List<dynamic> books) {
     return SizedBox(
-      height: Get.height * 0.3, // Enough height for book image + text
+      height: Get.height * 0.3,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: books.length ?? 0,
+        itemCount: books.length,
         separatorBuilder: (context, index) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
+          final book = books[index];
           return GestureDetector(
             onTap: () => Get.toNamed(
               "/book-detail",
-              arguments: {"id": books[index]?.sId},
+              arguments: {"id": book?.sId},
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -810,16 +827,20 @@ class TabhomeScreen extends GetView<HomeDataController> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: books[index].image != null
+                    child: book.image != null
                         ? Image.network(
-                            "${AppConfig.imgBaseUrl}${books[index].image}")
+                            "${AppConfig.imgBaseUrl}${book.image}",
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(AppAssets.book,
+                                    fit: BoxFit.contain),
+                          )
                         : Image.asset(AppAssets.book, fit: BoxFit.contain),
                   ),
                 ),
                 Label(
                   txt: controller.getBookTitle(
-                      language: controller.language.value,
-                      name: books[index].name),
+                      language: controller.language.value, name: book.name),
                   maxWidth: 144,
                   type: TextTypes.f_13_500,
                 ).marginOnly(top: 10),
@@ -828,7 +849,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                   child: Label(
                     txt: controller.getBookTitle(
                         language: controller.language.value,
-                        name: books[index].authorId![0].name),
+                        name: book.authorId?[0]?.name ?? ''),
                     type: TextTypes.f_13_400,
                     forceColor: AppColors.resnd,
                   ),
@@ -836,7 +857,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                 Label(
                   txt: controller.getBookTitle(
                       language: controller.language.value,
-                      name: books[index].categoryId![0].name),
+                      name: book.categoryId?[0]?.name ?? ''),
                   maxWidth: 144,
                   type: TextTypes.f_12_400,
                   forceColor: AppColors.resnd,
@@ -851,7 +872,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
 
   Widget _buildBooksRow(List<BookModel> books) {
     return SizedBox(
-      height: 230, // Enough height for book image + text
+      height: 230,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: books.length,
@@ -860,9 +881,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
           final book = books[index];
           return GestureDetector(
             onTap: () {
-              Get.toNamed('/book-detail', arguments: {
-                "id": book?.sId,
-              });
+              Get.toNamed('/book-detail', arguments: {"id": book.sId});
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -901,11 +920,8 @@ class TabhomeScreen extends GetView<HomeDataController> {
                   child: Label(
                     txt: controller.getBookTitle(
                       language: controller.language.value,
-                      name: book.authors![0].name,
+                      name: book.authors?[0]?.name ?? '',
                     ),
-                    // txt: book.authors?.isNotEmpty == true
-                    //     ? book.authors![0].name?.eng?.toString() ?? "No Author"
-                    //     : "No Author",
                     type: TextTypes.f_13_400,
                     forceColor: AppColors.resnd,
                   ),
@@ -913,7 +929,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                 Label(
                   txt: controller.getBookTitle(
                     language: controller.language.value,
-                    name: book.categoryId![0].name,
+                    name: book.categoryId?[0]?.name ?? '',
                   ),
                   maxWidth: 144,
                   type: TextTypes.f_12_400,
@@ -929,24 +945,21 @@ class TabhomeScreen extends GetView<HomeDataController> {
 
   Widget _buildCoursesRow(List<CourseModel> courses) {
     return SizedBox(
-      height: 230, // Adjust the height to fit your content
+      height: 230,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: courses.length, // Number of items to display
+        itemCount: courses.length,
         itemBuilder: (context, index) {
-          final course = courses[index]; // Get course at the current index
-
+          final course = courses[index];
           return Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: GestureDetector(
               onTap: () {
-                Get.toNamed('/Course-detail',
-                    arguments: {"id": courses[index].sId});
+                Get.toNamed('/Course-detail', arguments: {"id": course.sId});
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Course image container
                   Container(
                     height: 144,
                     width: 246,
@@ -962,22 +975,22 @@ class TabhomeScreen extends GetView<HomeDataController> {
                         borderRadius: BorderRadius.circular(16),
                         child: course.image != null
                             ? Image.network(
-                                "${AppConfig.imgBaseUrl}${courses[index].image}",
+                                "${AppConfig.imgBaseUrl}${course.image}",
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppAssets.book,
+                                        fit: BoxFit.cover),
                               )
                             : Image.asset(AppAssets.book, fit: BoxFit.cover),
                       ),
                     ),
                   ),
-                  // Vertical padding
                   padVertical(5),
-                  // Course title
                   Label(
                     txt: controller.getBookTitle(
                         language: controller.language.value, name: course.name),
                     type: TextTypes.f_13_500,
                   ),
-                  // Course info section
                   SizedBox(
                     width: 240,
                     child: Row(
@@ -991,10 +1004,9 @@ class TabhomeScreen extends GetView<HomeDataController> {
                               color: AppColors.primaryColor,
                             ),
                             Label(
-                                txt: course.averageRating.toString(),
+                                txt: course.averageRating?.toString() ?? '0',
                                 type: TextTypes.f_11_500),
                             padHorizontal(8),
-                            // Divider line
                             Container(
                               height: 12,
                               width: 1,
@@ -1009,7 +1021,7 @@ class TabhomeScreen extends GetView<HomeDataController> {
                               child: Label(
                                 txt: controller.getBookTitle(
                                     language: controller.language.value,
-                                    name: course.authorId![0].name),
+                                    name: course.authorId?[0]?.name ?? ''),
                                 type: TextTypes.f_13_400,
                                 forceColor: AppColors.resnd,
                               ),
@@ -1018,33 +1030,30 @@ class TabhomeScreen extends GetView<HomeDataController> {
                         ),
                         Row(
                           children: [
-                            course.isDiscounted == true
-                                ? Text(
-                                    course.price.toString(),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: AppConst.fontFamily,
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationThickness: 2,
-                                      decorationColor: AppColors.blackColor,
-                                      color: AppColors.blackColor,
-                                    ),
-                                  )
-                                : SizedBox(),
-                            SizedBox(width: 10),
-                            course.isDiscounted == true
-                                ? Text(
-                                    "${(((course?.price ?? 0) - ((course?.price ?? 0) * ((course?.discountPercentage ?? 0)) / 100)).toStringAsFixed(0))}",
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: AppConst.fontFamily,
-                                      decorationColor: AppColors.blackColor,
-                                      color: AppColors.primaryColor,
-                                    ),
-                                  )
-                                : SizedBox(),
+                            if (course.isDiscounted == true)
+                              Text(
+                                course.price?.toString() ?? '',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: AppConst.fontFamily,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationThickness: 2,
+                                  decorationColor: AppColors.blackColor,
+                                  color: AppColors.blackColor,
+                                ),
+                              ),
+                            const SizedBox(width: 10),
+                            if (course.isDiscounted == true)
+                              Text(
+                                "${(((course.price ?? 0) - ((course.price ?? 0) * (course.discountPercentage ?? 0) / 100)).toStringAsFixed(0))}",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: AppConst.fontFamily,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
                           ],
                         ),
                       ],
@@ -1059,7 +1068,11 @@ class TabhomeScreen extends GetView<HomeDataController> {
     );
   }
 
-  Widget _buildArticlesRow(articles) {
+  Widget _buildArticlesRow(List<dynamic>? articles) {
+    if (articles == null || articles.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return SizedBox(
       height: 180,
       child: ListView.builder(
@@ -1083,28 +1096,26 @@ class TabhomeScreen extends GetView<HomeDataController> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: articles[index].image != null
-                            ? Image.network(
-                                "${AppConfig.imgBaseUrl}${articles[index].image}",
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(AppAssets.book,
-                                        fit: BoxFit.contain),
-                              )
-                            : Image.asset(AppAssets.book, fit: BoxFit.contain),
-                      ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: article.image != null
+                          ? Image.network(
+                              "${AppConfig.imgBaseUrl}${article.image}",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.asset(AppAssets.book,
+                                      fit: BoxFit.contain),
+                            )
+                          : Image.asset(AppAssets.book, fit: BoxFit.contain),
                     ),
                   ),
                 ),
                 padVertical(5),
-                Label(txt: article.name, type: TextTypes.f_13_500),
+                Label(
+                    txt: controller.getBookTitle(
+                        language: controller.language.value,
+                        name: article.name),
+                    type: TextTypes.f_13_500),
               ],
             ),
           );

@@ -3,6 +3,7 @@ import 'package:bookstagram/app_settings/components/widget_global_margin.dart';
 import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
+import 'package:bookstagram/features/data/modules/bookstudy/models/teacher_model.dart';
 import 'package:bookstagram/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,7 +50,7 @@ class PgTeachers extends GetView<TeachersController> {
                     ),
                     SizedBox(height: 10), // Replaced padVertical(10)
                     Obx(() => _buildAuthorGrid(
-                        controller.bookStudy.value?.data?.teachers ?? [])),
+                        controller.bookStudy.value?.data?.authors)),
                     SizedBox(height: 10), // Replaced padVertical(10)
                   ],
                 )),
@@ -58,7 +59,7 @@ class PgTeachers extends GetView<TeachersController> {
     );
   }
 
-  Widget _buildAuthorGrid(List authors) {
+  Widget _buildAuthorGrid(List<Teachers>? authors) {
     return GridView.builder(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -67,15 +68,15 @@ class PgTeachers extends GetView<TeachersController> {
         mainAxisSpacing: 16,
         childAspectRatio: 0.8,
       ),
-      itemCount: authors.length,
+      itemCount: controller.bookStudy.value?.data?.authors?.length ?? 0,
       shrinkWrap: true,
       physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
-            print("hello>>>>>>teachers>>>>>>${authors[index].sId}");
-            Get.toNamed("/teacherDetail",
-                arguments: {"teacherId": authors[index].sId});
+            Get.toNamed("/teacherDetail", arguments: {
+              "teacherId": controller.bookStudy.value?.data?.authors?[index].sId
+            });
           },
           child: Column(
             children: [
@@ -95,11 +96,13 @@ class PgTeachers extends GetView<TeachersController> {
                     ],
                   ),
                   child: ClipOval(
-                    child: authors[index].image != null
+                    child: controller
+                                .bookStudy.value?.data?.authors?[index].image !=
+                            null
                         ? Image.network(
                             height: 110,
                             width: 110,
-                            "${AppConfig.imgBaseUrl}${authors[index].image}",
+                            "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.authors?[index].image}",
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Image.asset(
@@ -119,7 +122,9 @@ class PgTeachers extends GetView<TeachersController> {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Label(
-                  txt: controller.getBookTitle(name: authors[index].name),
+                  txt: controller.getBookTitle(
+                      name: controller
+                          .bookStudy.value?.data?.authors?[index].name),
                   type: TextTypes.f_13_500,
                 ),
               ),

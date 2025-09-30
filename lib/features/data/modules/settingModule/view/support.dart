@@ -300,16 +300,20 @@ class PgSupport extends GetView<SupportController> {
                                                       topRight:
                                                           const Radius.circular(
                                                               8),
-                                                      bottomLeft:
-                                                          Radius.circular(
-                                                              isExpanded
-                                                                  ? 0
-                                                                  : 8),
-                                                      bottomRight:
-                                                          Radius.circular(
-                                                              isExpanded
-                                                                  ? 0
-                                                                  : 8),
+                                                      bottomLeft: Radius
+                                                          .circular((index ==
+                                                                  controller
+                                                                      .openIndex
+                                                                      .value)
+                                                              ? 0
+                                                              : 8),
+                                                      bottomRight: Radius
+                                                          .circular((index ==
+                                                                  controller
+                                                                      .openIndex
+                                                                      .value)
+                                                              ? 0
+                                                              : 8),
                                                     ),
                                                     boxShadow: const [
                                                       BoxShadow(
@@ -331,16 +335,19 @@ class PgSupport extends GetView<SupportController> {
                                                             type: TextTypes
                                                                 .f_17_500),
                                                       ),
-                                                      Icon(
-                                                        isExpanded
-                                                            ? Icons
-                                                                .arrow_drop_up_outlined
-                                                            : Icons
-                                                                .arrow_drop_down_outlined,
-                                                        color: AppColors
-                                                            .primaryColor,
-                                                        size: 30,
-                                                      )
+                                                      Obx(() => Icon(
+                                                            (index ==
+                                                                    controller
+                                                                        .openIndex
+                                                                        .value)
+                                                                ? Icons
+                                                                    .arrow_drop_up_outlined
+                                                                : Icons
+                                                                    .arrow_drop_down_outlined,
+                                                            color: AppColors
+                                                                .primaryColor,
+                                                            size: 30,
+                                                          ))
                                                     ],
                                                   ),
                                                 ),

@@ -25,23 +25,23 @@ class TeachersModel {
 }
 
 class TeacherData {
-  List<Teachers>? teachers;
+  List<Teachers>? authors;
 
-  TeacherData({this.teachers});
+  TeacherData({this.authors});
 
   TeacherData.fromJson(Map<String, dynamic> json) {
-    if (json['teachers'] != null) {
-      teachers = <Teachers>[];
-      json['teachers'].forEach((v) {
-        teachers!.add(new Teachers.fromJson(v));
+    if (json['authors'] != null) {
+      authors = <Teachers>[];
+      json['authors'].forEach((v) {
+        authors!.add(new Teachers.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.teachers != null) {
-      data['teachers'] = this.teachers!.map((v) => v.toJson()).toList();
+    if (this.authors != null) {
+      data['authors'] = this.authors!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -1,43 +1,46 @@
 import 'dart:convert';
 
-import 'package:bookstagram/features/presentation/Pages/SubCategory/pg_subcategory.dart';
+import 'package:bookstagram/app_settings/components/common_sheet.dart';
+import 'package:bookstagram/app_settings/constants/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
-import '../../../../../app_settings/components/common_sheet.dart';
-import '../../../../../app_settings/constants/app_colors.dart';
-import '../../../../../app_settings/constants/app_config.dart';
-import '../models/BookStudyModel.dart';
-import '../models/Category_data_model.dart';
+import '../../../../../app_settings/constants/app_config.dart' show AppConfig;
+import '../../../../../localization/app_localization.dart';
+import '../../collection_and_summary/models/GetAllCollectionsModel.dart';
+import '../models/subcategoiesResponseModel.dart';
 
-class PgCategoryController extends GetxController {
-  // Reactive selected index (if needed, currently unused in the UI)
-  var selectedIndex = 0.obs;
+class SubcategoriesController extends GetxController {
+  final selectedIndex = 0.obs;
+  var title = ''.obs;
+  var Id = ''.obs;
 
-  final Rx<CategoryModel?> bookStudy = Rx<CategoryModel?>(null);
+  final Rx<SubCategoriesResponseModel?> collectiondata =
+      Rx<SubCategoriesResponseModel?>(null);
 
   final RxBool isLoading = true.obs;
 
-  Future<String> getToken() async {
-    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-    final fullToken = await secureStorage.read(key: 'token');
-    return fullToken ?? "";
-  }
-
   @override
   void onInit() {
-    fetchBookStudy();
+    if (Get.arguments != null) {
+      title.value = Get.arguments['title'];
+      Id.value = Get.arguments['id'];
+      fetchAllCollections(Id.value);
+    }
+
     super.onInit();
   }
 
-  Future<void> fetchBookStudy() async {
+  Future<void> fetchAllCollections(String? id) async {
     isLoading.value = true;
     try {
-      var data = await getAllCategories();
-      bookStudy.value = data;
-      bookStudy.refresh();
-      print("Books found: ${bookStudy.value?.data?.length ?? 0}");
+      var data = await getCollectionById(id);
+      if (data.data != null) {
+        collectiondata.value = data;
+        collectiondata.refresh();
+      }
     } catch (e) {
       print("Error fetching books: $e");
     } finally {
@@ -70,7 +73,13 @@ class PgCategoryController extends GetxController {
     }
   }
 
-  Future<CategoryModel> getAllCategories() async {
+  Future<String> getToken() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    final fullToken = await secureStorage.read(key: 'token');
+    return fullToken ?? "";
+  }
+
+  Future<SubCategoriesResponseModel> getCollectionById(String? Id) async {
     try {
       final token = await getToken();
       final headers = {
@@ -84,10 +93,8 @@ class PgCategoryController extends GetxController {
         middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
       );
 
-      // Build the base URI string
-      String uri = '${AppConfig.baseUrl}${AppConfig.getCategories}';
-
-      // Append `description` only if searchText is not null or empty
+      String uri =
+          '${AppConfig.baseUrl}api/user/categories/${Id}/sub-categories';
 
       final response = await httpClient.get(
         Uri.parse(uri),
@@ -96,7 +103,7 @@ class PgCategoryController extends GetxController {
 
       if (response.statusCode == 200) {
         final jsonBody = json.decode(response.body);
-        return CategoryModel.fromJson(jsonBody);
+        return SubCategoriesResponseModel.fromJson(jsonBody);
       } else {
         throw Exception('Failed to fetch books: ${response.statusCode}');
       }
@@ -106,22 +113,11 @@ class PgCategoryController extends GetxController {
     }
   }
 
-  // Navigate to subcategory page
-  // void navigateToSubcategory(String label) {
-  //   Get.to(() => PgSubcategory(label: label));
-  // }
-
-  // Show filter bottom sheet
   void showFilterBottomSheet() {
     Get.bottomSheet(
-      const FilterBottomSheet(),
+      FilterBottomSheet(),
       isScrollControlled: true,
       backgroundColor: AppColors.whiteColor,
     );
-  }
-
-  // Navigate back
-  void goBack() {
-    Get.back();
   }
 }

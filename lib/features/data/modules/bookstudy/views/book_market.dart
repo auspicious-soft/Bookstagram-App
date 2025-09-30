@@ -10,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../../app_settings/components/loader.dart';
 import '../../../../../app_settings/constants/app_config.dart';
+import '../../home_module/controller/searchcontroller.dart';
 import '../../home_module/models/CollectionDataModel.dart';
+import '../../home_module/view/search_screen.dart';
 import '../controllers/book_market_controller.dart';
 
 class PgBookmarket extends GetView<PgBookmarketController> {
@@ -113,7 +115,13 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                               padHorizontal(10),
                               Expanded(
                                 child: TextField(
-                                  controller: searchController,
+                                  onTap: () {
+                                    Get.put(TabSearchController())
+                                        .searchController
+                                        .clear();
+                                    Get.to(() => PgTabsearch());
+                                  },
+                                  readOnly: true,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: AppLocalization.of(context)
@@ -124,15 +132,6 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.w400,
                                     ),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons.clear,
-                                          color: AppColors.blackColor),
-                                      onPressed: () {
-                                        searchController.clear();
-                                        controller.searchQuery.value = '';
-                                        controller.fetchBookStudy();
-                                      },
-                                    ),
                                   ),
                                   style: const TextStyle(
                                     color: AppColors.blackColor,
@@ -141,7 +140,6 @@ class PgBookmarket extends GetView<PgBookmarketController> {
                                     fontWeight: FontWeight.w400,
                                   ),
                                   keyboardType: TextInputType.text,
-                                  onChanged: controller.onSearchChanged,
                                 ),
                               ),
                             ],

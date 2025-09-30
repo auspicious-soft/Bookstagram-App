@@ -181,12 +181,12 @@ class CartController extends GetxController {
         Get.find<PgBookViewController>().bookDetailResponseModel.refresh();
         Get.back();
       } else {
-        Get.find<PgCoursedetailController>()
+        Get.put(PgCoursedetailController())
             .CourseLessonDetail
             .value
             ?.data
             ?.isPurchased = true;
-        Get.find<PgCoursedetailController>().CourseLessonDetail.refresh();
+        Get.put(PgCoursedetailController()).CourseLessonDetail.refresh();
         Get.back();
       }
     } catch (e) {
@@ -379,7 +379,13 @@ class CartController extends GetxController {
         middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
       );
       String uri = '${AppConfig.baseUrl}api/user/vouchers/$voucher';
-      final response = await httpClient.get(Uri.parse(uri), headers: headers);
+      final response = await httpClient.post(Uri.parse(uri),
+          headers: headers,
+          body: jsonEncode({
+            "productIds": CartData.value?.data?.productId
+                ?.map((item) => item.sId)
+                .toList(),
+          }));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonBody = json.decode(response.body);
         return VoucherResponseModel.fromJson(jsonBody);

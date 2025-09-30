@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:bookstagram/features/data/modules/home_module/models/author_listmodel.dart';
 import 'package:bookstagram/features/data/modules/home_module/models/homeProductModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 
@@ -13,11 +14,12 @@ import '../models/booksListModel.dart';
 
 class TabSearchController extends GetxController {
   var selectedIndex = 0.obs;
-  var searchText = ''.obs;
+  // var searchText = ''.obs;
   final Rx<BooksListModel?> bookList = Rx<BooksListModel?>(null);
   final Rx<AuthorListModel?> authorList = Rx<AuthorListModel?>(null);
   Timer? _debounce;
   final RxBool isLoading = false.obs;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {
@@ -27,7 +29,7 @@ class TabSearchController extends GetxController {
   }
 
   void onSearchChanged(String query) {
-    searchText.value = query;
+    searchController?.text = query;
 
     // Cancel previous timer
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -129,8 +131,9 @@ class TabSearchController extends GetxController {
           '${AppConfig.baseUrl}${AppConfig.getBooksEndPoints}?page=1&limit=20&type=$type';
 
       // Append `description` only if searchText is not null or empty
-      if (searchText.value.trim().isNotEmpty) {
-        uri += '&description=${Uri.encodeComponent(searchText.value.trim())}';
+      if (searchController?.text.trim().isNotEmpty == true) {
+        uri +=
+            '&description=${Uri.encodeComponent(searchController?.text.trim() ?? "")}';
       }
 
       final response = await httpClient.get(
@@ -171,8 +174,9 @@ class TabSearchController extends GetxController {
           '${AppConfig.baseUrl}${AppConfig.getAuthorsEndPoints}?page=1&limit=20';
 
       // Append `description` only if searchText is not null or empty
-      if (searchText.value.trim().isNotEmpty) {
-        uri += '&description=${Uri.encodeComponent(searchText.value.trim())}';
+      if (searchController.text.trim().isNotEmpty) {
+        uri +=
+            '&description=${Uri.encodeComponent(searchController?.text.trim() ?? "")}';
       }
 
       final response = await httpClient.get(

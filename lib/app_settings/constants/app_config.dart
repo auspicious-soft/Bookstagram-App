@@ -17,8 +17,8 @@ class AppConfig {
   static const String getBookStudHome = 'api/user/books-studies';
   static const String getBookUniHome = 'api/user/books-universities';
   static const String getBookMasterHome = 'api/user/books-masters';
-  static const String getCategories = 'api/user/books-studies/categories';
-  static const String getAllTeachers = 'api/user/books-studies/teachers';
+  static const String getCategories = 'api/user/categories';
+  static const String getAllTeachers = 'api/user/authors';
   static const String getTeacherById = 'api/user/authors';
   static const String getCategoryById = 'api/user/categories';
   static const String getCourseById = 'api/user/course';
@@ -65,8 +65,8 @@ class AppConfig {
   static const String BookSchoolBooksEndPoint = 'api/user/book-schools/books';
   static const String ProfilePasswordChange = 'api/user/change-password';
   static const String WalletHistory = 'api/user/wallet-history';
-  static const String FAQEndPoints = 'api/user/faqs';
+  static const String FAQEndPoints = 'api/faqs';
   static const String NotificationSettingEndPoint = 'api/user/user-language';
-  static const String StaticData = 'api/user/policies';
+  static const String StaticData = 'api/policies';
   static const String getAllNotifications = 'api/user/notifications';
 }

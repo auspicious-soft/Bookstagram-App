@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
 
-
 import '../../../../../app_settings/constants/app_config.dart';
 import '../../../datasources/user_storage.dart';
 
@@ -29,16 +28,16 @@ class OtpVerificationController extends GetxController {
   RxInt secondsRemaining = 30.obs;
   late Timer _timer;
   String otpCode = "";
-  String type="";
-  String from="";
+  String type = "";
+  String from = "";
 
   @override
   void onInit() {
-    verifyOtpUseCase=Get.find<UsecaseVerifyOtp>();
-    _forgotOtpUseCase=Get.find<UsecaseForgotOtp>();
-    _resendOtpUseCase=Get.find<UsecaseResendOtp>();
+    verifyOtpUseCase = Get.find<UsecaseVerifyOtp>();
+    _forgotOtpUseCase = Get.find<UsecaseForgotOtp>();
+    _resendOtpUseCase = Get.find<UsecaseResendOtp>();
     type = Get.arguments['type'];
-    from=Get.arguments['from'];
+    from = Get.arguments['from'];
     startTimer();
     super.onInit();
   }
@@ -53,13 +52,12 @@ class OtpVerificationController extends GetxController {
     });
   }
 
-
-   verifyOtp(String email, String otp,context) async {
+  verifyOtp(String email, String otp, context) async {
     try {
       isLoading.value = true;
       final result = await verifyOtpUseCase.call(email: email, otpCode: otp);
       result.fold(
-            (error) {
+        (error) {
           errorMessage.value = error.message;
           isLoading.value = false;
           MotionToast.error(
@@ -73,15 +71,15 @@ class OtpVerificationController extends GetxController {
               type: TextTypes.f_13_500,
               forceColor: AppColors.whiteColor,
             ),
-                  animationType: AnimationType.slideInFromBottom,
+            animationType: AnimationType.slideInFromBottom,
             toastAlignment: Alignment.topRight,
             dismissable: true,
           ).show(context);
-
         },
-            (successData)async {
+        (successData) async {
           verificationResult.value = successData;
-          await UserStorage.con.saveToken(verificationResult.value?.data?.user?.token);
+          await UserStorage.con
+              .saveToken(verificationResult.value?.data?.user?.token);
           Get.offAllNamed('/congratulations'); // Navigate on success
         },
       );
@@ -94,7 +92,7 @@ class OtpVerificationController extends GetxController {
           forceColor: AppColors.whiteColor,
         ),
         description: Label(
-          txt:"Invalid OTP",
+          txt: "Invalid OTP",
           type: TextTypes.f_13_500,
           forceColor: AppColors.whiteColor,
         ),
@@ -103,7 +101,6 @@ class OtpVerificationController extends GetxController {
         dismissable: true,
       ).show(context);
       isLoading.value = false;
-
     } finally {
       isLoading.value = false;
       isLoading.refresh();
@@ -113,42 +110,37 @@ class OtpVerificationController extends GetxController {
     print(">>>>>>>>>>>Prewwwttttt>>>>>>>>>");
   }
 
-
   Future<void> resendOtp(context) async {
     try {
       _timer.cancel();
       isLoading.value = true;
 
-      final data = await _resendOtpUseCase.call(email:type);
+      final data = await _resendOtpUseCase.call(email: type);
 
-      data.fold(
-            (error) {
-          print("yes here error ${error.message}");
-          isLoading.value = false;
-        },
-            (successData)async {
-              secondsRemaining.value=30;
-              secondsRemaining.refresh();
+      data.fold((error) {
+        print("yes here error ${error.message}");
+        isLoading.value = false;
+      }, (successData) async {
+        secondsRemaining.value = 30;
+        secondsRemaining.refresh();
 
-              startTimer();
-              MotionToast.success(
-                title: const Label(
-                  txt: "Success",
-                  type: TextTypes.f_15_500,
-                  forceColor: AppColors.whiteColor,
-                ),
-                description: Label(
-                  txt: successData.data?.response?.message ?? "OTP sent successfully",
-                  type: TextTypes.f_13_500,
-                  forceColor: AppColors.whiteColor,
-                ),
-                      animationType: AnimationType.slideInFromBottom,
-                toastAlignment: Alignment.topRight,
-                dismissable: true,
-              ).show(context);
-            });
-
-
+        startTimer();
+        MotionToast.success(
+          title: const Label(
+            txt: "Success",
+            type: TextTypes.f_15_500,
+            forceColor: AppColors.whiteColor,
+          ),
+          description: Label(
+            txt: successData.data?.response?.message ?? "OTP sent successfully",
+            type: TextTypes.f_13_500,
+            forceColor: AppColors.whiteColor,
+          ),
+          animationType: AnimationType.slideInFromBottom,
+          toastAlignment: Alignment.topRight,
+          dismissable: true,
+        ).show(context);
+      });
     } catch (e) {
       errorMessage.value = e.toString();
       showErrorToast(e.toString());
@@ -158,11 +150,9 @@ class OtpVerificationController extends GetxController {
     }
   }
 
-
   Future<void> resendForget(BuildContext context) async {
     isLoading.value = true;
     try {
-
       final headers = {
         'Content-Type': 'application/json',
         'role': 'admin',
@@ -171,7 +161,6 @@ class OtpVerificationController extends GetxController {
 
       final body = jsonEncode({
         "email": type,
-
       });
 
       HttpWithMiddleware httpClient = HttpWithMiddleware.build(
@@ -187,7 +176,7 @@ class OtpVerificationController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        secondsRemaining.value=30;
+        secondsRemaining.value = 30;
         secondsRemaining.refresh();
         startTimer();
         MotionToast.success(
@@ -197,7 +186,7 @@ class OtpVerificationController extends GetxController {
             forceColor: AppColors.whiteColor,
           ),
           description: Label(
-            txt:  "OTP sent successfully",
+            txt: "OTP sent successfully",
             type: TextTypes.f_13_500,
             forceColor: AppColors.whiteColor,
           ),
@@ -205,7 +194,6 @@ class OtpVerificationController extends GetxController {
           toastAlignment: Alignment.topRight,
           dismissable: true,
         ).show(context);
-
       }
     } catch (e) {
       MotionToast.error(
@@ -231,7 +219,7 @@ class OtpVerificationController extends GetxController {
     }
   }
 
-  Future<void> forgetverifyOtp( String otp,context) async {
+  Future<void> forgetverifyOtp(String otp, context) async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
@@ -255,41 +243,46 @@ class OtpVerificationController extends GetxController {
               type: TextTypes.f_13_500,
               forceColor: AppColors.whiteColor,
             ),
-                  animationType: AnimationType.slideInFromBottom,
+            animationType: AnimationType.slideInFromBottom,
             toastAlignment: Alignment.topRight,
             dismissable: true,
-          ).show(context);   //     error.message, StackTrace.fromString("Failed to fetch user"));
+          ).show(
+              context); //     error.message, StackTrace.fromString("Failed to fetch user"));
         },
-            (successData)async {
-              MotionToast.success(
-                title: const Label(
-                  txt: "Success",
-                  type: TextTypes.f_15_500,
-                  forceColor: AppColors.whiteColor,
-                ),
-                description: Label(
-                  txt: successData.message ?? "OTP sent successfully",
-                  type: TextTypes.f_13_500,
-                  forceColor: AppColors.whiteColor,
-                ),
-                      animationType: AnimationType.slideInFromBottom,
-                toastAlignment: Alignment.topRight,
-                dismissable: true,
-              ).show(context);
-              showModalBottomSheet(
-                backgroundColor: AppColors.background,
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                isScrollControlled: true,
-                builder: (context) {
-                  _timer.cancel();
-                  secondsRemaining.value=0;
-                  return  ChangePassSheet(otp: otpCode);
-                },
-              );
-           },
+        (successData) async {
+          MotionToast.success(
+            title: const Label(
+              txt: "Success",
+              type: TextTypes.f_15_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            description: Label(
+              txt: successData.message ?? "OTP sent successfully",
+              type: TextTypes.f_13_500,
+              forceColor: AppColors.whiteColor,
+            ),
+            animationType: AnimationType.slideInFromBottom,
+            toastAlignment: Alignment.topRight,
+            dismissable: true,
+          ).show(context);
+          // ✅ FIXED: Use post frame callback to show modal
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _timer.cancel();
+            secondsRemaining.value = 0;
+
+            showModalBottomSheet(
+              backgroundColor: AppColors.background,
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              isScrollControlled: true,
+              builder: (context) {
+                return ChangePassSheet(otp: otpCode);
+              },
+            );
+          });
+        },
       );
     } catch (e) {
       errorMessage.value = e.toString();
@@ -308,15 +301,11 @@ class OtpVerificationController extends GetxController {
         toastAlignment: Alignment.topRight,
         dismissable: true,
       ).show(context);
-
     } finally {
-
       isLoading.value = false;
-      pinController.clear();
+      // pinController.clear();
     }
   }
-
-
 
   void showErrorToast(String message) {
     Get.snackbar(

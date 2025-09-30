@@ -52,6 +52,7 @@ class PgTabsearch extends GetView<TabSearchController> {
                     padHorizontal(10),
                     Expanded(
                       child: TextField(
+                        controller: controller.searchController,
                         onChanged: (val) => controller.onSearchChanged(val),
                         decoration: InputDecoration(
                           border: InputBorder.none,

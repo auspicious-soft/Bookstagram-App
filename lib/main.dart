@@ -71,8 +71,10 @@ import 'features/data/modules/auth_module/view/signup_view.dart';
 
 import 'features/data/modules/book_detail/bindings/book_detail_binding.dart';
 import 'features/data/modules/book_detail/views/book_detail.dart';
+import 'features/data/modules/bookstudy/bindings/SubCategories_Bindings.dart';
 import 'features/data/modules/bookstudy/bindings/book_event_binding.dart';
 import 'features/data/modules/bookstudy/bindings/bookeventdetail_binding.dart';
+import 'features/data/modules/bookstudy/views/SubCategories_screen.dart';
 import 'features/data/modules/bookstudy/views/bookEventDetail.dart';
 import 'features/data/modules/bookstudy/views/book_event.dart';
 import 'features/data/modules/bookstudy/views/teacher_detail_screen.dart';
@@ -462,6 +464,11 @@ class MyApp extends StatelessWidget {
           name: "/podcastPlayer",
           page: () => Podcastplayer(),
           binding: Podcastbinding(),
+        ),
+        GetPage(
+          name: "/subCategories",
+          page: () => SubcategoriesScreen(),
+          binding: SubcategoriesBindings(),
         ),
       ],
     );

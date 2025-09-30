@@ -3,14 +3,19 @@ import '../../home_module/models/blog_collection_model.dart';
 class CategoryModel {
   bool? success;
   String? message;
-  CategoryData? data;
+  List<Categories>? data;
 
   CategoryModel({this.success, this.message, this.data});
 
   CategoryModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? new CategoryData.fromJson(json['data']) : null;
+    if (json['data'] != null) {
+      data = <Categories>[];
+      json['data'].forEach((v) {
+        data!.add(new Categories.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -18,30 +23,7 @@ class CategoryModel {
     data['success'] = this.success;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-}
-
-class CategoryData {
-  List<Categories>? categories;
-
-  CategoryData({this.categories});
-
-  CategoryData.fromJson(Map<String, dynamic> json) {
-    if (json['categories'] != null) {
-      categories = <Categories>[];
-      json['categories'].forEach((v) {
-        categories!.add(new Categories.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.categories != null) {
-      data['categories'] = this.categories!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -57,11 +39,11 @@ class Categories {
 
   Categories(
       {this.sId,
-        this.image,
-        this.name,
-        this.createdAt,
-        this.updatedAt,
-        this.iV});
+      this.image,
+      this.name,
+      this.createdAt,
+      this.updatedAt,
+      this.iV});
 
   Categories.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -85,4 +67,3 @@ class Categories {
     return data;
   }
 }
-

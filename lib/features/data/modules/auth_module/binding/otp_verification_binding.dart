@@ -10,19 +10,26 @@ import 'package:bookstagram/features/data/repositories/remote_ds_impl.dart';
 import '../../../../domain/usecases/usecase_login.dart';
 import '../../../../domain/usecases/usecase_verify_otp.dart';
 import '../../../../presentation/providers/auth_google_service.dart';
+import '../controller/password_change_controller.dart'
+    show ChangePassController;
 import '../controller/signup_controller.dart';
 
 class OtpVerificationBinding extends Bindings {
   @override
   void dependencies() {
     // Inject the RemoteDs and RemoteDsImpl
-    Get.lazyPut<RemoteDs>(() => RemoteDs());  // Assuming RemoteDs is your data source class
-    Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(remoteDataSource: Get.find())); // RemoteDsImpl depends on RemoteDs
-     Get.lazyPut<UsecaseVerifyOtp>(() => UsecaseVerifyOtp(repository: Get.find()));
-    Get.lazyPut<UsecaseForgotOtp>(() => UsecaseForgotOtp(repository: Get.find()));
-    Get.lazyPut<UsecaseResendOtp>(() => UsecaseResendOtp(repository: Get.find()));
-    Get.lazyPut<UsecaseChangePass>(() => UsecaseChangePass(repository: Get.find()));
+    Get.lazyPut<RemoteDs>(
+        () => RemoteDs()); // Assuming RemoteDs is your data source class
+    Get.lazyPut<RemoteRepo>(() => RemoteDsImpl(
+        remoteDataSource: Get.find())); // RemoteDsImpl depends on RemoteDs
+    Get.lazyPut<UsecaseVerifyOtp>(
+        () => UsecaseVerifyOtp(repository: Get.find()));
+    Get.lazyPut<UsecaseForgotOtp>(
+        () => UsecaseForgotOtp(repository: Get.find()));
+    Get.lazyPut<UsecaseResendOtp>(
+        () => UsecaseResendOtp(repository: Get.find()));
+    Get.lazyPut<UsecaseChangePass>(
+        () => UsecaseChangePass(repository: Get.find()));
     Get.lazyPut<OtpVerificationController>(() => OtpVerificationController());
-
   }
 }

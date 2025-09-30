@@ -12,7 +12,11 @@ class PrivacyPolicyController extends GetxController {
 
   @override
   void onInit() {
-    fetchPrivacyPolicy();
+    if (Get.arguments != null) {
+      title.value = Get.arguments["title"];
+      fetchPrivacyPolicy();
+    }
+
     super.onInit();
   }
 

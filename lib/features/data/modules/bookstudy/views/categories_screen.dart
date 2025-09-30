@@ -85,18 +85,15 @@ class PgCategory extends GetView<PgCategoryController> {
     return Wrap(
       spacing: screenWidth * 0.015, // Horizontal spacing between items
       runSpacing: screenWidth * 0.025, // Vertical spacing between rows
-      children: controller.bookStudy.value?.data?.categories
-              ?.asMap()
-              .entries
-              .map((entry) {
+      children: controller.bookStudy.value?.data?.asMap().entries.map((entry) {
             final index = entry.key;
             final item = entry.value;
             return IntrinsicWidth(
               child: GestureDetector(
                 onTap: () {
-                  Get.toNamed("/categoryById", arguments: {
-                    "teacherId":
-                        controller.bookStudy.value?.data?.categories?[index].sId
+                  Get.toNamed("/subCategories", arguments: {
+                    "title": controller.getBookTitle(name: item.name ?? {}),
+                    "id": item.sId
                   });
                 },
                 child: Container(
@@ -124,7 +121,7 @@ class PgCategory extends GetView<PgCategoryController> {
                             ? Image.network(
                                 height: 20,
                                 width: 20,
-                                "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?.categories?[index].image}",
+                                "${AppConfig.imgBaseUrl}${controller.bookStudy.value?.data?[index].image}",
                                 errorBuilder: (context, error, stackTrace) =>
                                     Label(
                                   txt: "📋",
