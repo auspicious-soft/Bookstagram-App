@@ -71,10 +71,13 @@ import 'features/data/modules/auth_module/view/signup_view.dart';
 
 import 'features/data/modules/book_detail/bindings/book_detail_binding.dart';
 import 'features/data/modules/book_detail/views/book_detail.dart';
+import 'features/data/modules/bookstudy/bindings/Collection_Summary_Bindings.dart';
 import 'features/data/modules/bookstudy/bindings/SubCategoriesBooksBinding.dart';
 import 'features/data/modules/bookstudy/bindings/SubCategories_Bindings.dart';
 import 'features/data/modules/bookstudy/bindings/book_event_binding.dart';
 import 'features/data/modules/bookstudy/bindings/bookeventdetail_binding.dart';
+import 'features/data/modules/bookstudy/views/CollectionSummaryBooks.dart'
+    show Collectionsummarybooks;
 import 'features/data/modules/bookstudy/views/SubCategories_Books.dart';
 import 'features/data/modules/bookstudy/views/SubCategories_screen.dart';
 import 'features/data/modules/bookstudy/views/bookEventDetail.dart';
@@ -476,6 +479,11 @@ class MyApp extends StatelessWidget {
           name: "/subCategoriesBooks",
           page: () => SubcategoriesBooks(),
           binding: Subcategoriesbooksbinding(),
+        ),
+        GetPage(
+          name: "/collectionSummaryBooks",
+          page: () => Collectionsummarybooks(),
+          binding: CollectionSummaryBooksBindings(),
         ),
       ],
     );

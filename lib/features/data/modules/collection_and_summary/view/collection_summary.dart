@@ -78,14 +78,15 @@ class CollectionSummary extends GetView<CollectionSummaryController> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    // Get.toNamed("/subCategoriesBooks",
-                                    //     arguments: {
-                                    //       "title": controller.getBookTitle(
-                                    //           name: controller.collectiondata
-                                    //               ?.value?.data?[index]?.name),
-                                    //       "id": controller.collectiondata?.value
-                                    //           ?.data?[index]?.sId
-                                    //     });
+                                    Get.toNamed("/collectionSummaryBooks",
+                                        arguments: {
+                                          "title": controller.getBookTitle(
+                                              name: controller.collectiondata
+                                                  ?.value?.data?[index]?.name),
+                                          "id": controller.collectiondata?.value
+                                              ?.data?[index]?.sId,
+                                          "type": controller.title.value
+                                        });
                                   },
                                   child: Column(
                                     children: [
