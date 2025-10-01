@@ -5,9 +5,11 @@ import 'package:bookstagram/app_settings/constants/app_assets.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:bookstagram/app_settings/constants/app_dim.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../../app_settings/components/loader.dart';
 import '../../../../../app_settings/constants/app_config.dart';
+import '../../../../../localization/app_localization.dart' show AppLocalization;
 import '../controllers/SubCategories_Controller.dart';
 
 class SubcategoriesScreen extends GetView<SubcategoriesController> {
@@ -15,6 +17,13 @@ class SubcategoriesScreen extends GetView<SubcategoriesController> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: AppColors.background, // Set status bar color
+        statusBarIconBrightness:
+            Brightness.dark, // Ensure icons are visible on white
+      ),
+    );
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -69,74 +78,127 @@ class SubcategoriesScreen extends GetView<SubcategoriesController> {
                             //     Icon(Icons.arrow_forward_ios_rounded, size: 18),
                             //   ],
                             // ),
-                            ListView.builder(
-                              itemCount: controller.collectiondata?.value?.data
-                                      ?.subcategory?.length ??
-                                  0,
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    Row(
+
+                            controller.collectiondata.value?.data?.subcategory
+                                        ?.length ==
+                                    0
+                                ? SizedBox(
+                                    height: Get.height * 0.5,
+                                    child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              child: controller
-                                                          .collectiondata
-                                                          ?.value
-                                                          ?.data
-                                                          ?.subcategory?[index]
-                                                          .image !=
-                                                      null
-                                                  ? Image.network(
-                                                      height: 20,
-                                                      width: 20,
-                                                      "${AppConfig.imgBaseUrl}${controller.collectiondata?.value?.data?.subcategory?[index].image}",
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Label(
-                                                        txt: "📋",
-                                                        type:
-                                                            TextTypes.f_18_400,
-                                                      ),
-                                                    )
-                                                  : Label(
-                                                      txt: "📋",
-                                                      type: TextTypes.f_18_400,
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Label(
-                                              txt: controller.getBookTitle(
-                                                  name: controller
-                                                      ?.collectiondata
-                                                      ?.value
-                                                      ?.data
-                                                      ?.subcategory?[index]
-                                                      ?.name),
-                                              type: TextTypes.f_20_300,
-                                            ),
-                                          ],
+                                        Image.asset(
+                                          AppAssets.noData,
+                                          height: 100,
+                                          width: 100,
                                         ),
-                                        const Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            size: 18),
+                                        padVertical(10),
+                                        Label(
+                                          txt: "Nothing found on this request",
+                                          type: TextTypes.f_13_500,
+                                        ),
                                       ],
                                     ),
-                                    padVertical(30),
-                                  ],
-                                );
-                              },
-                            ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: controller.collectiondata?.value
+                                            ?.data?.subcategory?.length ??
+                                        0,
+                                    shrinkWrap: true,
+                                    physics: BouncingScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Get.toNamed("/subCategoriesBooks",
+                                              arguments: {
+                                                "title":
+                                                    controller.getBookTitle(
+                                                        name: controller
+                                                            .collectiondata
+                                                            ?.value
+                                                            ?.data
+                                                            ?.subcategory?[
+                                                                index]
+                                                            ?.name),
+                                                "id": controller
+                                                    .collectiondata
+                                                    ?.value
+                                                    ?.data
+                                                    ?.subcategory?[index]
+                                                    ?.sId
+                                              });
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    ClipRRect(
+                                                      child: controller
+                                                                  .collectiondata
+                                                                  ?.value
+                                                                  ?.data
+                                                                  ?.subcategory?[
+                                                                      index]
+                                                                  .image !=
+                                                              null
+                                                          ? Image.network(
+                                                              height: 20,
+                                                              width: 20,
+                                                              "${AppConfig.imgBaseUrl}${controller.collectiondata?.value?.data?.subcategory?[index].image}",
+                                                              errorBuilder:
+                                                                  (context,
+                                                                          error,
+                                                                          stackTrace) =>
+                                                                      Label(
+                                                                txt: "📋",
+                                                                type: TextTypes
+                                                                    .f_18_400,
+                                                              ),
+                                                            )
+                                                          : Label(
+                                                              txt: "📋",
+                                                              type: TextTypes
+                                                                  .f_18_400,
+                                                            ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Label(
+                                                      txt: controller.getBookTitle(
+                                                          name: controller
+                                                              ?.collectiondata
+                                                              ?.value
+                                                              ?.data
+                                                              ?.subcategory?[
+                                                                  index]
+                                                              ?.name),
+                                                      type: TextTypes.f_20_300,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    size: 18),
+                                              ],
+                                            ),
+                                            padVertical(30),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                             padVertical(20),
                           ],
                         ),

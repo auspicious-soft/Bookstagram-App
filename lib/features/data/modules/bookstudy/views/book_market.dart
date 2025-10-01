@@ -983,10 +983,14 @@ class PgBookmarket extends GetView<PgBookmarketController> {
             return IntrinsicWidth(
               child: GestureDetector(
                 onTap: () {
-                  Get.toNamed("/categoryById", arguments: {
-                    "teacherId": controller
-                        .bookMarket.value?.data?.categories?[index].sId,
+                  Get.toNamed("/subCategories", arguments: {
+                    "title": controller.getBookTitle(name: item.name ?? {}),
+                    "id": item.sId
                   });
+                  // Get.toNamed("/categoryById", arguments: {
+                  //   "teacherId": controller
+                  //       .bookMarket.value?.data?.categories?[index].sId,
+                  // });
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(

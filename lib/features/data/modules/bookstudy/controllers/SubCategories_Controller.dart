@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bookstagram/app_settings/components/common_sheet.dart';
 import 'package:bookstagram/app_settings/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:pretty_http_logger/pretty_http_logger.dart';
@@ -111,6 +112,18 @@ class SubcategoriesController extends GetxController {
       print("API Error: $e");
       throw e;
     }
+  }
+
+  @override
+  void onClose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Set status bar color
+        statusBarIconBrightness:
+            Brightness.dark, // Ensure icons are visible on white
+      ),
+    );
+    super.onClose();
   }
 
   void showFilterBottomSheet() {

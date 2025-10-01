@@ -63,22 +63,26 @@ class PgPublishers extends StatelessWidget {
                             Get.back();
                           },
                         ),
-                        Label(
-                          txt: AppLocalization.of(context)
-                              .translate('Publishers'),
-                          type: TextTypes.f_20_500,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            controller.showFilterSheet(context);
-                          },
-                          child: Image.asset(
-                            width: 16,
-                            height: 20,
-                            AppAssets.categoryfil,
-                            fit: BoxFit.contain,
+                        Expanded(
+                          child: Center(
+                            child: Label(
+                              txt: AppLocalization.of(context)
+                                  .translate('Publishers'),
+                              type: TextTypes.f_20_500,
+                            ),
                           ),
                         ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     controller.showFilterSheet(context);
+                        //   },
+                        //   child: Image.asset(
+                        //     width: 16,
+                        //     height: 20,
+                        //     AppAssets.categoryfil,
+                        //     fit: BoxFit.contain,
+                        //   ),
+                        // ),
                       ],
                     ),
                     padVertical(10),
@@ -102,14 +106,10 @@ class PgPublishers extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              if (controller
-                                      .allPublishers.value?.data?[index]?.sId !=
-                                  null) {
-                                Get.toNamed('/publisherDetail', arguments: {
-                                  "teacherId": controller
-                                      .allPublishers.value?.data?[index]?.sId
-                                });
-                              }
+                              Get.toNamed('/publisherDetail', arguments: {
+                                "teacherId": controller
+                                    .allPublishers.value?.data?[index]?.sId
+                              });
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,

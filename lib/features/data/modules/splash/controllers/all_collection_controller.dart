@@ -15,6 +15,8 @@ class PgCollectionsController extends GetxController {
   // Reactive list to track like status for each item
   // final RxList<bool> likeStatus = RxList<bool>([false, false, false]);
   var title = "".obs;
+  var filter = "".obs;
+  var id = "";
 
   // Add the missing collectiondata property
   final Rx<CollectionDetailModel?> collectiondata =
@@ -55,7 +57,7 @@ class PgCollectionsController extends GetxController {
       );
 
       String uri =
-          '${AppConfig.baseUrl}${AppConfig.getCollectionDetailEndPoint}/$id';
+          '${AppConfig.baseUrl}${AppConfig.getCollectionDetailEndPoint}/$id?sorting=${filter.value == AppLocalization.of(Get.context!).translate('alphabetically') ? "alphabetically" : filter.value == AppLocalization.of(Get.context!).translate('byrating') ? "rating" : filter.value == AppLocalization.of(Get.context!).translate('bynovelty') ? "newest" : "default"}';
 
       final response = await httpClient.get(
         Uri.parse(uri),
@@ -88,7 +90,8 @@ class PgCollectionsController extends GetxController {
         middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
       );
 
-      String uri = '${AppConfig.baseUrl}${AppConfig.getBestSellers}';
+      String uri =
+          '${AppConfig.baseUrl}${AppConfig.getBestSellers}?sorting=${filter.value == AppLocalization.of(Get.context!).translate('alphabetically') ? "alphabetically" : filter.value == AppLocalization.of(Get.context!).translate('byrating') ? "rating" : filter.value == AppLocalization.of(Get.context!).translate('bynovelty') ? "newest" : "default"}';
 
       final response = await httpClient.get(
         Uri.parse(uri),
@@ -151,7 +154,9 @@ class PgCollectionsController extends GetxController {
         middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
       );
 
-      String uri = '${AppConfig.baseUrl}${AppConfig.getAllAudioBooksEndPoints}';
+      String uri =
+          '${AppConfig.baseUrl}${AppConfig.getAllAudioBooksEndPoints}?sorting=${filter.value == AppLocalization.of(Get.context!).translate('alphabetically') ? "alphabetically" : filter.value == AppLocalization.of(Get.context!).translate('byrating') ? "rating" : filter.value == AppLocalization.of(Get.context!).translate('bynovelty') ? "newest" : "default"}';
+      ;
 
       final response = await httpClient.get(
         Uri.parse(uri),
@@ -200,7 +205,8 @@ class PgCollectionsController extends GetxController {
         middlewares: [HttpLogger(logLevel: LogLevel.BODY)],
       );
 
-      String uri = '${AppConfig.baseUrl}${AppConfig.getAllNewBooks}';
+      String uri =
+          '${AppConfig.baseUrl}${AppConfig.getAllNewBooks}?sorting=${filter.value == AppLocalization.of(Get.context!).translate('alphabetically') ? "alphabetically" : filter.value == AppLocalization.of(Get.context!).translate('byrating') ? "rating" : filter.value == AppLocalization.of(Get.context!).translate('bynovelty') ? "newest" : "default"}';
 
       final response = await httpClient.get(
         Uri.parse(uri),
@@ -242,7 +248,7 @@ class PgCollectionsController extends GetxController {
       title.value = Get.arguments["title"];
       print(Get.arguments["id"]);
 
-      String id = Get.arguments["id"];
+      id = Get.arguments["id"];
       if (id != null && id.isNotEmpty) {
         fetchBookStudy(id);
       } else {

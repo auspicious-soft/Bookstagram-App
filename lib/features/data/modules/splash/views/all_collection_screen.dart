@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import '../../../../../app_settings/components/loader.dart';
 import '../../../../../app_settings/constants/app_config.dart';
+import '../../../../../app_settings/constants/common_button.dart';
 import '../../../../../localization/app_localization.dart';
 import '../controllers/all_collection_controller.dart';
 
@@ -79,7 +80,314 @@ class PgCollections extends GetView<PgCollectionsController> {
                                   GestureDetector(
                                     onTap: () {
                                       Get.bottomSheet(
-                                        FilterBottomSheet(),
+                                        StatefulBuilder(
+                                          builder: (BuildContext context,
+                                              StateSetter setState) {
+                                            // Define state variables
+
+                                            return SingleChildScrollView(
+                                              child: Container(
+                                                height: Get.height / 1.2,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.whiteColor,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(20),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(15),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      // Header
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          const Text('  '),
+                                                          Label(
+                                                            txt: AppLocalization
+                                                                    .of(context)
+                                                                .translate(
+                                                                    'Filter'),
+                                                            type: TextTypes
+                                                                .f_17_500,
+                                                          ),
+                                                          IconButton(
+                                                            onPressed: () {
+                                                              // controller
+                                                              //     .fetchBookStudy(
+                                                              //         controller
+                                                              //             .id
+                                                              //             .value);
+                                                              Get.back(); // Close the bottom sheet
+                                                            },
+                                                            icon: Image.asset(
+                                                              width: 30,
+                                                              height: 30,
+                                                              AppAssets.close,
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      // Sorting Section
+                                                      Label(
+                                                        txt: AppLocalization.of(
+                                                                context)
+                                                            .translate(
+                                                                'sorting'),
+                                                        forceColor: AppColors
+                                                            .buttongroupBorder,
+                                                        type:
+                                                            TextTypes.f_13_400,
+                                                      ),
+                                                      padVertical(20),
+                                                      // Default
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          controller.filter
+                                                                  .value =
+                                                              AppLocalization.of(
+                                                                      context)
+                                                                  .translate(
+                                                                      'thedefault');
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Label(
+                                                              txt: AppLocalization
+                                                                      .of(
+                                                                          context)
+                                                                  .translate(
+                                                                      'thedefault'),
+                                                              type: TextTypes
+                                                                  .f_16_500,
+                                                            ),
+                                                            Obx(() => controller
+                                                                        .filter
+                                                                        .value !=
+                                                                    AppLocalization.of(
+                                                                            context)
+                                                                        .translate(
+                                                                            'thedefault')
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .radio_button_off_outlined,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .radio_button_checked,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      padVertical(15),
+                                                      // Alphabetically
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          controller.filter
+                                                                  .value =
+                                                              AppLocalization.of(
+                                                                      context)
+                                                                  .translate(
+                                                                      'alphabetically');
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Label(
+                                                              txt: AppLocalization
+                                                                      .of(
+                                                                          context)
+                                                                  .translate(
+                                                                      'alphabetically'),
+                                                              type: TextTypes
+                                                                  .f_16_500,
+                                                            ),
+                                                            Obx(() => controller
+                                                                        .filter
+                                                                        .value !=
+                                                                    AppLocalization.of(
+                                                                            context)
+                                                                        .translate(
+                                                                            'alphabetically')
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .radio_button_off_outlined,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .radio_button_checked,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      padVertical(15),
+                                                      // By Rating
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          controller.filter
+                                                                  .value =
+                                                              AppLocalization.of(
+                                                                      context)
+                                                                  .translate(
+                                                                      'byrating');
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Label(
+                                                              txt: AppLocalization
+                                                                      .of(
+                                                                          context)
+                                                                  .translate(
+                                                                      'byrating'),
+                                                              type: TextTypes
+                                                                  .f_16_500,
+                                                            ),
+                                                            Obx(() => controller
+                                                                        .filter
+                                                                        .value !=
+                                                                    AppLocalization.of(
+                                                                            context)
+                                                                        .translate(
+                                                                            'byrating')
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .radio_button_off_outlined,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .radio_button_checked,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      padVertical(15),
+                                                      // By Novelty
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          controller.filter
+                                                                  .value =
+                                                              AppLocalization.of(
+                                                                      context)
+                                                                  .translate(
+                                                                      'bynovelty');
+                                                        },
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Label(
+                                                              txt: AppLocalization
+                                                                      .of(
+                                                                          context)
+                                                                  .translate(
+                                                                      'bynovelty'),
+                                                              type: TextTypes
+                                                                  .f_16_500,
+                                                            ),
+                                                            Obx(() => controller
+                                                                        .filter
+                                                                        .value !=
+                                                                    AppLocalization.of(
+                                                                            context)
+                                                                        .translate(
+                                                                            'bynovelty')
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .radio_button_off_outlined,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  )
+                                                                : Icon(
+                                                                    Icons
+                                                                        .radio_button_checked,
+                                                                    color: Colors
+                                                                        .orange,
+                                                                  ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      padVertical(15),
+                                                      SizedBox(
+                                                          height:
+                                                              MediaQuery.sizeOf(
+                                                                          context)
+                                                                      .height *
+                                                                  0.2),
+                                                      commonButton(
+                                                        context: context,
+                                                        onPressed: () {
+                                                          if (controller.id !=
+                                                                  null &&
+                                                              controller.id
+                                                                  .isNotEmpty) {
+                                                            controller
+                                                                .fetchBookStudy(
+                                                                    controller
+                                                                        .id);
+                                                          } else {
+                                                            if (controller.title
+                                                                    .value ==
+                                                                '${AppLocalization.of(Get.context!).translate('bestsellers')}🔥') {
+                                                              controller
+                                                                  .fetchBestSeller();
+                                                            } else if (controller
+                                                                    .title
+                                                                    .value ==
+                                                                '${AppLocalization.of(Get.context!).translate('newbooks')}💌') {
+                                                              controller
+                                                                  .fetchAllNewBooks();
+                                                            } else {
+                                                              controller
+                                                                  .fetchAudioBooks();
+                                                            }
+                                                          }
+                                                          Get.back();
+                                                        },
+                                                        txt: AppLocalization.of(
+                                                                context)
+                                                            .translate(
+                                                                'Filter'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                         isScrollControlled: true,
                                         backgroundColor: AppColors.whiteColor,
                                       );

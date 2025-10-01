@@ -41,18 +41,22 @@ class CollectionSummary extends GetView<CollectionSummaryController> {
                                       color: Colors.black),
                                   onPressed: () => Get.back(),
                                 ),
-                                Obx(() => Label(
-                                    txt: "${controller.title.value}",
-                                    type: TextTypes.f_20_500)),
-                                GestureDetector(
-                                  onTap: controller.showFilterBottomSheet,
-                                  child: Image.asset(
-                                    width: 16,
-                                    height: 20,
-                                    AppAssets.categoryfil,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
+                                Obx(() => Expanded(
+                                      child: Center(
+                                        child: Label(
+                                            txt: "${controller.title.value}",
+                                            type: TextTypes.f_20_500),
+                                      ),
+                                    )),
+                                // GestureDetector(
+                                //   onTap: controller.showFilterBottomSheet,
+                                //   child: Image.asset(
+                                //     width: 16,
+                                //     height: 20,
+                                //     AppAssets.categoryfil,
+                                //     fit: BoxFit.contain,
+                                //   ),
+                                // ),
                               ],
                             ),
                             padVertical(30),
@@ -72,62 +76,75 @@ class CollectionSummary extends GetView<CollectionSummaryController> {
                               shrinkWrap: true,
                               physics: BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            ClipRRect(
-                                              child: controller
-                                                          .collectiondata
-                                                          ?.value
-                                                          ?.data?[index]
-                                                          .image !=
-                                                      null
-                                                  ? Image.network(
-                                                      height: 20,
-                                                      width: 20,
-                                                      "${AppConfig.imgBaseUrl}${controller.collectiondata?.value?.data?[index].image}",
-                                                      errorBuilder: (context,
-                                                              error,
-                                                              stackTrace) =>
-                                                          Label(
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Get.toNamed("/subCategoriesBooks",
+                                    //     arguments: {
+                                    //       "title": controller.getBookTitle(
+                                    //           name: controller.collectiondata
+                                    //               ?.value?.data?[index]?.name),
+                                    //       "id": controller.collectiondata?.value
+                                    //           ?.data?[index]?.sId
+                                    //     });
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              ClipRRect(
+                                                child: controller
+                                                            .collectiondata
+                                                            ?.value
+                                                            ?.data?[index]
+                                                            .image !=
+                                                        null
+                                                    ? Image.network(
+                                                        height: 20,
+                                                        width: 20,
+                                                        "${AppConfig.imgBaseUrl}${controller.collectiondata?.value?.data?[index].image}",
+                                                        errorBuilder: (context,
+                                                                error,
+                                                                stackTrace) =>
+                                                            Label(
+                                                          txt: "📋",
+                                                          type: TextTypes
+                                                              .f_18_400,
+                                                        ),
+                                                      )
+                                                    : Label(
                                                         txt: "📋",
                                                         type:
                                                             TextTypes.f_18_400,
                                                       ),
-                                                    )
-                                                  : Label(
-                                                      txt: "📋",
-                                                      type: TextTypes.f_18_400,
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Label(
-                                              txt: controller.getBookTitle(
-                                                  name: controller
-                                                      ?.collectiondata
-                                                      ?.value
-                                                      ?.data?[index]
-                                                      ?.name),
-                                              type: TextTypes.f_20_300,
-                                            ),
-                                          ],
-                                        ),
-                                        const Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            size: 18),
-                                      ],
-                                    ),
-                                    padVertical(30),
-                                  ],
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Label(
+                                                txt: controller.getBookTitle(
+                                                    name: controller
+                                                        ?.collectiondata
+                                                        ?.value
+                                                        ?.data?[index]
+                                                        ?.name),
+                                                type: TextTypes.f_20_300,
+                                              ),
+                                            ],
+                                          ),
+                                          const Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              size: 18),
+                                        ],
+                                      ),
+                                      padVertical(30),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
